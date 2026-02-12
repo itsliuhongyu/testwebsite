@@ -1,0 +1,189 @@
+<script>
+	/** @type {import('./$types').PageData} */
+	export let data;
+</script>
+
+<svelte:head>
+	<link rel="stylesheet" href="https://wisconsinwatch.org/wp-content/themes/newspack-theme/style.css?ver=2.17.0">
+	<link rel="stylesheet" href="./src/lib/wp-custom.css">
+	<link rel="stylesheet" href="./src/lib/landingpage.css">
+</svelte:head>
+
+<div id="content" class="site-content">
+    <section id="primary" class="content-area">
+        <main id="main" class="site-main" role="main">
+            <header class="entry-header">						
+				<h1 class="entry-title ">Wisconsin 2026 voter guide: Find the results in your district</h1>
+			</header>
+            <div class="entry-content">
+                <div class="entry-content">
+		
+                    <h2 class="wp-block-heading has-text-align-center">See the results</h2>
+
+                        <div class="wp-block-buttons is-horizontal is-content-justification-center is-layout-flex wp-container-core-buttons-is-layout-a4d366b9 wp-block-buttons-is-layout-flex">
+                            <div class="wp-block-button"><a class="wp-block-button__link has-white-color has-text-color has-link-color wp-element-button" href="https://wisconsinwatch.org/?p=1294354">U.S. House</a></div>
+                            <div class="wp-block-button"><a class="wp-block-button__link has-white-color has-text-color has-link-color wp-element-button" href="https://wisconsinwatch.org/?p=1294358">U.S. Senate</a></div>
+                            <div class="wp-block-button"><a class="wp-block-button__link has-white-color has-text-color has-link-color wp-element-button" href="https://wisconsinwatch.org/?p=1294827">Constitutional amendment</a></div>
+                            <div class="wp-block-button"><a class="wp-block-button__link has-white-color has-text-color has-link-color wp-element-button" href="https://wisconsinwatch.org/?p=1291349">Assembly</a></div>
+                            <div class="wp-block-button"><a class="wp-block-button__link has-white-color has-text-color has-link-color wp-element-button" href="https://wisconsinwatch.org/?p=1294349">State Senate</a></div>
+                            <div class="wp-block-button"><a class="wp-block-button__link has-white-color has-text-color has-link-color wp-element-button" href="https://wisconsinwatch.org/2024/09/wisconsin-voter-guide-2024-us-house-1-2/">President</a></div>
+                        </div>
+
+                    <h4 class="wp-block-heading has-text-align-center">Nov. 5 is Election Day.</h4>
+                    <h4 class="wp-block-heading has-text-align-center">Here’s what you need to know.</h4>
+
+                    <div class="wp-block-image">
+                        <figure class="alignright size-large">
+                            <img data-recalc-dims="1" decoding="async" width="782" height="577" src="https://i0.wp.com/wisconsinwatch.org/wp-content/uploads/2024/06/Election-GFX-14-1.png?resize=782%2C577&amp;quality=100&amp;ssl=1" alt="" class="wp-image-1291249" srcset="https://i0.wp.com/wisconsinwatch.org/wp-content/uploads/2024/06/Election-GFX-14-1.png?resize=782%2C577&amp;quality=100&amp;ssl=1 782w, https://i0.wp.com/wisconsinwatch.org/wp-content/uploads/2024/06/Election-GFX-14-1.png?resize=336%2C248&amp;quality=100&amp;ssl=1 336w, https://i0.wp.com/wisconsinwatch.org/wp-content/uploads/2024/06/Election-GFX-14-1.png?resize=140%2C103&amp;quality=100&amp;ssl=1 140w, https://i0.wp.com/wisconsinwatch.org/wp-content/uploads/2024/06/Election-GFX-14-1.png?resize=768%2C566&amp;quality=100&amp;ssl=1 768w, https://i0.wp.com/wisconsinwatch.org/wp-content/uploads/2024/06/Election-GFX-14-1.png?resize=1200%2C885&amp;quality=100&amp;ssl=1 1200w, https://i0.wp.com/wisconsinwatch.org/wp-content/uploads/2024/06/Election-GFX-14-1.png?resize=1024%2C755&amp;quality=100&amp;ssl=1 1024w, https://i0.wp.com/wisconsinwatch.org/wp-content/uploads/2024/06/Election-GFX-14-1.png?resize=400%2C295&amp;quality=100&amp;ssl=1 400w, https://i0.wp.com/wisconsinwatch.org/wp-content/uploads/2024/06/Election-GFX-14-1.png?resize=706%2C521&amp;quality=100&amp;ssl=1 706w, https://i0.wp.com/wisconsinwatch.org/wp-content/uploads/2024/06/Election-GFX-14-1.png?w=1326&amp;quality=100&amp;ssl=1 1326w, https://i0.wp.com/wisconsinwatch.org/wp-content/uploads/2024/06/Election-GFX-14-1-782x577.png?w=370&amp;quality=100&amp;ssl=1 370w" sizes="(max-width: 782px) 100vw, 782px">
+                        </figure>
+                    </div>
+
+                    <p>Over the past two months, the<a href="https://wisconsinwatch.org/2024/09/wisconsin-voter-guide-2024-us-house-1-2/"> race for the White House</a> between Vice President Kamala Harris and former President Donald Trump has dominated the political conversation — especially in a critical battleground state like Wisconsin. But on Nov. 5 there will be scores of other races on the ballots of Wisconsin voters, including contests for <a href="https://wisconsinwatch.org/2024/08/wisconsin-voter-guide-2024-us-senate-1/">U.S. Senate</a>, <a href="https://wisconsinwatch.org/2024/08/wisconsin-voter-guide-2024-us-house-1/">eight U.S. House</a> seats, <a href="https://wisconsinwatch.org/2024/08/wisconsin-voter-guide-2024-assembly-home/">99 state Assembly seats</a>, <a href="https://wisconsinwatch.org/2024/08/wisconsin-voter-guide-2024-state-senate-1/">16 state Senate seats</a>, some county offices and even an <a href="https://wisconsinwatch.org/2024/08/constitutional-amendments/">amendment to the Wisconsin Constitution</a>.</p>
+                    <p>The implications of these down-ballot races could be massive. In the Legislature, for example, Democrats have a <a href="https://wisconsinwatch.org/2024/08/wisconsin-democrat-dnc-kamala-harris-assembly-senate-election-republican/">chance to win a majority in the Assembly</a> for the first time in more than a decade, potentially upending Republicans’ iron grip on the statehouse and jolting state government in a way not seen for years. That’s largely because the <a href="https://wisconsinwatch.org/2023/12/wisconsin-supreme-court-orders-new-legislative-maps-for-2024/">Wisconsin Supreme Court tossed out GOP-skewed legislative districts</a>, leading to the adoption of more politically balanced maps.</p>
+                    <details class="wp-block-details is-layout-flow wp-block-details-is-layout-flow">
+                        <summary>Click to read more</summary>
+                        <p>In western Wisconsin, both state and national <a href="https://wisconsinwatch.org/2024/10/wisconsin-congress-van-orden-cooke-republican-democrat-us-house/">Democrats are looking to unseat incumbent U.S. Rep. Derrick Van Orden</a>, a freshman Republican being challenged by Democrat Rebecca Cooke. Van Orden flipped the seat in 2022, and Democrats are hoping to take it back in their push to retake the U.S. House majority.</p>
+                        <p>In the Milwaukee area, Republicans are hoping to help incumbent state Sen. Duey Stroebel, R-Saukville, <a href="https://wisconsinwatch.org/2024/09/wisconsin-milwaukee-senate-election-democrat-republican-stroebel-habush-sinykin/">survive a challenge from Democrat Jodi Habush Sinykin</a>. The race is one of a handful of state Senate seats that will set the field for races in 2026, in which Democrats will look to also flip control of the state Senate.</p>
+                        <p>And those are just a few examples. Elections consequential to the daily lives of Wisconsin residents across the state are on the ballot.</p>
+                    </details>
+                    <p>The goal of Wisconsin Watch’s nonpartisan voter guide is to equip voters with the information they need to vote before or on Nov. 5.</p>
+
+                    <h2 class="wp-block-heading has-text-align-center"><strong>Quick links</strong></h2>
+
+                    <div class="wp-block-buttons is-horizontal is-content-justification-center is-layout-flex wp-container-core-buttons-is-layout-9393892f wp-block-buttons-is-layout-flex">
+                        <div class="wp-block-button"><a class="wp-block-button__link has-white-color has-text-color has-link-color wp-element-button" href="#Links">Who’s running?</a></div>
+                        <div class="wp-block-button"><a class="wp-block-button__link has-white-color has-text-color has-link-color wp-element-button" href="https://wisconsinwatch.org/tag/election-2024/">Election news</a></div>
+                        <div class="wp-block-button"><a class="wp-block-button__link has-white-color has-text-color has-link-color wp-element-button" href="#Fact">Fact briefs</a></div>
+                        <div class="wp-block-button"><a class="wp-block-button__link has-white-color has-text-color has-link-color wp-element-button" href="#Ask">Ask Wisconsin Watch</a></div>
+                    </div>
+
+                    <hr class="wp-block-separator has-alpha-channel-opacity is-style-wide">
+                        <h2 class="wp-block-heading has-text-align-center"><strong>Who can vote?</strong></h2>
+                        <p>To register to vote in Wisconsin, you must meet the following <a href="https://www.cityofmadison.com/clerk/elections-voting/voter-registration/eligibility-to-vote">requirements</a>:</p>
+                        <ul class="wp-block-list">
+                            <li>Be a United States citizen.</li>
+                            <li>Be age 18 or older by Election Day.</li>
+                            <li>Have resided at your current address for at least 28 days before Election Day.</li>
+                            <li>If you’ve been convicted of a felony, you must have completed your sentence, including probation, parole or extended supervision.</li>
+                            <li>Have not been adjudicated incompetent to vote by a judge.</li>
+                        </ul>
+                        <h2 class="wp-block-heading has-text-align-center"><strong>How do you check if you’re registered?</strong></h2>
+                        <p>You can check your registration status on the MyVote Wisconsin website <a href="https://myvote.wi.gov/en-us/Register-To-Vote">here</a> by entering your name and date of birth.</p>
+                        <p>The deadline to register <a href="https://myvote.wi.gov/en-us/Register-To-Vote">online</a> or by mail is Oct. 16. The deadline to register in person at your municipal clerk’s office is Nov. 1 at 5 p.m. If you haven’t registered to vote before Nov. 5, don’t panic. You can register to vote in person at your polling place on Election Day. You’ll just need to bring an <a href="https://myvote.wi.gov/Portals/0/Documents/AcceptablePhotoIDs.pdf?ver=vS9TnMVULlI9Yi0mGe-P0g%3D%3D">accepted form of ID</a> and <a href="https://myvote.wi.gov/Portals/0/Documents/ProofOfResidence.pdf?ver=vS9TnMVULlI9Yi0mGe-P0g%3d%3d">proof of residence</a> (and meet the requirements listed above).</p>
+                        <h2 class="wp-block-heading has-text-align-center"><strong>How do I find my polling place?</strong></h2>
+                        <p class="has-text-align-center">You can find your polling location by entering your address <a href="https://myvote.wi.gov/en-us/Find-My-Polling-Place">here</a>.</p>
+
+                        <div class="wp-block-group has-light-gray-background-color has-background">
+                            <div class="wp-block-group__inner-container is-layout-constrained wp-block-group-is-layout-constrained">
+                                <h2 class="wp-block-heading has-text-align-center" id="Keydates">Key election dates</h2>
+                                <ul class="wp-block-list">
+                                    <li><strong>Oct. 22:</strong> Early in-person voting begins (availability varies by municipality).</li>
+                                </ul>
+                                <ul class="wp-block-list">
+                                    <li><strong>Oct. 31:</strong> Last day to request an absentee ballot.</li>
+                                </ul>
+                                <ul class="wp-block-list">
+                                    <li><strong>Nov. 3:</strong> Last day of early in-person voting (availability varies by municipality).</li>
+                                </ul>
+                                <ul class="wp-block-list">
+                                    <li><strong>Nov. 5:</strong> Election Day: Polls are open from 7 a.m. to 8 p.m. (Absentee ballots must be returned by 8 p.m.)</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <h2 class="wp-block-heading has-text-align-center"><strong>Can I vote by mail?</strong></h2>
+                        <p>Yes. Wisconsin voters don’t need a reason to vote by mail/be an absentee voter. Every registered Wisconsin voter has the ability to request an absentee ballot by mail. You can request an absentee ballot on MyVote Wisconsin <a href="https://myvote.wi.gov/en-us/Vote-Absentee-By-Mail">here</a>.</p>
+                        <p>Once you’ve submitted your request for an absentee ballot, you can track your ballot <a href="https://myvote.wi.gov/en-us/Track-My-Ballot">here</a>.</p>
+                        <p>Before you begin filling out your absentee ballot, make sure you have a witness who can verify that you filled out your own ballot. The witness needs to be an adult U.S. citizen who is not a candidate in the upcoming election. Once you’ve completed your ballot, place it in the certified envelope that comes with your absentee ballot. Seal and sign the certificate envelope and then have your witness sign the certificate and include the witness’ address.</p>
+                        <p>The next step is to mail it back to your municipal clerk. The United States Postal Service recommends mailing your ballot back at least seven days before Election Day, according to the Wisconsin Elections Commission.</p>
+                        <p>If you’re worried about your ballot being returned in time, you can deliver it to your municipal clerk’s office or deliver it to your polling place on Election Day.</p>
+
+                        <h2 class="wp-block-heading has-text-align-center"><strong>Can I put my absentee ballot in a ballot drop box?</strong></h2>
+                        <p>Yes. The Wisconsin Supreme Court recently <a href="https://wisconsinwatch.org/2024/07/wisconsin-supreme-court-allows-expanded-use-of-ballot-drop-boxes/">ruled</a> that Wisconsin communities can once again use drop boxes to collect absentee ballots. However, the use of drop boxes is not required, so it’s up to your municipal clerk whether they are available in your community or not.</p>
+
+                    <hr class="wp-block-separator has-alpha-channel-opacity is-style-wide">
+                        <h2 class="wp-block-heading has-text-align-center" id="Links">Who’s running</h2>
+
+                        <div class="wp-block-buttons is-horizontal is-content-justification-center is-layout-flex wp-container-core-buttons-is-layout-a4d366b9 wp-block-buttons-is-layout-flex">
+                            <div class="wp-block-button"><a class="wp-block-button__link has-white-color has-text-color has-link-color wp-element-button" href="https://wisconsinwatch.org/?p=1294354">U.S. House</a></div>
+                            <div class="wp-block-button"><a class="wp-block-button__link has-white-color has-text-color has-link-color wp-element-button" href="https://wisconsinwatch.org/?p=1294358">U.S. Senate</a></div>
+                            <div class="wp-block-button"><a class="wp-block-button__link has-white-color has-text-color has-link-color wp-element-button" href="https://wisconsinwatch.org/?p=1294827">Constitutional amendment</a></div>
+                            <div class="wp-block-button"><a class="wp-block-button__link has-white-color has-text-color has-link-color wp-element-button" href="https://wisconsinwatch.org/?p=1291349">Assembly</a></div>
+                            <div class="wp-block-button"><a class="wp-block-button__link has-white-color has-text-color has-link-color wp-element-button" href="https://wisconsinwatch.org/?p=1294349">State Senate</a></div>
+                            <div class="wp-block-button"><a class="wp-block-button__link has-white-color has-text-color has-link-color wp-element-button" href="https://wisconsinwatch.org/2024/09/wisconsin-voter-guide-2024-us-house-1-2/">President</a></div>
+                        </div>
+
+                    <hr class="wp-block-separator has-alpha-channel-opacity is-style-wide">
+                        <h2 class="wp-block-heading has-text-align-center" id="Ballot">Fact briefs</h2>
+                        <p class="has-text-align-center">Wisconsin Watch is partnering with Gigafact to produce fact briefs — bite-sized fact checks of trending claims. Read more about <a href="https://wisconsinwatch.org/2023/05/how-wisconsin-watch-checks-claims-for-its-gigafact-fact-briefs/">how Wisconsin Watch checks claims for the fact briefs</a>, and contact us at <a href="mailto:factbriefs@wisconsinwatch.org">factbriefs@wisconsinwatch.org</a>. Our latest fact briefs are below, and you can access our <a href="https://wisconsinwatch.org/series/fact-briefs/">full archive here</a>. </p>
+
+                        <ul class="wp-block-latest-posts__list is-grid columns-3 wp-block-latest-posts"><li><a class="wp-block-latest-posts__post-title" href="https://wisconsinwatch.org/2026/01/immigration-customs-enforcement-ice-criminal-conviction-people-arrested/">Do most people arrested by ICE have a criminal conviction?</a></li>
+                            <li><a class="wp-block-latest-posts__post-title" href="https://wisconsinwatch.org/2026/01/solar-panels-release-more-emissions-burning-fossil-fuels/">Do solar panels release more emissions than burning fossil fuels?</a></li>
+                            <li><a class="wp-block-latest-posts__post-title" href="https://wisconsinwatch.org/2026/01/weather-temperatures-trees-explode-extreme-cold-freeze/">Do trees explode in extreme cold?</a></li>
+                        </ul>
+
+                    <hr class="wp-block-separator has-alpha-channel-opacity is-style-wide">
+                        <h2 class="wp-block-heading has-text-align-center" id="Ask">Ask Wisconsin Watch</h2>
+                        <p class="has-text-align-center">Wisconsin Watch readers have submitted questions to our statehouse team, and we’ll answer them in our series,&nbsp;<a href="https://wisconsinwatch.org/series/ask-wisconsin-watch/">Ask Wisconsin Watch</a>. Have a question about state government? Ask it&nbsp;<a href="https://docs.google.com/forms/d/e/1FAIpQLSednmcZC_b2wxcp1ut-NolSKxaeAMlxCXziv-L_YRxCcxWGBQ/viewform">here</a>.</p>
+
+                        <ul class="wp-block-latest-posts__list is-grid columns-3 wp-block-latest-posts"><li><a class="wp-block-latest-posts__post-title" href="https://wisconsinwatch.org/2025/07/wisconsin-expungement-pardon-record-crime-conviction-corrections-justice/">Does anyone actually get their record expunged in Wisconsin?</a></li>
+                            <li><a class="wp-block-latest-posts__post-title" href="https://wisconsinwatch.org/2025/06/wisconsin-madison-university-military-defense-department-research-funding-college/">How much funding do the University of Wisconsin-Madison and Madison College receive from the US military?</a></li>
+                            <li><a class="wp-block-latest-posts__post-title" href="https://wisconsinwatch.org/2025/06/why-is-wisconsins-prison-system-such-a-mess-what-can-be-done-to-fix-it/">Why is Wisconsin’s prison system such a ‘mess,’ and what can be done to fix it?</a></li>
+                        </ul>
+
+                    <div class="wp-block-group has-background" style="background-color:#3491c752">
+                        <div class="wp-block-group__inner-container is-layout-constrained wp-block-group-is-layout-constrained">
+                            <h2 class="wp-block-heading" id="News">Latest election news from Wisconsin Watch</h2>
+                                <div class="wp-block-newspack-blocks-homepage-articles is-style-borders wpnbha is-grid columns-3 colgap-3 ts-2 is-style-borders" style="">
+		                            <div data-posts="" data-current-post-id="1290806" id="latest-election-2024-news-and-resources">
+                                        <article data-post-id="1303864" class="tag-election-2024 tag-madison tag-news tag-associated-press tag-wisconsin-elections-commission category-government type-post post-has-image">     
+                                            <div class="entry-wrapper">
+                                                <h3 class="entry-title"><a href="https://wisconsinwatch.org/2025/03/wisconsin-election-madison-uncounted-absentee-ballots-depositions/" rel="bookmark">Wisconsin election officials to force depositions for Madison workers over uncounted ballots</a></h3>											
+                                            </div><!-- .entry-wrapper -->
+                                        </article>
+		
+                                        <article data-post-id="1303812" class="tag-election-2024 tag-madison tag-news tag-associated-press tag-voting tag-wisconsin-elections-commission category-government type-post post-has-image">       
+                                            <div class="entry-wrapper">
+                                                <h3 class="entry-title"><a href="https://wisconsinwatch.org/2025/03/wisconsin-election-voters-ballots-madison-lawsuit-damages/" rel="bookmark">Wisconsin voters whose ballots were not counted in November election seek damages</a></h3>											
+                                            </div><!-- .entry-wrapper -->
+                                        </article>
+
+                                        <article data-post-id="1303673" class="tag-donald-trump tag-election-2024 tag-meagan-wolfe tag-news tag-associated-press tag-wisconsin-elections-commission category-government type-post post-has-image">				
+                                            <div class="entry-wrapper">
+                                                <h3 class="entry-title"><a href="https://wisconsinwatch.org/2025/03/wisconsin-election-voting-machine-errors-trump-audit/" rel="bookmark">Wisconsin audit of Trump win finds not a single voting machine error</a></h3>											
+                                            </div><!-- .entry-wrapper -->
+                                        </article>
+		
+                                        <article data-post-id="1302397" class="tag-election-2024 tag-madison tag-news tag-statehouse tag-votebeat tag-wisconsin-elections-commission category-forward category-government type-post post-has-image">	
+                                            <div class="entry-wrapper">
+                                                <h3 class="entry-title"><a href="https://wisconsinwatch.org/2025/01/madison-wisconsin-missing-ballots-election-vote-city-clerk/" rel="bookmark">Some missing Madison ballots could have been counted — if clerk’s staff had acted in time</a></h3>											
+                                            </div><!-- .entry-wrapper -->
+                                        </article>
+		
+                                        <article data-post-id="1301715" class="tag-election-2024 tag-news tag-statehouse tag-votebeat tag-wisconsin-elections-commission category-forward category-government type-post post-has-image">				
+                                            <div class="entry-wrapper">
+                                                <h3 class="entry-title"><a href="https://wisconsinwatch.org/2025/01/wisconsin-election-commission-madison-absentee-ballots-vote-uncounted/" rel="bookmark">Wisconsin Elections Commission launches investigation into uncounted Madison ballots</a></h3>											
+                                            </div><!-- .entry-wrapper -->
+                                        </article>
+	
+                                        <article data-post-id="1301616" class="tag-election tag-election-2024 tag-madison tag-news tag-votebeat category-government type-of-work-news type-post post-has-image">	
+                                            <div class="entry-wrapper">
+                                                <h3 class="entry-title"><a href="https://wisconsinwatch.org/2024/12/nearly-200-madison-ballots-went-uncounted-officials-dont-know-exactly-how/" rel="bookmark">Nearly 200 Madison ballots went uncounted. Officials don’t know exactly how.</a></h3>											
+                                            </div><!-- .entry-wrapper -->
+                                        </article>
+                                    </div>
+		                        </div>
+	                        </div>
+                        </div>
+
+                        <h4 class="wp-block-heading">Credits</h4>
+                        <p>Reporters: Jack Kelly, Hallie Claflin, Ava Menkes, Julius Shieh</p>
+                        <p>Editors: Jeff Bauer, Matthew DeFour, Khushboo Rathore, Kiran Saini</p>
+                        <p>With special thanks to&nbsp;<a href="https://calmatters.org/" target="_blank" rel="noreferrer noopener">CalMatters</a></p>
+                    </div>
+                </div> 
+        </main>
+    </section>  
+</div>
+
+

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Google Sheets API</title>
+</head>
+<body>
+    <h1>Testing Google Sheets API</h1>
+    <div id="results"></div>
+    
+    <script>
+        const SPREADSHEET_ID = '1XecLv5Q-ZFr-5ijvhHqEiVbX6MPl61jJDmiS4GuG-SY';
+        // This will use the actual API key from your .env when running through Vite
+        const API_KEY = import.meta.env?.VITE_GOOGLE_SHEETS_API_KEY || 'test';
+        
+        async function getSheetNames() {
+            try {
+                const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}?key=${API_KEY}`;
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.error) {
+                    document.getElementById('results').innerHTML = 
+                        '<p style="color: red;">Error: ' + data.error.message + '</p>' +
+                        '<p>Make sure VITE_GOOGLE_SHEETS_API_KEY is set in .env file</p>';
+                    return;
+                }
+                
+                const sheetNames = data.sheets.map(sheet => sheet.properties.title);
+                document.getElementById('results').innerHTML = 
+                    '<h2>Sheet Names:</h2><ul>' + 
+                    sheetNames.map(name => `<li>${name}</li>`).join('') + 
+                    '</ul>';
+                    
+                console.log('Sheet names:', sheetNames);
+            } catch (error) {
+                document.getElementById('results').innerHTML = 
+                    '<p style="color: red;">Error: ' + error.message + '</p>';
+                console.error(error);
+            }
+        }
+        
+        getSheetNames();
+    </script>
+</body>
+</html>

@@ -13,6 +13,15 @@
         padding: 0 1rem;
     }
 
+    #address-map {
+        border:#3090c9 2px solid;
+        border-radius: 8px;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+
     .search-box {
         display: flex;
         gap: 0.5rem;
@@ -107,7 +116,6 @@
     .address-result {
         text-align: center;
         margin-bottom: 1.5rem;
-        font-size: 1rem;
     }
 
     .district-results {
@@ -192,15 +200,12 @@
 
     .previous-results-container {
         background-color: #f0f8ff;
-        border: 1px solid #3090c9;
-        border-radius: 8px;
-        padding: 1.5rem;
+        padding: 1rem;
         margin-top: 1.5rem;
         text-align: center;
     }
 
     .previous-results-container h3 {
-        margin: 0 0 1rem 0;
         color: #3090c9;
         font-size: 1.25rem;
     }
@@ -219,6 +224,10 @@
 
         .search-button {
             width: 100%;
+        }
+
+        .previous-results-buttons {
+            gap: 0.5rem;
         }
     }
 </style>
@@ -418,12 +427,12 @@
     <section id="primary" class="content-area">
         <main id="main" class="site-main" role="main">
             <header class="entry-header">						
-				<h1 class="entry-title ">Wisconsin 2026 voter guide: Find the results in your district</h1>
+				<h1 class="entry-title ">Wisconsin 2026 voter guide</h1>
 			</header>
             <div class="entry-content">
                 <div class="entry-content">
 		
-                    <h2 class="wp-block-heading has-text-align-center">What elections do we have for this year?</h2>
+                    <h2 class="wp-block-heading has-text-align-center">National and statewide elections</h2>
 
                         <div class="block-buttons is-horizontal is-content-justification-center is-layout-flex">
                             <button class="election-button" on:click={() => navigate('/wisconsin-supreme-court')}>Wisconsin Supreme Court</button>
@@ -469,7 +478,7 @@
                                     {searching ? 'Searching...' : 'Search'}
                                 </button>
                             </div>
-                            <small><i>You can also verify your district <a href="https://myvote.wi.gov/en-us/Find-My-Polling-Place">here</a>.</i></small>
+                            <small><i>We do not save your data! Read our privacy policy <a href="https://wisconsinwatch.org/about/user-agreement-and-privacy-policy/">here</a> .</i></small> 
 
                             {#if searchError}
                                 <div class="error-message">
@@ -485,9 +494,8 @@
                                     <div class="district-results">
                                         {#if districtResults.raceIds?.assembly}
                                             <a href="/assembly/{districtResults.raceIds.assembly}" class="district-card district-card-link">
-                                                <h4>State Assembly</h4>
                                                 <p class="district-number">
-                                                    {districtResults.districts.assembly ? `District ${districtResults.districts.assembly}` : 'Not found'}
+                                                    State Assembly {districtResults.districts.assembly ? `District ${districtResults.districts.assembly}` : 'Not found'}
                                                 </p>
                                                 {#if districtResults.districts.assembly}
                                                     <div id="assembly-map" class="district-map"></div>
@@ -496,16 +504,14 @@
                                             </a>
                                         {:else}
                                             <div class="district-card">
-                                                <h4>State Assembly</h4>
-                                                <p class="district-number">Not found</p>
+                                                <p class="district-number">State Assembly Not found</p>
                                             </div>
                                         {/if}
 
                                         {#if districtResults.raceIds?.senate}
                                             <a href="/senate/{districtResults.raceIds.senate}" class="district-card district-card-link">
-                                                <h4>Senate</h4>
                                                 <p class="district-number">
-                                                    {districtResults.districts.senate ? `District ${districtResults.districts.senate}` : 'Not found'}
+                                                    Senate {districtResults.districts.senate ? `District ${districtResults.districts.senate}` : 'Not found'}
                                                 </p>
                                                 {#if districtResults.districts.senate}
                                                     <div id="senate-map" class="district-map"></div>
@@ -514,16 +520,14 @@
                                             </a>
                                         {:else}
                                             <div class="district-card">
-                                                <h4>Senate</h4>
-                                                <p class="district-number">Not found</p>
+                                                <p class="district-number">Senate Not found</p>
                                             </div>
                                         {/if}
 
                                         {#if districtResults.raceIds?.congress}
                                             <a href="/congress/{districtResults.raceIds.congress}" class="district-card district-card-link">
-                                                <h4>U.S. Congress</h4>
                                                 <p class="district-number">
-                                                    {districtResults.districts.congress ? `District ${districtResults.districts.congress}` : 'Not found'}
+                                                   U.S. Congress {districtResults.districts.congress ? `District ${districtResults.districts.congress}` : 'Not found'}
                                                 </p>
                                                 {#if districtResults.districts.congress}
                                                     <div id="congress-map" class="district-map"></div>
@@ -532,14 +536,13 @@
                                             </a>
                                         {:else}
                                             <div class="district-card">
-                                                <h4>U.S. Congress</h4>
-                                                <p class="district-number">Not found</p>
+                                                <p class="district-number">U.S. Congress Not found</p>
                                             </div>
                                         {/if}
                                     </div>
 
                                     <p class="coordinates-info">
-                                        <small>Location: {districtResults.coordinates.lat.toFixed(6)}, {districtResults.coordinates.lng.toFixed(6)}</small>
+                                        <small>Location coordinates: {districtResults.coordinates.lat.toFixed(6)}, {districtResults.coordinates.lng.toFixed(6)}</small>
                                     </p>
                                 </div>
                             {/if}
@@ -547,9 +550,9 @@
                         
                         {#if savedRaces && (savedRaces.assembly || savedRaces.senate || savedRaces.congress)}
                             <div class="previous-results-container">
-                                <h3>Your Previous Search Results</h3>
+                                <h3 style="margin-bottom: 0; margin-top: 0;">Your Previous Search Results</h3>
                                 {#if savedRaces.address}
-                                    <p class="address-result"><strong>Address:</strong> {savedRaces.address}</p>
+                                    <small class="address-result"><strong>Address:</strong> {savedRaces.address}</small>
                                 {/if}
                                 <div class="previous-results-buttons">
                                     {#if savedRaces.assembly}
@@ -568,52 +571,13 @@
                                         </button>
                                     {/if}
                                 </div>
-                            </div>
-                        <small><i>Your previous search results are stored locally in your browser. They will be erased when you close this tab.</i></small>  
+                            </div> 
                         {/if}
                     </section>
 
-                    <section id="voting-info">
-                        <div class ="bento-container grid grid-cols-12 grid-flow-dense gap-4">
-
-                            <section class="bento-section bento-section-primary ring col-span-full md:col-span-6 xl:col-span-6 xl:row-span-3">
-                                <div class="bento-body">
-                                    <h2 class="wp-block-heading has-text-align-center"><strong>Who can vote?</strong></h2>
-                                    <p>To register to vote in Wisconsin, you must meet the following <a href="https://www.cityofmadison.com/clerk/elections-voting/voter-registration/eligibility-to-vote">requirements</a>:</p>
-                                    <ul class="wp-block-list">
-                                        <li>Be a United States citizen.</li>
-                                        <li>Be age 18 or older by Election Day.</li>
-                                        <li>Have resided at your current address for at least 28 days before Election Day.</li>
-                                        <li>If you've been convicted of a felony, you must have completed your sentence, including probation, parole or extended supervision.</li>
-                                        <li>Have not been adjudicated incompetent to vote by a judge.</li>
-                                    </ul>
-                                </div>
-                                <div class="bento-image-container">
-                                    <img srcset="" width="468" height="376">
-                                </div>
-                            </section>
-
-                            <section class="bento-section bento-section-primary ring col-span-full md:col-span-6 xl:col-span-6 xl:row-span-3">
-                                <div class="bento-body">
-                                    <h2 class="wp-block-heading has-text-align-center"><strong>How do you check if you're registered?</strong></h2>
-                                    <p>You can check your registration status on the MyVote Wisconsin website <a href="https://myvote.wi.gov/en-us/Register-To-Vote">here</a> by entering your name and date of birth.</p>
-                                    <p>The deadline to register <a href="https://myvote.wi.gov/en-us/Register-To-Vote">online</a> or by mail is Oct. 16. The deadline to register in person at your municipal clerk's office is Nov. 1 at 5 p.m. If you haven't registered to vote before Nov. 5, don't panic. You can register to vote in person at your polling place on Election Day. You'll just need to bring an <a href="https://myvote.wi.gov/Portals/0/Documents/AcceptablePhotoIDs.pdf?ver=vS9TnMVULlI9Yi0mGe-P0g%3D%3D">accepted form of ID</a> and <a href="https://myvote.wi.gov/Portals/0/Documents/ProofOfResidence.pdf?ver=vS9TnMVULlI9Yi0mGe-P0g%3d%3d">proof of residence</a> (and meet the requirements listed above).</p>
-                                </div>
-                                <div class="bento-image-container">
-                                    <img srcset="" width="468" height="376">
-                                </div>
-                            </section>
-
-                            <section class="bento-section bento-section-tertiary ring col-span-full md:col-span-6 xl:col-span-3 md:row-span-1">
-                                <div class="bento-body">
-                                    <h2 class="wp-block-heading has-text-align-center"><strong>How do I find my polling place?</strong></h2>
-                                    <p class="has-text-align-center">You can find your polling location by entering your address <a href="https://myvote.wi.gov/en-us/Find-My-Polling-Place">here</a>.</p>
-                                </div>
-                            </section>
-
                             <section class="bento-section bento-section-secondary ring col-span-full md:col-span-6 xl:col-span-3 xl:row-span-2">
                                 <div class="bento-body">
-                                    <h2 class="wp-block-heading has-text-align-center" id="Keydates">Key election dates</h2>
+                                    <h3 class="wp-block-heading has-text-align-center" id="Keydates">Save the dates!</h3>
                                     <ul class="wp-block-list">
                                         <li><strong>Oct. 22:</strong> Early in-person voting begins (availability varies by municipality).</li>
                                     </ul>
@@ -627,32 +591,63 @@
                                         <li><strong>Nov. 5:</strong> Election Day: Polls are open from 7 a.m. to 8 p.m. (Absentee ballots must be returned by 8 p.m.)</li>
                                     </ul>
                                 </div>
+                            </section>
+
+                    <section id="voting-info">
+                        <h2 class="wp-block-heading has-text-align-center">Election Q&As</h2>
+                        <div class ="bento-container grid grid-cols-12 grid-flow-dense gap-4">
+                            <section class="bento-section bento-section-primary ring col-span-full md:col-span-6 xl:col-span-6 xl:row-span-3">
                                 <div class="bento-image-container">
-                                    <img srcset="" width="468" height="376">
+                                    <img srcset="https://wisconsinwatch.org/wp-content/uploads/2024/11/Legislative-Race-Results-1.jpg">
+                                    <figcaption><span>Jennifer Taylor, left, votes during Election Day on Nov. 5, 2024, at Madison East High School in Madison, Wis. (Joe Timmerman / Wisconsin Watch)</span></figcaption>
+                                </div>
+                                <div class="bento-body">
+                                    <h3 class="wp-block-heading has-text-align-center"><strong>Who can vote?</strong></h3>
+                                    <p>To register to vote in Wisconsin, you must meet the following <a href="https://www.cityofmadison.com/clerk/elections-voting/voter-registration/eligibility-to-vote">requirements</a>:</p>
+                                    <ul class="wp-block-list">
+                                        <li>Be a United States citizen.</li>
+                                        <li>Be age 18 or older by Election Day.</li>
+                                        <li>Have resided at your current address for at least 28 days before Election Day.</li>
+                                        <li>If you've been convicted of a felony, you must have completed your sentence, including probation, parole or extended supervision.</li>
+                                        <li>Have not been adjudicated incompetent to vote by a judge.</li>
+                                    </ul>
                                 </div>
                             </section>
 
-                            <section class="bento-section bento-section-primary ring col-span-full md:col-span-6 xl:col-span-6 xl:row-span-2">
+                            <section class="bento-section bento-section-primary ring col-span-full md:col-span-6 xl:col-span-6 xl:row-span-3">
                                 <div class="bento-body">
-                                    <h2 class="wp-block-heading has-text-align-center"><strong>Can I vote by mail?</strong></h2>
+                                    <h3 class="wp-block-heading has-text-align-center"><strong>How do you check if you're registered?</strong></h3>
+                                    <p>You can check your registration status on the MyVote Wisconsin website <a href="https://myvote.wi.gov/en-us/Register-To-Vote">here</a> by entering your name and date of birth.</p>
+                                    <p>The deadline to register <a href="https://myvote.wi.gov/en-us/Register-To-Vote">online</a> or by mail is Oct. 16. The deadline to register in person at your municipal clerk's office is Nov. 1 at 5 p.m. If you haven't registered to vote before Nov. 5, don't panic. You can register to vote in person at your polling place on Election Day. You'll just need to bring an <a href="https://myvote.wi.gov/Portals/0/Documents/AcceptablePhotoIDs.pdf?ver=vS9TnMVULlI9Yi0mGe-P0g%3D%3D">accepted form of ID</a> and <a href="https://myvote.wi.gov/Portals/0/Documents/ProofOfResidence.pdf?ver=vS9TnMVULlI9Yi0mGe-P0g%3d%3d">proof of residence</a> (and meet the requirements listed above).</p>
+                                </div>
+                                <div class="bento-image-container">
+                                    <img srcset="https://wisconsinwatch.org/wp-content/uploads/2024/11/20241105-General-Election-Voting-Timmerman-44.jpg">
+                                    <figcaption><span>Stephanie Rushing, Milwaukee Election Commission election services coordinator, sorts through rejected absentee ballots on Election Day, Nov. 5, 2024, at Milwaukee Central Count at the Baird Center in Milwaukee. (Joe Timmerman / Wisconsin Watch)</span></figcaption>
+                                </div>
+                            </section>
+
+                            <section class="bento-section bento-section-primary ring col-span-full md:col-span-12 xl:col-span-8 xl:row-span-2">
+                                <div class="bento-body">
+                                    <h3 class="wp-block-heading has-text-align-center"><strong>Can I vote by mail?</strong></h3>
                                     <p>Yes. Wisconsin voters don't need a reason to vote by mail/be an absentee voter. Every registered Wisconsin voter has the ability to request an absentee ballot by mail. You can request an absentee ballot on MyVote Wisconsin <a href="https://myvote.wi.gov/en-us/Vote-Absentee-By-Mail">here</a>.</p>
                                     <p>Once you've submitted your request for an absentee ballot, you can track your ballot <a href="https://myvote.wi.gov/en-us/Track-My-Ballot">here</a>.</p>
                                     <p>Before you begin filling out your absentee ballot, make sure you have a witness who can verify that you filled out your own ballot. The witness needs to be an adult U.S. citizen who is not a candidate in the upcoming election. Once you've completed your ballot, place it in the certified envelope that comes with your absentee ballot. Seal and sign the certificate envelope and then have your witness sign the certificate and include the witness' address.</p>
                                     <p>The next step is to mail it back to your municipal clerk. The United States Postal Service recommends mailing your ballot back at least seven days before Election Day, according to the Wisconsin Elections Commission.</p>
                                     <p>If you're worried about your ballot being returned in time, you can deliver it to your municipal clerk's office or deliver it to your polling place on Election Day.</p>
                                 </div>
-                                <div class="bento-image-container">
-                                    <img srcset="" width="468" height="376">
+                            </section>
+
+                            <section class="bento-section bento-section-tertiary ring col-span-full md:col-span-12 xl:col-span-4 md:row-span-1">
+                                <div class="bento-body">
+                                    <h3 class="wp-block-heading has-text-align-center"><strong>How do I find my polling place?</strong></h3>
+                                    <p class="has-text-align-center">You can find your polling location by entering your address <a href="https://myvote.wi.gov/en-us/Find-My-Polling-Place">here</a>.</p>
                                 </div>
                             </section>
 
-                            <section class="bento-section bento-section-secondary ring col-span-full md:col-span-6 xl:col-span-3 xl:row-span-1">
+                            <section class="bento-section bento-section-secondary ring col-span-full md:col-span-12 xl:col-span-4 xl:row-span-1">
                                 <div class="bento-body">
-                                    <h2 class="wp-block-heading has-text-align-center"><strong>Can I put my absentee ballot in a ballot drop box?</strong></h2>
+                                    <h3 class="wp-block-heading has-text-align-center"><strong>Can I put my absentee ballot in a ballot drop box?</strong></h3>
                                     <p>Yes. The Wisconsin Supreme Court recently <a href="https://wisconsinwatch.org/2024/07/wisconsin-supreme-court-allows-expanded-use-of-ballot-drop-boxes/">ruled</a> that Wisconsin communities can once again use drop boxes to collect absentee ballots. However, the use of drop boxes is not required, so it's up to your municipal clerk whether they are available in your community or not.</p>
-                                </div>
-                                <div class="bento-image-container">
-                                    <img srcset="" width="468" height="376">
                                 </div>
                             </section>
 
@@ -669,19 +664,8 @@
                         <p>In the Milwaukee area, Republicans are hoping to help incumbent state Sen. Duey Stroebel, R-Saukville, <a href="https://wisconsinwatch.org/2024/09/wisconsin-milwaukee-senate-election-democrat-republican-stroebel-habush-sinykin/">survive a challenge from Democrat Jodi Habush Sinykin</a>. The race is one of a handful of state Senate seats that will set the field for races in 2026, in which Democrats will look to also flip control of the state Senate.</p>
                         <p>And those are just a few examples. Elections consequential to the daily lives of Wisconsin residents across the state are on the ballot.</p>
                     </details>
-
-                                        <h4 class="wp-block-heading has-text-align-center">Nov. 5 is Election Day.</h4>
-
-                    <h2 class="wp-block-heading has-text-align-center"><strong>Quick links</strong></h2>
-
-                    <div class="block-buttons is-horizontal is-content-justification-center is-layout-flex">
-                        <button class="election-button" on:click={() => navigate('#Links')}>Who's running?</button>
-                        <button class="election-button" on:click={() => navigate('https://wisconsinwatch.org/tag/election-2024/')}>Election news</button>
-                        <button class="election-button" on:click={() => navigate('#Ballot')}>Fact briefs</button>
-                        <button class="election-button" on:click={() => navigate('#Ask')}>Ask Wisconsin Watch</button>
-                    </div>
                     
-                    <!--Sample of a self populated list of stories-->
+                    <!--Self populated list of stories-->
 
                         <h2 class="wp-block-heading has-text-align-center" id="News">Latest election news from Wisconsin Watch</h2>
                             <ul class="wp-block-latest-posts__list is-grid columns-3 wp-block-latest-posts" id="latest-election-2024-news-and-resources">
@@ -690,8 +674,10 @@
                                 {/each}
                             </ul>
 
-                        <div class="wp-block-group">
-                            <h4 class="wp-block-heading">Credits</h4>
+                    <!--Credit section-->
+                        <div class="wp-block-group credits" style="padding-top: 1rem;">
+                            <h4 class="wp-block-heading has-text-align-center">Credits</h4>
+                            <p>Wisconsin Watch's voter guide is a team effort made possible by:</p>
                             <p>Reporters: </p>
                             <p>Editors: </p>
                         </div>

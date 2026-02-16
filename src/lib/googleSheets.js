@@ -18,7 +18,7 @@ export async function fetchCandidatesFromAPI(sheetName = 'Candidate') {
         const API_KEY = import.meta.env.VITE_GOOGLE_SHEETS_API_KEY;
         // Enclose sheet name in single quotes to handle spaces and special characters
         const range = `'${sheetName}'!A:Z`;
-        const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${encodeURIComponent(range)}?key=${API_KEY}`;
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}?key=${API_KEY}`;
         
         const response = await fetch(url);
         
@@ -122,7 +122,7 @@ export async function fetchRacesFromAPI(sheetName) {
         const API_KEY = import.meta.env.VITE_GOOGLE_SHEETS_API_KEY;
         // Enclose sheet name in single quotes to handle spaces and special characters
         const range = `'${sheetName}'!A:Z`;
-        const url = `https://sheets.googleapis.com/v4/spreadsheets/${RACES_SPREADSHEET_ID}/values/${encodeURIComponent(range)}?key=${API_KEY}`;
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${RACES_SPREADSHEET_ID}/values/${range}?key=${API_KEY}`;
         
         const response = await fetch(url);
         

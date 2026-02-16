@@ -5,13 +5,15 @@
  */
 
 /**
- * Geocode an address using our server-side API endpoint
+ * Geocode an address using Mapbox Geocoding API directly
  * @param {string} address - The address to geocode
+ * @param {string} mapboxToken - Mapbox access token
  * @returns {Promise<Object>} Object containing lat, lng, and formatted address
  */
-export async function geocodeAddress(address) {
-    // Use our server-side API endpoint instead of calling Mapbox directly
-    const url = `/api/geocode?query=${encodeURIComponent(address)}`;
+export async function geocodeAddress(address, mapboxToken) {
+    // Call Mapbox Geocoding API directly from client
+    const encodedAddress = encodeURIComponent(address);
+    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodedAddress}.json?access_token=${mapboxToken}&country=US&types=address&bbox=-92.889,42.491,-86.249,47.309&limit=1`;
 
     try {
         const response = await fetch(url);
@@ -133,7 +135,7 @@ export async function queryDistrictAtPoint(lat, lng, districtType, accessToken) 
  */
 export async function findDistrictsForAddress(address, accessToken) {
     // Geocode the address
-    const location = await geocodeAddress(address);
+    const location = await geocodeAddress(address, accessToken);
 
     // Query all districts in parallel using Tilequery API
     const [assemblyDistrict, senateDistrict, congressDistrict] = await Promise.all([

@@ -174,8 +174,8 @@
     <section id="primary" class="content-area">
         <main id="main" class="site-main" role="main">
             <div class="candidate-detail">
-                <button class="back-button" on:click={() => goto('/wisconsin-governor')}>← Back to Race</button>
-                <button class="back-button" style="margin-left: 1rem;" on:click={() => goto('/')}>← Back to Main Page</button>
+                <button class="back-button" on:click={() => goto(`${base}/wisconsin-governor`)}>← Back to Race</button>
+                <button class="back-button" style="margin-left: 1rem;" on:click={() => goto(`${base}/`)}>← Back to Main Page</button>
                 
                 {#if loading}
                     <div style="text-align: center; padding: 2rem;">

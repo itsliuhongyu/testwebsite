@@ -199,7 +199,7 @@
     function navigateToCandidate(candidateId) {
         if (race) {
             saveSourceRace('congress', race['race-id']);
-            goto(`/congress/candidate/${candidateId}`);
+            goto(`${base}/congress/candidate/${candidateId}`);
         }
     }
     
@@ -287,7 +287,7 @@
     <section id="primary" class="content-area">
         <main id="main" class="site-main" role="main">
             <div class="race-detail">
-                <button class="back-button" on:click={() => goto('/')}>← Back to Main Page</button>
+                <button class="back-button" on:click={() => goto(`${base}/`)}>← Back to Main Page</button>
                 
                 {#if loading}
                     <div class="loading-message">

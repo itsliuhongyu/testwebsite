@@ -394,7 +394,7 @@
         if (url.startsWith('http')) {
             window.location.href = url;
         } else {
-            goto(url);
+            goto(`${base}${url}`);
         }
     }
 
@@ -685,7 +685,7 @@
                                     
                                     <div class="district-results">
                                         {#if districtResults.raceIds?.assembly}
-                                            <a href="/assembly/{districtResults.raceIds.assembly}" class="district-card district-card-link">
+                                            <a href="{base}/assembly/{districtResults.raceIds.assembly}" class="district-card district-card-link">
                                                 <p class="district-number">
                                                     State Assembly {districtResults.districts.assembly ? `District ${districtResults.districts.assembly}` : 'Not found'}
                                                 </p>
@@ -701,7 +701,7 @@
                                         {/if}
 
                                         {#if districtResults.raceIds?.senate}
-                                            <a href="/senate/{districtResults.raceIds.senate}" class="district-card district-card-link">
+                                            <a href="{base}/senate/{districtResults.raceIds.senate}" class="district-card district-card-link">
                                                 <p class="district-number">
                                                     Senate {districtResults.districts.senate ? `District ${districtResults.districts.senate}` : 'Not found'}
                                                 </p>
@@ -717,7 +717,7 @@
                                         {/if}
 
                                         {#if districtResults.raceIds?.congress}
-                                            <a href="/congress/{districtResults.raceIds.congress}" class="district-card district-card-link">
+                                            <a href="{base}/congress/{districtResults.raceIds.congress}" class="district-card district-card-link">
                                                 <p class="district-number">
                                                    U.S. Congress {districtResults.districts.congress ? `District ${districtResults.districts.congress}` : 'Not found'}
                                                 </p>
@@ -748,17 +748,17 @@
                                 {/if}
                                 <div class="previous-results-buttons">
                                     {#if savedRaces.assembly}
-                                        <button class="previous-result-button" on:click={() => goto(`/assembly/${savedRaces.assembly}`)}>
+                                        <button class="previous-result-button" on:click={() => goto(`${base}/assembly/${savedRaces.assembly}`)}>
                                             State Assembly
                                         </button>
                                     {/if}
                                     {#if savedRaces.senate}
-                                        <button class="previous-result-button" on:click={() => goto(`/senate/${savedRaces.senate}`)}>
+                                        <button class="previous-result-button" on:click={() => goto(`${base}/senate/${savedRaces.senate}`)}>
                                             Senate
                                         </button>
                                     {/if}
                                     {#if savedRaces.congress}
-                                        <button class="previous-result-button" on:click={() => goto(`/congress/${savedRaces.congress}`)}>
+                                        <button class="previous-result-button" on:click={() => goto(`${base}/congress/${savedRaces.congress}`)}>
                                             U.S. Congress
                                         </button>
                                     {/if}

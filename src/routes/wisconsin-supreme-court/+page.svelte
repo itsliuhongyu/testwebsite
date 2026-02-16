@@ -191,7 +191,7 @@
     <section id="primary" class="content-area">
         <main id="main" class="site-main" role="main">
             <div class="race-detail">
-                <button class="back-button" on:click={() => goto('/')}>← Back to Main Page</button>
+                <button class="back-button" on:click={() => goto(`${base}/`)}>← Back to Main Page</button>
                 
                 {#if loading}
                     <div class="loading-message">
@@ -210,7 +210,7 @@
                         <h2>Candidates</h2>
                         <div class="candidates-grid">
                             {#each candidates as candidate}
-                                <a href="/wisconsin-supreme-court/{candidate.id}" class="candidate-card">
+                                <a href="{base}/wisconsin-supreme-court/{candidate.id}" class="candidate-card">
                                     {#if candidate.image}
                                         <img src={candidate.image} alt={candidate.name} class="candidate-photo" />
                                     {:else}

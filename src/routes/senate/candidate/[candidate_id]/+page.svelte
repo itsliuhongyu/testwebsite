@@ -138,13 +138,13 @@
         const sourceRace = loadSourceRace();
         if (sourceRace && sourceRace.raceType === 'senate') {
             clearSourceRace();
-            goto(`/senate/${sourceRace.raceId}`);
+            goto(`${base}/senate/${sourceRace.raceId}`);
         } else if (raceId) {
             clearSourceRace();
-            goto(`/senate/${raceId}`);
+            goto(`${base}/senate/${raceId}`);
         } else {
             clearSourceRace();
-            goto('/');
+            goto(`${base}/`);
         }
     }
     
@@ -219,7 +219,7 @@
                 {#if raceId}
                     <button class="back-button" on:click={returnToRace}>← Back to Race</button>
                 {/if}
-                <button class="back-button" style="margin-left: 1rem;" on:click={() => goto('/')}>← Back to Main Page</button>
+                <button class="back-button" style="margin-left: 1rem;" on:click={() => goto(`${base}/`)}>← Back to Main Page</button>
                 
                 {#if loading}
                     <div style="text-align: center; padding: 2rem;">

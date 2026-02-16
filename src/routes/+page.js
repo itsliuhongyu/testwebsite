@@ -1,5 +1,7 @@
-// Disable prerendering since we need server-side data for API keys
-export const prerender = false;
-
-// Enable client-side rendering
-export const csr = true;
+/** @type {import('./$types').PageLoad} */
+export async function load() {
+	return {
+		stories: [],
+		mapboxToken: import.meta.env.VITE_MAPBOX_ACCESS_TOKEN || ''
+	};
+}

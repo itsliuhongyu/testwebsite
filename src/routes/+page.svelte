@@ -217,6 +217,126 @@
         flex-wrap: wrap;
     }
 
+    .calendars-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .calendar {
+        background: white;
+        border: 2px solid #3090c9;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 12px rgba(48, 144, 201, 0.1);
+        position: relative;
+        overflow-x: clip;
+        overflow-y: visible;
+        width: 100%;
+        box-sizing: border-box;
+        min-width: 0;
+    }
+
+    .calendar-header {
+        text-align: center;
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #3090c9;
+    }
+
+    .calendar-header h4 {
+        margin: 0;
+        color: #3090c9;
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 0.5rem;
+    }
+
+    .calendar-day-header {
+        text-align: center;
+        font-weight: 600;
+        color: #233166;
+        padding: 0.5rem 0;
+        font-size: 0.85rem;
+    }
+
+    .calendar-day {
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        color: #333;
+        position: relative;
+        transition: all 0.2s ease;
+    }
+
+    .calendar-day.empty {
+        visibility: hidden;
+    }
+
+    .calendar-day.highlighted {
+        background: #3090c9;
+        color: white;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 2px 8px #3090c9;
+    }
+
+    .calendar-day.highlighted:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px #233166;
+        background: #233166;
+        transition: all 0.2s ease;
+    }
+
+    .calendar-tooltip {
+        position: absolute;
+        bottom: calc(100% + 0.5rem);
+        left: 50%;
+        transform: translateX(-50%);
+        background: #233166;
+        color: white;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+        z-index: 1000;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        width: max-content;
+        max-width: clamp(200px, 80%, 350px);
+        white-space: normal;
+        text-align: center;
+        line-height: 1.5;
+    }
+
+    .calendar-tooltip::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 6px solid transparent;
+        border-top-color: #233166;
+    }
+
+    .calendar-day.highlighted:hover .calendar-tooltip {
+        opacity: 1;
+    }
+
     @media (max-width: 768px) {
         .search-box {
             flex-direction: column;
@@ -228,6 +348,33 @@
 
         .previous-results-buttons {
             gap: 0.5rem;
+        }
+
+        .calendars-container {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .calendar {
+            padding: 1rem;
+        }
+
+        .calendar-grid {
+            gap: 0.25rem;
+        }
+
+        .calendar-day {
+            font-size: 0.85rem;
+        }
+
+        .calendar-header h4 {
+            font-size: 1.25rem;
+        }
+
+        .calendar-tooltip {
+            max-width: clamp(150px, 85vw, 280px);
+            font-size: 0.75rem;
+            padding: 0.5rem 0.75rem;
         }
     }
 </style>
@@ -265,6 +412,48 @@
     // Saved races from localStorage
     let savedRaces = null;
 
+    // Key dates for the calendar
+    const keyDates = {
+        '10-22': 'Early in-person voting begins (availability varies by municipality)',
+        '10-31': 'Last day to request an absentee ballot',
+        '11-03': 'Last day of early in-person voting (availability varies by municipality)',
+        '11-05': 'Election Day: Polls are open from 7 a.m. to 8 p.m. (Absentee ballots must be returned by 8 p.m.)'
+    };
+
+    function generateCalendar(month, year) {
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        const daysInMonth = lastDay.getDate();
+        const startingDayOfWeek = firstDay.getDay();
+        
+        const days = [];
+        
+        // Add empty cells for days before the month starts
+        for (let i = 0; i < startingDayOfWeek; i++) {
+            days.push({ day: null, isEmpty: true });
+        }
+        
+        // Add actual days
+        for (let day = 1; day <= daysInMonth; day++) {
+            const monthStr = String(month + 1).padStart(2, '0');
+            const dayStr = String(day).padStart(2, '0');
+            const dateKey = `${monthStr}-${dayStr}`;
+            const isHighlighted = keyDates.hasOwnProperty(dateKey);
+            
+            days.push({
+                day,
+                isEmpty: false,
+                isHighlighted,
+                tooltip: isHighlighted ? keyDates[dateKey] : null
+            });
+        }
+        
+        return days;
+    }
+
+    const octoberDays = generateCalendar(9, 2026); // October = month 9 (0-indexed)
+    const novemberDays = generateCalendar(10, 2026); // November = month 10
+
     async function fetchSuggestions(query) {
         if (query.length < 10) {
             suggestions = [];
@@ -273,14 +462,16 @@
         }
 
         try {
-            // Use our server-side API endpoint instead of calling Mapbox directly
-            const url = `/api/geocode?query=${encodeURIComponent(query)}`;
+            // Call Mapbox API directly with the public token
+            const encodedQuery = encodeURIComponent(query);
+            const mapboxToken = data.mapboxToken;
+            const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodedQuery}.json?access_token=${mapboxToken}&country=US&limit=5&types=address&bbox=-92.889,42.491,-86.249,47.309`;
             
             const response = await fetch(url);
             if (response.ok) {
-                const data = await response.json();
+                const responseData = await response.json();
                 // Filter to only include Wisconsin addresses with complete street addresses
-                const wisconsinSuggestions = data.features.filter(feature => {
+                const wisconsinSuggestions = responseData.features.filter(feature => {
                     const context = feature.context || [];
                     const isInWisconsin = context.some(ctx => 
                         ctx.id.startsWith('region') && 
@@ -575,23 +766,66 @@
                         {/if}
                     </section>
 
-                            <section class="bento-section bento-section-secondary ring col-span-full md:col-span-6 xl:col-span-3 xl:row-span-2">
-                                <div class="bento-body">
-                                    <h3 class="wp-block-heading has-text-align-center" id="Keydates">Save the dates!</h3>
-                                    <ul class="wp-block-list">
-                                        <li><strong>Oct. 22:</strong> Early in-person voting begins (availability varies by municipality).</li>
-                                    </ul>
-                                    <ul class="wp-block-list">
-                                        <li><strong>Oct. 31:</strong> Last day to request an absentee ballot.</li>
-                                    </ul>
-                                    <ul class="wp-block-list">
-                                        <li><strong>Nov. 3:</strong> Last day of early in-person voting (availability varies by municipality).</li>
-                                    </ul>
-                                    <ul class="wp-block-list">
-                                        <li><strong>Nov. 5:</strong> Election Day: Polls are open from 7 a.m. to 8 p.m. (Absentee ballots must be returned by 8 p.m.)</li>
-                                    </ul>
+                    <section id="Keydates" style="margin: 3rem 0; overflow-x: hidden; width: 100%;">
+                        <h2 class="wp-block-heading has-text-align-center">Save these dates</h2>
+                        <p class="has-text-align-center"><small><i>Hover over highlighted dates for details</i></small></p>
+                        
+                        <div class="calendars-container">
+                            <!-- October 2026 Calendar -->
+                            <div class="calendar">
+                                <div class="calendar-header">
+                                    <h4>October 2026</h4>
                                 </div>
-                            </section>
+                                <div class="calendar-grid">
+                                    <div class="calendar-day-header">Sun</div>
+                                    <div class="calendar-day-header">Mon</div>
+                                    <div class="calendar-day-header">Tue</div>
+                                    <div class="calendar-day-header">Wed</div>
+                                    <div class="calendar-day-header">Thu</div>
+                                    <div class="calendar-day-header">Fri</div>
+                                    <div class="calendar-day-header">Sat</div>
+                                    
+                                    {#each octoberDays as dayInfo}
+                                        <div class="calendar-day {dayInfo.isEmpty ? 'empty' : ''} {dayInfo.isHighlighted ? 'highlighted' : ''}">
+                                            {#if !dayInfo.isEmpty}
+                                                {dayInfo.day}
+                                                {#if dayInfo.isHighlighted}
+                                                    <div class="calendar-tooltip">{dayInfo.tooltip}</div>
+                                                {/if}
+                                            {/if}
+                                        </div>
+                                    {/each}
+                                </div>
+                            </div>
+
+                            <!-- November 2026 Calendar -->
+                            <div class="calendar">
+                                <div class="calendar-header">
+                                    <h4>November 2026</h4>
+                                </div>
+                                <div class="calendar-grid">
+                                    <div class="calendar-day-header">Sun</div>
+                                    <div class="calendar-day-header">Mon</div>
+                                    <div class="calendar-day-header">Tue</div>
+                                    <div class="calendar-day-header">Wed</div>
+                                    <div class="calendar-day-header">Thu</div>
+                                    <div class="calendar-day-header">Fri</div>
+                                    <div class="calendar-day-header">Sat</div>
+                                    
+                                    {#each novemberDays as dayInfo}
+                                        <div class="calendar-day {dayInfo.isEmpty ? 'empty' : ''} {dayInfo.isHighlighted ? 'highlighted' : ''}">
+                                            {#if !dayInfo.isEmpty}
+                                                {dayInfo.day}
+                                                {#if dayInfo.isHighlighted}
+                                                    <div class="calendar-tooltip">{dayInfo.tooltip}</div>
+                                                {/if}
+                                            {/if}
+                                        </div>
+                                    {/each}
+                                </div>
+                            </div>
+                        </div>
+                    </section>
 
                     <section id="voting-info">
                         <h2 class="wp-block-heading has-text-align-center">Election Q&As</h2>

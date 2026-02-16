@@ -1,23 +1,23 @@
 /**
  * Google Sheets API Utility
  * 
- * This module provides functions to fetch data from Google Sheets using server-side API endpoints.
- * The API key is kept secure on the server.
+ * This module provides functions to fetch data from Google Sheets using the Google Sheets API directly from the client.
  */
 
 const SPREADSHEET_ID = '1H2tgXpnn7kt8KxvPkLSELsU5ohYFM0p2tvBQJi5M44E';
 const RACES_SPREADSHEET_ID = '1XecLv5Q-ZFr-5ijvhHqEiVbX6MPl61jJDmiS4GuG-SY';
 
 /**
- * Fetch candidate data from Google Sheets using our server-side API
+ * Fetch candidate data from Google Sheets using Google Sheets API directly
  * All candidates are now in a single "Candidate" tab
  * @param {string} sheetName - Deprecated parameter, kept for backward compatibility. Always uses "Candidate" tab.
  * @returns {Promise<Array>} Array of candidate objects
  */
 export async function fetchCandidatesFromAPI(sheetName = 'Candidate') {
     try {
-        // Use our server-side API endpoint
-        const url = `/api/sheets/candidates?sheet=Candidate`;
+        const API_KEY = import.meta.env.VITE_GOOGLE_SHEETS_API_KEY;
+        const range = `${sheetName}!A:Z`;
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}?key=${API_KEY}`;
         
         const response = await fetch(url);
         
@@ -25,7 +25,22 @@ export async function fetchCandidatesFromAPI(sheetName = 'Candidate') {
             throw new Error(`API error: ${response.status}`);
         }
         
-        const candidates = await response.json();
+        const data = await response.json();
+        const rows = data.values || [];
+        
+        if (rows.length === 0) {
+            return [];
+        }
+        
+        const headers = rows[0].map(h => h.toLowerCase().replace(/\s+/g, '_'));
+        const candidates = rows.slice(1).map((row, index) => {
+            const candidate = { id: index };
+            headers.forEach((header, i) => {
+                candidate[header] = row[i] || '';
+            });
+            return candidate;
+        });
+        
         return candidates;
         
     } catch (error) {
@@ -103,8 +118,9 @@ export async function getCandidateByCandidateId(candidateId, sheetName) {
  */
 export async function fetchRacesFromAPI(sheetName) {
     try {
-        // Use our server-side API endpoint
-        const url = `/api/sheets/races?sheet=${encodeURIComponent(sheetName)}`;
+        const API_KEY = import.meta.env.VITE_GOOGLE_SHEETS_API_KEY;
+        const range = `${sheetName}!A:Z`;
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${RACES_SPREADSHEET_ID}/values/${range}?key=${API_KEY}`;
         
         const response = await fetch(url);
         
@@ -112,7 +128,22 @@ export async function fetchRacesFromAPI(sheetName) {
             throw new Error(`API error: ${response.status}`);
         }
         
-        const races = await response.json();
+        const data = await response.json();
+        const rows = data.values || [];
+        
+        if (rows.length === 0) {
+            return [];
+        }
+        
+        const headers = rows[0].map(h => h.toLowerCase().replace(/\s+/g, '_'));
+        const races = rows.slice(1).map((row, index) => {
+            const race = { id: index };
+            headers.forEach((header, i) => {
+                race[header] = row[i] || '';
+            });
+            return race;
+        });
+        
         return races;
         
     } catch (error) {

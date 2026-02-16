@@ -139,55 +139,16 @@
 </svelte:head>
 
 <script>
+    import { onMount } from 'svelte';
     import { base } from '$app/paths';
     import { goto } from '$app/navigation';
     
     // Redirect to the Governor race detail page (district 1)
-    goto(`${base}/wisconsin-governor/1`);
+    onMount(() => {
+        goto(`${base}/wisconsin-governor/1`);
+    });
 </script>
 
-<div id="content" class="site-content" bind:this={contentElement}>
-    <section id="primary" class="content-area">
-        <main id="main" class="site-main" role="main">
-            <div class="race-detail">
-                <button class="back-button" on:click={() => goto(`${base}/`)}>← Back to Main Page</button>
-                
-                {#if loading}
-                    <div class="loading-message">
-                        <p>Loading candidates...</p>
-                    </div>
-                {:else if error}
-                    <div class="error-message">
-                        <p>Error: {error}</p>
-                    </div>
-                {:else}
-                    <div class="race-header">
-                        <h1>Wisconsin Governor Race</h1>
-                    </div>
-                    
-                    <div class="info-section">
-                        <h2>Candidates</h2>
-                        <div class="candidates-grid">
-                            {#each candidates as candidate}
-                                <a href="{base}/wisconsin-governor/{candidate.id}" class="candidate-card">
-                                    {#if candidate.image}
-                                        <img src={candidate.image} alt={candidate.name} class="candidate-photo" />
-                                    {:else}
-                                        <div class="candidate-placeholder">?</div>
-                                    {/if}
-                                    <div class="candidate-name">{candidate.name}</div>
-                                    {#if candidate.party}
-                                        <div class="candidate-party">{candidate.party}</div>
-                                    {/if}
-                                    {#if candidate.occupation}
-                                        <div class="candidate-occupation">{candidate.occupation}</div>
-                                    {/if}
-                                </a>
-                            {/each}
-                        </div>
-                    </div>
-                {/if}
-            </div>
-        </main>
-    </section>
+<div class="loading-message">
+    <p>Redirecting to Wisconsin Governor race...</p>
 </div>

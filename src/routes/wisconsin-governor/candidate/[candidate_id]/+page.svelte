@@ -123,19 +123,46 @@
     import { onMount, afterUpdate } from 'svelte';
     import { afterNavigate, goto } from '$app/navigation';
     import { page } from '$app/stores';
-    import { getCandidateById } from '$lib/googleSheets.js';
+    import { getCandidateByCandidateId, fetchRacesFromAPI } from '$lib/googleSheets.js';
+    import { loadSourceRace, clearSourceRace } from '$lib/raceStorage.js';
     
     let candidate = null;
     let loading = true;
     let error = null;
+    let raceId = null;
     
     let pymChild;
     let contentElement;
     
+    function returnToRace() {
+        const sourceRace = loadSourceRace();
+        if (sourceRace && sourceRace.raceType === 'governor') {
+            clearSourceRace();
+            goto(`${base}/governor/${sourceRace.raceId}`);
+        } else if (raceId) {
+            clearSourceRace();
+            goto(`${base}/governor/${raceId}`);
+        } else {
+            clearSourceRace();
+            goto(`${base}/`);
+        }
+    }
+    
     async function fetchCandidate() {
         try {
-            const candidateId = parseInt($page.params.id);
-            candidate = await getCandidateById(candidateId, 'Governor');
+            const candidateId = $page.params.candidate_id;
+            candidate = await getCandidateByCandidateId(candidateId, 'Governor');
+            
+            // Find the race that contains this candidate
+            if (candidateId) {
+                const races = await fetchRacesFromAPI('Governor');
+                const race = races.find(r => 
+                    r['candidate-1'] === candidateId || r['candidate-2'] === candidateId
+                );
+                if (race) {
+                    raceId = race['race-id'];
+                }
+            }
             
             if (!candidate) {
                 error = 'Candidate not found';
@@ -150,6 +177,12 @@
     }
     
     onMount(() => {
+        // Try to load from session storage first
+        const sourceRace = loadSourceRace();
+        if (sourceRace && sourceRace.raceType === 'governor') {
+            raceId = sourceRace.raceId;
+        }
+        
         fetchCandidate();
         
         if (typeof window !== 'undefined' && window.pym) {
@@ -174,7 +207,9 @@
     <section id="primary" class="content-area">
         <main id="main" class="site-main" role="main">
             <div class="candidate-detail">
-                <button class="back-button" on:click={() => goto(`${base}/wisconsin-governor`)}>← Back to Race</button>
+                {#if raceId}
+                    <button class="back-button" on:click={returnToRace}>← Back to Race</button>
+                {/if}
                 <button class="back-button" style="margin-left: 1rem;" on:click={() => goto(`${base}/`)}>← Back to Main Page</button>
                 
                 {#if loading}

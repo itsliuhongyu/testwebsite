@@ -140,47 +140,10 @@
 
 <script>
     import { base } from '$app/paths';
-    import { onMount, afterUpdate } from 'svelte';
-    import { afterNavigate, goto } from '$app/navigation';
-    import { fetchCandidatesFromAPI } from '$lib/googleSheets.js';
+    import { goto } from '$app/navigation';
     
-    let candidates = [];
-    let loading = true;
-    let error = null;
-    
-    let pymChild;
-    let contentElement;
-    
-    async function fetchCandidates() {
-        try {
-            candidates = await fetchCandidatesFromAPI('Governor');
-            loading = false;
-        } catch (e) {
-            error = e.message;
-            loading = false;
-            console.error('Error fetching candidates:', e);
-        }
-    }
-    
-    onMount(() => {
-        fetchCandidates();
-        
-        if (typeof window !== 'undefined' && window.pym) {
-            pymChild = new window.pym.Child();
-        }
-    });
-    
-    afterUpdate(() => {
-        if (pymChild && pymChild.sendHeight) {
-            pymChild.sendHeight();
-        }
-    });
-    
-    afterNavigate(() => {
-        if (pymChild && pymChild.sendHeight) {
-            pymChild.sendHeight();
-        }
-    });
+    // Redirect to the Governor race detail page (district 1)
+    goto(`${base}/wisconsin-governor/1`);
 </script>
 
 <div id="content" class="site-content" bind:this={contentElement}>

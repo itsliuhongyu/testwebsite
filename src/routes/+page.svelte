@@ -627,7 +627,6 @@
                     <h2 class="wp-block-heading has-text-align-center">National and statewide elections</h2>
 
                         <div class="block-buttons is-horizontal is-content-justification-center is-layout-flex">
-                            <button class="election-button" on:click={() => navigate('/wisconsin-supreme-court')}>Wisconsin Supreme Court</button>
                             <button class="election-button" on:click={() => navigate('/wisconsin-governor')}>Wisconsin Governor</button>
                         </div>
 

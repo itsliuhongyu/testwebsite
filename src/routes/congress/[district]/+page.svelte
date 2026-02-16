@@ -1,6 +1,6 @@
 <svelte:head>
     <link rel="stylesheet" href="https://wisconsinwatch.org/wp-content/themes/newspack-theme/style.css?ver=2.17.0">
-    <link rel="stylesheet" href="/css/wp-custom.css">
+    <link rel="stylesheet" href="{base}/css/wp-custom.css">
     <link href='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css' rel='stylesheet' />
     <script src='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js'></script>
     <script src="https://pym.nprapps.org/pym.v1.min.js"></script>
@@ -178,6 +178,7 @@
 </style>
 
 <script>
+    import { base } from '$app/paths';
     import { onMount, onDestroy } from 'svelte';
     import { page } from '$app/stores';
     import { goto } from '$app/navigation';

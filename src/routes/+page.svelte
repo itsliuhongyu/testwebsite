@@ -1,7 +1,7 @@
 <svelte:head>
 	<link rel="stylesheet" href="https://wisconsinwatch.org/wp-content/themes/newspack-theme/style.css?ver=2.17.0">
-	<link rel="stylesheet" href="/css/wp-custom.css">
-    <link rel="stylesheet" href="/css/bento-grid.css">
+	<link rel="stylesheet" href="{base}/css/wp-custom.css">
+    <link rel="stylesheet" href="{base}/css/bento-grid.css">
 	<link href='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css' rel='stylesheet' />
 	<script src='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js'></script>
 </svelte:head>
@@ -382,6 +382,7 @@
 <script>
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
+    import { base } from '$app/paths';
     import { findDistrictsForAddress } from '$lib/districtLookup.js';
     import { getRaceByDistrict } from '$lib/googleSheets.js';
     import { saveRacesToLocalStorage, loadRacesFromLocalStorage } from '$lib/raceStorage.js';

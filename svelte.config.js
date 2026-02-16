@@ -1,5 +1,7 @@
 import adapter from '@sveltejs/adapter-static';
 
+const dev = process.argv.includes('dev');
+
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	kit: {
@@ -10,6 +12,9 @@ const config = {
 			precompress: false,
 			strict: false
 		}),
+		paths: {
+			base: dev ? '' : '/testwebsite'
+		},
 		prerender: {
 			handleMissingId: 'warn',
 			handleUnseenRoutes: 'warn'

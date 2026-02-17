@@ -235,8 +235,7 @@
         padding: 1.5rem;
         box-shadow: 0 4px 12px rgba(48, 144, 201, 0.1);
         position: relative;
-        overflow-x: clip;
-        overflow-y: visible;
+        overflow: visible;
         width: 100%;
         box-sizing: border-box;
         min-width: 0;
@@ -302,10 +301,7 @@
     }
 
     .calendar-tooltip {
-        position: absolute;
-        bottom: calc(100% + 0.5rem);
-        left: 50%;
-        transform: translateX(-50%);
+        position: fixed;
         background: #233166;
         color: white;
         padding: 0.75rem 1rem;
@@ -317,7 +313,7 @@
         z-index: 1000;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         width: max-content;
-        max-width: clamp(200px, 80%, 350px);
+        max-width: min(350px, calc(100vw - 2rem));
         white-space: normal;
         text-align: center;
         line-height: 1.5;
@@ -326,11 +322,21 @@
     .calendar-tooltip::after {
         content: '';
         position: absolute;
+        border: 6px solid transparent;
+    }
+
+    .calendar-tooltip.tooltip-above::after {
         top: 100%;
         left: 50%;
         transform: translateX(-50%);
-        border: 6px solid transparent;
         border-top-color: #233166;
+    }
+
+    .calendar-tooltip.tooltip-below::after {
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border-bottom-color: #233166;
     }
 
     .calendar-day.highlighted:hover .calendar-tooltip {
@@ -372,7 +378,7 @@
         }
 
         .calendar-tooltip {
-            max-width: clamp(150px, 85vw, 280px);
+            max-width: min(280px, calc(100vw - 2rem));
             font-size: 0.75rem;
             padding: 0.5rem 0.75rem;
         }
@@ -612,7 +618,82 @@
         
         // Load saved races from localStorage
         savedRaces = loadRacesFromLocalStorage();
+
+        // Add tooltip positioning logic after a short delay to ensure DOM is ready
+        setTimeout(() => {
+            setupTooltipPositioning();
+        }, 100);
     });
+
+    function setupTooltipPositioning() {
+        // Get all highlighted calendar days
+        const highlightedDays = document.querySelectorAll('.calendar-day.highlighted');
+        
+        highlightedDays.forEach(day => {
+            const tooltip = day.querySelector('.calendar-tooltip');
+            if (!tooltip) return;
+
+            let isHovering = false;
+
+            day.addEventListener('mouseenter', () => {
+                isHovering = true;
+                positionTooltip(day, tooltip);
+            });
+
+            day.addEventListener('mouseleave', () => {
+                isHovering = false;
+            });
+
+            // Reposition tooltip on scroll
+            const handleScroll = () => {
+                if (isHovering) {
+                    positionTooltip(day, tooltip);
+                }
+            };
+
+            window.addEventListener('scroll', handleScroll, true);
+            
+            // Clean up on component destroy
+            day._scrollHandler = handleScroll;
+        });
+    }
+
+    function positionTooltip(dayElement, tooltip) {
+        const dayRect = dayElement.getBoundingClientRect();
+        const tooltipRect = tooltip.getBoundingClientRect();
+        
+        // Calculate initial position (centered above the day)
+        let tooltipLeft = dayRect.left + (dayRect.width / 2) - (tooltipRect.width / 2);
+        let tooltipTop = dayRect.top - tooltipRect.height - 12; // 12px gap
+        let positionClass = 'tooltip-above';
+        
+        // Check if tooltip would go off the top of the screen
+        if (tooltipTop < 10) {
+            // Position below instead
+            tooltipTop = dayRect.bottom + 12;
+            positionClass = 'tooltip-below';
+        }
+        
+        // Check if tooltip would go off the left edge
+        if (tooltipLeft < 10) {
+            tooltipLeft = 10;
+        }
+        
+        // Check if tooltip would go off the right edge
+        const tooltipRight = tooltipLeft + tooltipRect.width;
+        const viewportWidth = window.innerWidth;
+        if (tooltipRight > viewportWidth - 10) {
+            tooltipLeft = viewportWidth - tooltipRect.width - 10;
+        }
+        
+        // Apply positioning
+        tooltip.style.left = `${tooltipLeft}px`;
+        tooltip.style.top = `${tooltipTop}px`;
+        
+        // Update arrow direction class
+        tooltip.classList.remove('tooltip-above', 'tooltip-below');
+        tooltip.classList.add(positionClass);
+    }
 </script>
 
 <div id="content" class="site-content" bind:this={contentElement}>

@@ -2,12 +2,25 @@
 	import favicon from '$lib/assets/favicon.webp';
 	import stylizedBkg from '$lib/assets/stylized-bkg.png';
 	import { base } from '$app/paths';
+	import { onMount } from 'svelte';
+	import navMenu from '$lib/navMenu.js';
+	
 	let { children } = $props();
+	let menuOpen = $state(false);
+
+	function toggleMenu() {
+		menuOpen = !menuOpen;
+	}
+
+	onMount(() => {
+		navMenu.init();
+	});
 </script>
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
 	<link rel="stylesheet" href="{base}/css/wp-custom.css">
+	<link rel="stylesheet" href="{base}/css/drop-nav.css">
 </svelte:head>
 
 <header id="masthead" class="site-header hide-header-search">			
@@ -18,7 +31,10 @@
 				<div class="site-identity">			
 					<p class="site-description">Nonprofit, nonpartisan news about Wisconsin</p>
 				</div><!-- .site-identity -->
-			</div><!-- .site-branding -->	
+			</div><!-- .site-branding -->
+			<button class="menu-icon" onclick={toggleMenu} aria-label="Toggle menu">
+				<img src="{base}/graphics/menu.svg" alt="Menu" />
+			</button>
 		</div><!-- .wrapper -->
 	</div><!-- .middle-header-contain -->
 
@@ -84,6 +100,41 @@
 											</div><!-- .wrapper -->
 				</div><!-- .bottom-header-contain -->
 </header>
+
+<!-- Navigation Menu Slide-in Panel -->
+<div 
+	class="nav-menu-overlay" 
+	class:open={menuOpen} 
+	onclick={toggleMenu}
+	onkeydown={(e) => e.key === 'Enter' && toggleMenu()}
+	role="button"
+	tabindex="0"
+	aria-label="Close menu overlay"
+></div>
+<div id="nav-menu" class="nav-menu" class:open={menuOpen}>
+	<div class="nav-menu-header">
+		<h2>Search</h2>
+		<button class="close-btn" onclick={toggleMenu} aria-label="Close menu">✕</button>
+	</div>
+	
+	<div class="nav-menu-content">
+		<!-- Race Search Section -->
+		<div class="search-section">
+			<h3>Search for Race</h3>
+			<div class="search-input-group">
+				<select id="race-type-select" aria-label="Race type">
+					<option value="">Select race type...</option>
+				</select>
+			</div>
+			<div class="search-input-group" id="district-select-group" style="display: none;">
+				<select id="district-select" aria-label="District">
+					<option value="">Select district...</option>
+				</select>
+			</div>
+			<button id="race-search-btn" class="search-btn" style="display: none;">Go to Race</button>
+		</div>
+	</div>
+</div>
 
 <div style="min-height: 100vh; background-image: url('{stylizedBkg}'); background-size: contain; background-position: bottom center; background-repeat: no-repeat; background-attachment: scroll">
 	{@render children()}

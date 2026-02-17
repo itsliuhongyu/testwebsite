@@ -1,6 +1,6 @@
 <svelte:head>
-	<link rel="stylesheet" href="https://wisconsinwatch.org/wp-content/themes/newspack-theme/style.css?ver=2.17.0">
 	<link rel="stylesheet" href="{base}/css/wp-custom.css">
+	<link rel="stylesheet" href="https://wisconsinwatch.org/wp-content/themes/newspack-theme/style.css?ver=2.17.0">
 	<script src="https://pym.nprapps.org/pym.v1.min.js"></script>
 	<style>
 		.candidate-detail {

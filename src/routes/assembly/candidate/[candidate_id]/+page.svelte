@@ -63,21 +63,7 @@
 			color: #333;
 		}
 		
-		.back-button {
-			display: inline-block;
-			margin-bottom: 1rem;
-			padding: 0.75rem 1.5rem;
-			background-color: #0073aa;
-			color: white !important;
-			text-decoration: none;
-			border-radius: 4px;
-			transition: background-color 0.2s;
-		}
-		
-		.back-button:hover {
-			background-color: #005a87;
-		}
-		
+
 		.contact-links a {
 			display: inline-block;
 			margin-right: 1rem;
@@ -208,9 +194,9 @@
         <main id="main" class="site-main" role="main">
             <div class="candidate-detail">
                 {#if raceId}
-                    <button class="back-button" on:click={returnToRace}>← Back to Race</button>
+                    <button class="back-button" on:click={returnToRace}><img src="{base}/graphics/back.svg" alt="" style="height: 1em; width: 1em; margin-right: 0.5rem; vertical-align: -0.125em; display: inline-block;" /> This Race</button>
                 {/if}
-                <button class="back-button" style="margin-left: 1rem;" on:click={() => goto(`${base}/`)}>← Back to Main Page</button>
+                <button class="back-button" style="margin-left: 1rem;" on:click={() => goto(`${base}/`)}><img src="{base}/graphics/back.svg" alt="" style="height: 1em; width: 1em; margin-right: 0.5rem; vertical-align: -0.125em; display: inline-block;" /> Home</button>
                 
                 {#if loading}
                     <div style="text-align: center; padding: 2rem;">

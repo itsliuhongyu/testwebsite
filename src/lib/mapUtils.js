@@ -193,31 +193,110 @@ export async function initializeSingleDistrictMap(containerId, tilesetId, proper
                                 filter: ['==', ['get', 'FID'], districtNum]
                             });
                             
+                            console.log(`[MapUtils] Found ${features.length} features for district ${districtNum} in tileset ${tilesetId}`);
+                            
                             if (features.length > 0) {
+                                // Log first feature for debugging
+                                console.log('[MapUtils] First feature geometry type:', features[0].geometry.type);
+                                console.log('[MapUtils] First feature sample coordinates:', 
+                                    features[0].geometry.type === 'Polygon' 
+                                        ? features[0].geometry.coordinates[0]?.slice(0, 2)
+                                        : features[0].geometry.coordinates[0]?.[0]?.slice(0, 2)
+                                );
+                                
                                 const bounds = new mapboxgl.LngLatBounds();
+                                let validCoordsFound = false;
+                                
                                 features.forEach(feature => {
                                     if (feature.geometry.type === 'Polygon') {
-                                        feature.geometry.coordinates[0].forEach(coord => {
-                                            bounds.extend(coord);
+                                        feature.geometry.coordinates[0].forEach((coord, idx) => {
+                                            // Log first few coords for debugging
+                                            if (idx < 3) {
+                                                console.log(`[MapUtils] Polygon coord ${idx}:`, coord, 'isArray:', Array.isArray(coord), 'length:', coord?.length);
+                                            }
+                                            // Validate coordinates before extending
+                                            if (Array.isArray(coord) && coord.length >= 2 && 
+                                                !isNaN(coord[0]) && !isNaN(coord[1]) &&
+                                                isFinite(coord[0]) && isFinite(coord[1])) {
+                                                bounds.extend(coord);
+                                                validCoordsFound = true;
+                                            }
                                         });
                                     } else if (feature.geometry.type === 'MultiPolygon') {
                                         feature.geometry.coordinates.forEach(polygon => {
-                                            polygon[0].forEach(coord => {
-                                                bounds.extend(coord);
+                                            polygon[0].forEach((coord, idx) => {
+                                                // Log first few coords for debugging
+                                                if (idx < 3) {
+                                                    console.log(`[MapUtils] MultiPolygon coord ${idx}:`, coord, 'isArray:', Array.isArray(coord), 'length:', coord?.length);
+                                                }
+                                                // Validate coordinates before extending
+                                                if (Array.isArray(coord) && coord.length >= 2 && 
+                                                    !isNaN(coord[0]) && !isNaN(coord[1]) &&
+                                                    isFinite(coord[0]) && isFinite(coord[1])) {
+                                                    bounds.extend(coord);
+                                                    validCoordsFound = true;
+                                                }
                                             });
                                         });
                                     }
                                 });
-                                map.fitBounds(bounds, { padding: 40, animate: false });
+                                
+                                console.log('[MapUtils] validCoordsFound:', validCoordsFound);
+                                console.log('[MapUtils] bounds:', bounds);
+                                console.log('[MapUtils] bounds SW:', bounds.getSouthWest());
+                                console.log('[MapUtils] bounds NE:', bounds.getNorthEast());
+                                
+                                if (validCoordsFound) {
+                                    // Defer fitBounds to avoid calling it during idle event handler
+                                    // This prevents camera calculation issues that can cause NaN errors
+                                    setTimeout(() => {
+                                        try {
+                                            // Double-check map and container are in valid state
+                                            const container = map.getContainer();
+                                            const containerSize = { width: container.clientWidth, height: container.clientHeight };
+                                            console.log('[MapUtils] Container size:', containerSize);
+                                            console.log('[MapUtils] Map loaded:', map.loaded());
+                                            
+                                            if (containerSize.width > 0 && containerSize.height > 0) {
+                                                // Convert bounds to array format which is more reliable
+                                                const sw = bounds.getSouthWest();
+                                                const ne = bounds.getNorthEast();
+                                                const boundsArray = [[sw.lng, sw.lat], [ne.lng, ne.lat]];
+                                                console.log('[MapUtils] Fitting to bounds array:', boundsArray);
+                                                map.fitBounds(boundsArray, { padding: 40, animate: false });
+                                            } else {
+                                                console.error('[MapUtils] Invalid container size, cannot fit bounds');
+                                            }
+                                        } catch (err) {
+                                            console.error('[MapUtils] Error fitting bounds:', err);
+                                            console.error('[MapUtils] Bounds object:', bounds);
+                                        }
+                                    }, 0);
+                                } else {
+                                    console.warn(`[MapUtils] No valid coordinates found for district ${districtNum}, using Wisconsin bounds`);
+                                    setTimeout(() => {
+                                        map.fitBounds([
+                                            [-92.889, 42.491],
+                                            [-86.249, 47.309]
+                                        ], {
+                                            padding: 20,
+                                            animate: false
+                                        });
+                                    }, 0);
+                                }
                             } else {
+                                console.warn(`[MapUtils] No features found for district ${districtNum}, using Wisconsin bounds`);
                                 // Fallback to Wisconsin bounds if no features found
-                                map.fitBounds([
-                                    [-92.889, 42.491],
-                                    [-86.249, 47.309]
-                                ], {
-                                    padding: 20,
-                                    animate: false
-                                });
+                                // Defer fitBounds to avoid calling it during idle event handler
+                                setTimeout(() => {
+                                    map.fitBounds([
+                                        [-92.889, 42.491],
+                                        [-86.249, 47.309]
+                                    ], {
+                                        padding: 20,
+                                        animate: false
+                                    });
+                                }, 0);
                             }
                         });
                     }

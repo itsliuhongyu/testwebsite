@@ -1,6 +1,5 @@
 <svelte:head>
 	<link rel="stylesheet" href="https://wisconsinwatch.org/wp-content/themes/newspack-theme/style.css?ver=2.17.0">
-	<link rel="stylesheet" href="{base}/css/wp-custom.css">
     <link rel="stylesheet" href="{base}/css/bento-grid.css">
 	<link href='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css' rel='stylesheet' />
 	<script src='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js'></script>
@@ -33,7 +32,7 @@
         padding: 0.75rem 1rem;
         font-size: 1rem;
         border: 3px solid #3090c9;
-        border-radius: 4px;
+        border-radius: 50px;
         transition: border 0.2s, box-shadow 0.2s;
     }
 
@@ -259,6 +258,7 @@
         display: grid;
         grid-template-columns: repeat(7, 1fr);
         gap: 0.5rem;
+        width: 100%;
     }
 
     .calendar-day-header {
@@ -279,6 +279,8 @@
         color: #333;
         position: relative;
         transition: all 0.2s ease;
+        min-width: 0;
+        overflow: hidden;
     }
 
     .calendar-day.empty {
@@ -300,8 +302,20 @@
         transition: all 0.2s ease;
     }
 
+    .tooltip-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        pointer-events: none;
+    }
+
     .calendar-tooltip {
         position: fixed;
+        left: var(--tooltip-left, 50%);
+        top: var(--tooltip-top, 50%);
+        transform: translate(-50%, calc(-100% - 12px - 1em));
         background: #233166;
         color: white;
         padding: 0.75rem 1rem;
@@ -319,28 +333,45 @@
         line-height: 1.5;
     }
 
+    .calendar-tooltip.visible {
+        opacity: 1;
+    }
+
     .calendar-tooltip::after {
         content: '';
         position: absolute;
         border: 6px solid transparent;
-    }
-
-    .calendar-tooltip.tooltip-above::after {
-        top: 100%;
-        left: 50%;
+        bottom: -12px;
+        left: var(--arrow-left, 50%);
         transform: translateX(-50%);
         border-top-color: #233166;
     }
 
-    .calendar-tooltip.tooltip-below::after {
-        bottom: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-        border-bottom-color: #233166;
-    }
+    @media (max-width: 820px) {
+        .calendars-container {
+            padding: 0 0.5rem;
+            gap: 1.5rem;
+        }
 
-    .calendar-day.highlighted:hover .calendar-tooltip {
-        opacity: 1;
+        .calendar {
+            padding: 1rem;
+        }
+
+        .calendar-grid {
+            gap: 0.3rem;
+        }
+
+        .calendar-day {
+            font-size: 0.8rem;
+        }
+
+        .calendar-day-header {
+            font-size: 0.75rem;
+        }
+
+        .calendar-header h4 {
+            font-size: 1.3rem;
+        }
     }
 
     @media (max-width: 768px) {
@@ -359,28 +390,79 @@
         .calendars-container {
             grid-template-columns: 1fr;
             gap: 1.5rem;
+            padding: 0 0.5rem;
         }
 
         .calendar {
-            padding: 1rem;
+            padding: 0.75rem;
         }
 
         .calendar-grid {
-            gap: 0.25rem;
+            gap: 0.15rem;
         }
 
         .calendar-day {
-            font-size: 0.85rem;
+            font-size: 0.75rem;
+            border-radius: 4px;
+        }
+
+        .calendar-day-header {
+            font-size: 0.7rem;
+            padding: 0.35rem 0;
+        }
+
+        .calendar-header {
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
         }
 
         .calendar-header h4 {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
         }
 
         .calendar-tooltip {
             max-width: min(280px, calc(100vw - 2rem));
             font-size: 0.75rem;
             padding: 0.5rem 0.75rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .calendars-container {
+            padding: 0 0.25rem;
+        }
+
+        .calendar {
+            padding: 0.5rem;
+        }
+
+        .calendar-grid {
+            gap: 0.1rem;
+        }
+
+        .calendar-day {
+            font-size: 0.7rem;
+            border-radius: 3px;
+        }
+
+        .calendar-day-header {
+            font-size: 0.65rem;
+            padding: 0.25rem 0;
+        }
+
+        .calendar-header {
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.35rem;
+        }
+
+        .calendar-header h4 {
+            font-size: 1rem;
+        }
+
+        .calendar-tooltip {
+            max-width: calc(100vw - 1rem);
+            font-size: 0.7rem;
+            padding: 0.4rem 0.6rem;
         }
     }
 </style>
@@ -418,6 +500,13 @@
     
     // Saved races from localStorage
     let savedRaces = null;
+    
+    // Tooltip state
+    let currentTooltipText = '';
+    let tooltipVisible = false;
+    let tooltipLeft = '50%';
+    let tooltipTop = '50%';
+    let arrowLeft = '50%';
 
     // Key dates for the calendar
     const keyDates = {
@@ -630,69 +719,70 @@
         const highlightedDays = document.querySelectorAll('.calendar-day.highlighted');
         
         highlightedDays.forEach(day => {
-            const tooltip = day.querySelector('.calendar-tooltip');
-            if (!tooltip) return;
-
-            let isHovering = false;
-
-            day.addEventListener('mouseenter', () => {
-                isHovering = true;
-                positionTooltip(day, tooltip);
+            day.addEventListener('mouseenter', (e) => {
+                const tooltip = e.currentTarget.getAttribute('data-tooltip');
+                if (tooltip) {
+                    currentTooltipText = tooltip;
+                    tooltipVisible = true;
+                    
+                    // Calculate position based on cursor and hovered element
+                    positionTooltipAtCursor(e);
+                }
             });
 
             day.addEventListener('mouseleave', () => {
-                isHovering = false;
+                tooltipVisible = false;
+                currentTooltipText = '';
             });
-
-            // Reposition tooltip on scroll
-            const handleScroll = () => {
-                if (isHovering) {
-                    positionTooltip(day, tooltip);
-                }
-            };
-
-            window.addEventListener('scroll', handleScroll, true);
-            
-            // Clean up on component destroy
-            day._scrollHandler = handleScroll;
         });
     }
-
-    function positionTooltip(dayElement, tooltip) {
-        const dayRect = dayElement.getBoundingClientRect();
-        const tooltipRect = tooltip.getBoundingClientRect();
+    
+    function positionTooltipAtCursor(event) {
+        const tooltipElement = document.querySelector('.calendar-tooltip');
+        const section = document.querySelector('#Keydates');
         
-        // Calculate initial position (centered above the day)
-        let tooltipLeft = dayRect.left + (dayRect.width / 2) - (tooltipRect.width / 2);
-        let tooltipTop = dayRect.top - tooltipRect.height - 12; // 12px gap
-        let positionClass = 'tooltip-above';
+        if (!tooltipElement || !section) return;
         
-        // Check if tooltip would go off the top of the screen
-        if (tooltipTop < 10) {
-            // Position below instead
-            tooltipTop = dayRect.bottom + 12;
-            positionClass = 'tooltip-below';
-        }
+        // Get cursor position
+        const cursorX = event.clientX;
+        const cursorY = event.clientY;
         
-        // Check if tooltip would go off the left edge
-        if (tooltipLeft < 10) {
-            tooltipLeft = 10;
-        }
+        // Set initial position at cursor location
+        tooltipLeft = `${cursorX}px`;
+        tooltipTop = `${cursorY}px`;
         
-        // Check if tooltip would go off the right edge
-        const tooltipRight = tooltipLeft + tooltipRect.width;
-        const viewportWidth = window.innerWidth;
-        if (tooltipRight > viewportWidth - 10) {
-            tooltipLeft = viewportWidth - tooltipRect.width - 10;
-        }
-        
-        // Apply positioning
-        tooltip.style.left = `${tooltipLeft}px`;
-        tooltip.style.top = `${tooltipTop}px`;
-        
-        // Update arrow direction class
-        tooltip.classList.remove('tooltip-above', 'tooltip-below');
-        tooltip.classList.add(positionClass);
+        // Wait for tooltip to render with new content, then check for overflow
+        setTimeout(() => {
+            const tooltipRect = tooltipElement.getBoundingClientRect();
+            const sectionRect = section.getBoundingClientRect();
+            const tooltipWidth = tooltipRect.width;
+            const tooltipHalfWidth = tooltipWidth / 2;
+            
+            // Calculate desired center position (at cursor X)
+            let finalLeft = cursorX;
+            
+            // Section boundaries with padding
+            const sectionPadding = 16;
+            const minLeft = sectionRect.left + sectionPadding + tooltipHalfWidth;
+            const maxLeft = sectionRect.right - sectionPadding - tooltipHalfWidth;
+            
+            // Adjust if overflowing left or right
+            if (finalLeft < minLeft) {
+                finalLeft = minLeft;
+            } else if (finalLeft > maxLeft) {
+                finalLeft = maxLeft;
+            }
+            
+            tooltipLeft = `${finalLeft}px`;
+            
+            // Calculate arrow position
+            // Arrow should point to cursor position, offset from tooltip center
+            const arrowOffset = cursorX - finalLeft;
+            const arrowPosition = 50 + ((arrowOffset / tooltipWidth) * 100);
+            
+            // Clamp arrow to stay within tooltip
+            arrowLeft = `${Math.max(15, Math.min(85, arrowPosition))}%`;
+        }, 0);
     }
 </script>
 
@@ -748,6 +838,15 @@
                                     class="search-button"
                                 >
                                     {searching ? 'Searching...' : 'Search'}
+                                    {#if !searching}
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="height: 1em; width: 1em; margin-left: 0.5rem; vertical-align: middle; display: inline-block;">
+                                            <g>
+                                                <circle cx="8.4" cy="8.4" r="6.9" style="fill: #3091c9;"/>
+                                                <path d="M8.4,3c2.98,0,5.4,2.42,5.4,5.4s-2.42,5.4-5.4,5.4-5.4-2.42-5.4-5.4,2.42-5.4,5.4-5.4M8.4,0C3.76,0,0,3.76,0,8.4s3.76,8.4,8.4,8.4,8.4-3.76,8.4-8.4S13.04,0,8.4,0h0Z" style="fill: #fff;"/>
+                                            </g>
+                                            <line x1="24" y1="24" x2="14.08" y2="14.26" style="fill: none; stroke: #fff; stroke-miterlimit: 10; stroke-width: 3px;"/>
+                                        </svg>
+                                    {/if}
                                 </button>
                             </div>
                             <small><i>We do not save your data! Read our privacy policy <a href="https://wisconsinwatch.org/about/user-agreement-and-privacy-policy/">here</a> .</i></small> 
@@ -847,9 +946,17 @@
                         {/if}
                     </section>
 
-                    <section id="Keydates" style="margin: 3rem 0; overflow-x: hidden; width: 100%;">
+                    <section id="Keydates" style="margin: 0 0; overflow-x: hidden; width: 100%; position: relative;">
                         <h2 class="wp-block-heading has-text-align-center">Save these dates</h2>
                         <p class="has-text-align-center"><small><i>Hover over highlighted dates for details</i></small></p>
+                        
+                        <!-- Dedicated Tooltip Container -->
+                        <div class="tooltip-container">
+                            <div class="calendar-tooltip {tooltipVisible ? 'visible' : ''}" 
+                                 style="--tooltip-left: {tooltipLeft}; --tooltip-top: {tooltipTop}; --arrow-left: {arrowLeft};">
+                                {currentTooltipText}
+                            </div>
+                        </div>
                         
                         <div class="calendars-container">
                             <!-- October 2026 Calendar -->
@@ -867,12 +974,10 @@
                                     <div class="calendar-day-header">Sat</div>
                                     
                                     {#each octoberDays as dayInfo}
-                                        <div class="calendar-day {dayInfo.isEmpty ? 'empty' : ''} {dayInfo.isHighlighted ? 'highlighted' : ''}">
+                                        <div class="calendar-day {dayInfo.isEmpty ? 'empty' : ''} {dayInfo.isHighlighted ? 'highlighted' : ''}" 
+                                             data-tooltip="{dayInfo.isHighlighted ? dayInfo.tooltip : ''}">
                                             {#if !dayInfo.isEmpty}
                                                 {dayInfo.day}
-                                                {#if dayInfo.isHighlighted}
-                                                    <div class="calendar-tooltip">{dayInfo.tooltip}</div>
-                                                {/if}
                                             {/if}
                                         </div>
                                     {/each}
@@ -894,12 +999,10 @@
                                     <div class="calendar-day-header">Sat</div>
                                     
                                     {#each novemberDays as dayInfo}
-                                        <div class="calendar-day {dayInfo.isEmpty ? 'empty' : ''} {dayInfo.isHighlighted ? 'highlighted' : ''}">
+                                        <div class="calendar-day {dayInfo.isEmpty ? 'empty' : ''} {dayInfo.isHighlighted ? 'highlighted' : ''}" 
+                                             data-tooltip="{dayInfo.isHighlighted ? dayInfo.tooltip : ''}">
                                             {#if !dayInfo.isEmpty}
                                                 {dayInfo.day}
-                                                {#if dayInfo.isHighlighted}
-                                                    <div class="calendar-tooltip">{dayInfo.tooltip}</div>
-                                                {/if}
                                             {/if}
                                         </div>
                                     {/each}

@@ -9,19 +9,6 @@
 			padding: 2rem 1rem;
 		}
 		
-		.race-header {
-			text-align: center;
-			margin-bottom: 2rem;
-			padding: 2rem;
-			background-color: #f5f5f5;
-			border-radius: 8px;
-		}
-		
-		.race-header h1 {
-			margin: 0 0 0.5rem 0;
-			color: #0073aa;
-		}
-		
 		.info-section {
 			margin: 2rem 0;
 			background-color: white;
@@ -102,21 +89,6 @@
 			color: #777;
 			font-size: 0.95rem;
 			margin-top: 0.5rem;
-		}
-		
-		.back-button {
-			display: inline-block;
-			margin-bottom: 1rem;
-			padding: 0.75rem 1.5rem;
-			background-color: #0073aa;
-			color: white !important;
-			text-decoration: none;
-			border-radius: 4px;
-			transition: background-color 0.2s;
-		}
-		
-		.back-button:hover {
-			background-color: #005a87;
 		}
 		
 		.loading-message {

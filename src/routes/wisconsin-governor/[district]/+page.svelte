@@ -11,19 +11,6 @@
         padding: 2rem 1rem;
     }
     
-    .race-header {
-        text-align: center;
-        margin-bottom: 2rem;
-        padding: 2rem;
-        background-color: #f5f5f5;
-        border-radius: 8px;
-    }
-    
-    .race-header h1 {
-        margin: 0 0 0.5rem 0;
-        color: #0073aa;
-    }
-    
     .info-section {
         margin: 2rem 0;
         background-color: white;
@@ -97,24 +84,6 @@
         color: #666;
         font-size: 1rem;
         margin: 0.25rem 0;
-    }
-    
-    .back-button {
-        display: inline-block;
-        margin-bottom: 1rem;
-        padding: 0.75rem 1.5rem;
-        background-color: #0073aa;
-        color: white !important;
-        text-decoration: none;
-        border-radius: 4px;
-        border: none;
-        cursor: pointer;
-        font-size: 1rem;
-        transition: background-color 0.2s;
-    }
-    
-    .back-button:hover {
-        background-color: #005a87;
     }
     
     .loading-message, .error-message {
@@ -223,7 +192,7 @@
                 </div>
             {:else if race}
                 <div class="race-detail">
-                    <button class="back-button" on:click={() => goto(`${base}/`)}>← Back to Main Page</button>
+                    <button class="back-button" on:click={() => goto(`${base}/`)}><img src="{base}/graphics/back.svg" alt="" style="height: 1em; width: 1em; margin-right: 0.5rem; vertical-align: -0.125em; display: inline-block;" /> Home</button>
                     
                     <div class="race-header">
                         <h1>Wisconsin Governor Race</h1>

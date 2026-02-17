@@ -1,11 +1,13 @@
 <script>
 	import favicon from '$lib/assets/favicon.webp';
 	import stylizedBkg from '$lib/assets/stylized-bkg.png';
+	import { base } from '$app/paths';
 	let { children } = $props();
 </script>
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
+	<link rel="stylesheet" href="{base}/css/wp-custom.css">
 </svelte:head>
 
 <header id="masthead" class="site-header hide-header-search">			

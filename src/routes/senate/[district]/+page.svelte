@@ -13,39 +13,15 @@
         padding: 2rem 1rem;
     }
     
-    .race-header {
-        text-align: center;
-        margin-bottom: 2rem;
-        padding: 2rem;
-        background-color: #f5f5f5;
-        border-radius: 8px;
-    }
-    
     .district-map {
         width: 100%;
         height: 300px;
-        margin-top: 1.5rem;
-        border-radius: 4px;
-        overflow: hidden;
-    }
-    
-    .race-header h1 {
-        margin: 0 0 0.5rem 0;
-        color: #0073aa;
-    }
-    
-    .race-header .district-number {
-        font-weight: bold;
-        color: #333;
-        margin: 1rem 0;
-    }
-    
-    .info-section {
         margin: 2rem 0;
         background-color: white;
         border: 1px solid #ddd;
         border-radius: 8px;
         padding: 1.5rem;
+        overflow: hidden;
     }
     
     .info-section h2 {
@@ -139,21 +115,6 @@
         color: #333;
     }
     
-    .back-button {
-        display: inline-block;
-        margin-bottom: 1rem;
-        padding: 0.75rem 1.5rem;
-        background-color: #0073aa;
-        color: white !important;
-        text-decoration: none;
-        border-radius: 4px;
-        transition: background-color 0.2s;
-    }
-    
-    .back-button:hover {
-        background-color: #005a87;
-    }
-    
     .error-message {
         text-align: center;
         padding: 2rem;
@@ -239,6 +200,12 @@
         const accessToken = data.mapboxToken;
         if (!accessToken) return;
         
+        // Check if district-number exists and is valid
+        if (!race['district-number']) {
+            console.error('District number is missing from race data:', race);
+            return;
+        }
+        
         mapboxgl.accessToken = accessToken;
         
         districtMap = await initializeSingleDistrictMap(
@@ -286,7 +253,7 @@
     <section id="primary" class="content-area">
         <main id="main" class="site-main" role="main">
             <div class="race-detail">
-                <button class="back-button" on:click={() => goto(`${base}/`)}>← Back to Main Page</button>
+                <button class="back-button" on:click={() => goto(`${base}/`)}><img src="{base}/graphics/back.svg" alt="" style="height: 1em; width: 1em; margin-right: 0.5rem; vertical-align: -0.125em; display: inline-block;" /> Home</button>
                 
                 {#if loading}
                     <div class="loading-message">

@@ -145,14 +145,14 @@ button, summary, span, .calendar-tooltip {
 }
 
 .entry-content a {
-    color: #3090c9;
-    text-decoration: none;
-    transition: color 0.2s;
+    color: #3090c9 !important;
+    text-decoration: none !important;
+    transition: color 0.2s !important;
 }
 
-.entry-content a:hover {
-    color: #233166;
-    text-decoration: underline;
+.entry-content a:active, .entry-content a:hover {
+    color: #233166 !important;
+    text-decoration: underline !important;
 }
 
 .wp-block-heading {
@@ -171,9 +171,14 @@ button, summary, span, .calendar-tooltip {
     flex-wrap: wrap;
 }
 
+.back-button {
+    margin: 1rem;
+}
+
 .election-button,
 .search-button,
-.previous-result-button {
+.previous-result-button,
+.back-button {
     display: inline-block;
     padding: 0.75rem 1.5rem;
     font-size: 1rem;
@@ -181,21 +186,27 @@ button, summary, span, .calendar-tooltip {
     color: white !important;
     background-color: #3090c9;
     border: none;
-    border-radius: 4px;
+    border-radius: 50px;
     text-decoration: none;
     cursor: pointer;
-    transition: background-color 0.2s, transform 0.1s;
+    transition: all 0.15s ease;
+    box-shadow: 0px 6px 0px 0px #233166;
+    position: relative;
 }
 
 .election-button:hover,
 .search-button:hover:not(:disabled),
-.previous-result-button:hover {
+.previous-result-button:hover
+,.back-button:hover {
+    transform: translateY(6px);
+    box-shadow: 0px 0px 0px 0px #233166;
     background-color: #233166;
-    transform: translateY(-1px);
 }
 
 .election-button:active {
-    transform: translateY(0);
+    transform: translateY(6px);
+    box-shadow: 0px 0px 0px 0px #233166;
+    background-color: #233166;
 }
 
 .search-button:disabled {
@@ -210,6 +221,26 @@ button, summary, span, .calendar-tooltip {
 
 #masthead p, footer {
     font-family: 'Heebo', sans-serif;
+}
+
+.race-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 2rem;
+    background-color: #f0f8ff;
+    border-radius: 8px;
+}
+
+.race-header h1 {
+    margin: 0 0 0.5rem 0;
+    color: #0073aa;
+}
+
+.race-header .district-number {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #333;
+    margin: 1rem 0;
 }
 
 footer {

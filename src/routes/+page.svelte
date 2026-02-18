@@ -31,7 +31,7 @@
         flex: 1;
         padding: 0.75rem 1rem;
         font-size: 1rem;
-        border: 3px solid #3090c9;
+        border: 3px solid #0073aa;
         border-radius: 50px;
         transition: border 0.2s, box-shadow 0.2s;
     }
@@ -249,7 +249,6 @@
 
     .calendar-header h4 {
         margin: 0;
-        color: #3090c9;
         font-size: 1.5rem;
         font-weight: 700;
     }
@@ -789,9 +788,13 @@
 <div id="content" class="site-content" bind:this={contentElement}>
     <section id="primary" class="content-area">
         <main id="main" class="site-main" role="main">
-            <header class="entry-header">						
-				<h1 class="entry-title ">Wisconsin 2026 voter guide</h1>
-			</header>
+
+            <section class="hero">
+                <header class="entry-header">						
+                    <h1 class="entry-title ">Wisconsin 2026 voter guide TBD</h1>
+                </header>
+            </section>
+
             <div class="entry-content">
                 <div class="entry-content">
 		

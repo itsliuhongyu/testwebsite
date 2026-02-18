@@ -80,6 +80,11 @@ small, p, i, h1, h2, h3, h4, h5, h6, input {
     font-family: "Publico Roman","Georgia","serif";
 }
 
+h1, h2, h3, h4, h5, h6 {
+    color: #0073aa;
+}
+
+
 button, summary, span, .calendar-tooltip {
     font-family: 'Heebo', sans-serif;
 }

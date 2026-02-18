@@ -113,14 +113,14 @@
 ></div>
 <div id="nav-menu" class="nav-menu" class:open={menuOpen}>
 	<div class="nav-menu-header">
-		<h2>Search</h2>
+		<h2>Know your race?</h2>
 		<button class="close-btn" onclick={toggleMenu} aria-label="Close menu">✕</button>
 	</div>
 	
 	<div class="nav-menu-content">
 		<!-- Race Search Section -->
 		<div class="search-section">
-			<h3>Search for Race</h3>
+			<h3>Search for a race</h3>
 			<div class="search-input-group">
 				<select id="race-type-select" aria-label="Race type">
 					<option value="">Select race type...</option>

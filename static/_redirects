@@ -1,0 +1,5 @@
+# Rewrite root to /testwebsite
+/  /testwebsite/index.html  200
+
+# Handle all other paths
+/*  /testwebsite/:splat  200

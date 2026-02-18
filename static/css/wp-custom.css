@@ -68,7 +68,7 @@
 }
 
 body {
-    background-color: #f0f8ff;
+    background-color: #F3F6FA;
 }
 
 img {
@@ -85,7 +85,11 @@ div, small, p, i, h1, h2, h3, h4, h5, h6, input {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    color: #0073aa;
+    color: #233166;
+}
+
+div, small, p, i {
+    color: #1F2937;
 }
 
 
@@ -160,7 +164,7 @@ button, summary, span, .calendar-tooltip {
 }
 
 .entry-content a:active, .entry-content a:hover {
-    color: #233166 !important;
+    color: #2679AA !important;
     text-decoration: underline !important;
 }
 

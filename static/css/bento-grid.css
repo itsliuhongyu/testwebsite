@@ -618,9 +618,13 @@
   grid-auto-rows: minmax(150px, auto); /* This is the key! */
 }
 
+.bento-section {
+  background-color: #fff;
+}
+
 .ring {
-    border: 2px solid #3090c9;
-    border-radius: 8px;
+    border: 2px solid #D5E2EE;
+    border-radius: 50px;
     padding: 1.5rem;
     margin-top: 0;
 }

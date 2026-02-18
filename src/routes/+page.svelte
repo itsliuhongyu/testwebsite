@@ -12,10 +12,10 @@
     }
 
     #address-map {
-        border:#3090c9 2px solid;
-        border-radius: 8px;
+        border:#D5E2EE 2px solid;
+        border-radius: 50px;
         padding-top: 1rem;
-        padding-bottom: 1rem;
+        padding-bottom: 0rem;
         margin-top: 1rem;
         margin-bottom: 1rem;
     }
@@ -80,7 +80,7 @@
     }
 
     .suggestion-item:hover {
-        background-color: #f0f8ff;
+        background-color: #F3F6FA;
     }
 
     .error-message {
@@ -197,10 +197,11 @@
     }
 
     .previous-results-container {
-        background-color: #f0f8ff;
+        background-color: #EAF1F7;
         padding: 1rem;
         margin-top: 1.5rem;
         text-align: center;
+        border-radius: 50px;
     }
 
     .previous-results-buttons {
@@ -223,7 +224,7 @@
 
     .calendar {
         background: white;
-        border: 2px solid #3090c9;
+        border: 2px solid #D5E2EE;
         border-radius: 12px;
         padding: 1.5rem;
         box-shadow: 0 4px 12px rgba(48, 144, 201, 0.1);
@@ -283,11 +284,11 @@
     }
 
     .calendar-day.highlighted {
-        background: #3090c9;
+        background: #3090C9;
         color: white;
         font-weight: 800;
         cursor: pointer;
-        box-shadow: 0 2px 8px #3090c9;
+        box-shadow: 0 2px 8px #3090C9;
     }
 
     .calendar-day.highlighted:hover {

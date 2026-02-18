@@ -1,7 +1,7 @@
 <svelte:head>
+    <link rel="stylesheet" href="https://wisconsinwatch.org/wp-content/themes/newspack-theme/style.css?ver=2.17.0">
     <link rel="stylesheet" href="{base}/css/bento-grid.css">
 	<link href='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css' rel='stylesheet' />
-	<link rel="stylesheet" href="https://wisconsinwatch.org/wp-content/themes/newspack-theme/style.css?ver=2.17.0">
 	<script src='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js'></script>
 </svelte:head>
 
@@ -204,11 +204,6 @@
         text-align: center;
     }
 
-    .previous-results-container h3 {
-        color: #3090c9;
-        font-size: 1.25rem;
-    }
-
     .previous-results-buttons {
         display: flex;
         gap: 1rem;
@@ -269,6 +264,8 @@
     }
 
     .calendar-day {
+        font-family: 'Heebo', sans-serif;
+        font-weight: 500;
         aspect-ratio: 1;
         display: flex;
         align-items: center;
@@ -289,7 +286,7 @@
     .calendar-day.highlighted {
         background: #3090c9;
         color: white;
-        font-weight: 700;
+        font-weight: 800;
         cursor: pointer;
         box-shadow: 0 2px 8px #3090c9;
     }

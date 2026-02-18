@@ -11,22 +11,27 @@
     height: 300px;
     margin: 2rem 0;
     background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    border-radius: 50px;
     padding: 1.5rem;
     overflow: hidden;
+    box-shadow: 0 6px 16px rgba(35, 49, 102, 0.08);
 }
 
 .info-section {
+    border: #D5E2EE 2px solid;
+    box-shadow: 0 6px 16px rgba(35, 49, 102, 0.08);
     margin: 2rem 0;
     background-color: white;
     padding: 1rem;
     border-radius: 50px;
 }
 
+.info-section:first-of-type {
+    margin-top: 1rem !important;
+}
+
 .info-section h2 {
-    color: #0073aa;
-    border-bottom: 2px solid #0073aa;
+    border-bottom: #D5E2EE 2px solid;
     padding-bottom: 0.5rem;
     margin-top: 0;
 }
@@ -40,8 +45,8 @@
 
 .candidate-card {
     background-color: white;
-    border: 2px solid #0073aa;
-    border-radius: 8px;
+    border: 2px solid #D5E2EE;
+    border-radius: 50px;
     padding: 1.5rem;
     text-align: center;
     text-decoration: none;
@@ -143,7 +148,7 @@
     display: block;
     font-size: 1.1rem;
     font-weight: 600;
-    color: #0073aa;
+    color: #233166;
     text-decoration: none;
     margin-bottom: 0.5rem;
     transition: color 0.2s ease;

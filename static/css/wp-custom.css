@@ -244,14 +244,12 @@ button, summary, span, .calendar-tooltip {
 }
 
 .race-header h1 {
-    margin: 0 0 0.5rem 0;
-    color: #0073aa;
+    margin: 0;
 }
 
 .race-header .district-number {
-    font-size: 3rem;
     font-weight: bold;
-    color: #333;
+    color: #5C6B7A;
     margin: 1rem 0;
 }
 

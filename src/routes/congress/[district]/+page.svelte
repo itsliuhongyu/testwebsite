@@ -134,7 +134,7 @@
                 {:else if race}
                     <div class="race-header">
                         <h1>U.S. Congressional District</h1>
-                        <div class="district-number">District {race['district-number']}</div>
+                        <h2 class="district-number">District {race['district-number']}</h2>
                         <div id="district-map" class="district-map"></div>
                     </div>
                     

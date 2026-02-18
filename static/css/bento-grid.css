@@ -624,6 +624,7 @@
 
 .ring {
     border: 2px solid #D5E2EE;
+    box-shadow: 0 6px 16px rgba(35, 49, 102, 0.08);
     border-radius: 50px;
     padding: 1.5rem;
     margin-top: 0;

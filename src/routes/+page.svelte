@@ -13,6 +13,7 @@
 
     #address-map {
         border:#D5E2EE 2px solid;
+        box-shadow: 0 6px 16px rgba(35, 49, 102, 0.08);
         border-radius: 50px;
         padding-top: 1rem;
         padding-bottom: 0rem;
@@ -227,7 +228,7 @@
         border: 2px solid #D5E2EE;
         border-radius: 12px;
         padding: 1.5rem;
-        box-shadow: 0 4px 12px rgba(48, 144, 201, 0.1);
+        box-shadow: 0 6px 16px rgba(35, 49, 102, 0.08);
         position: relative;
         overflow: visible;
         width: 100%;

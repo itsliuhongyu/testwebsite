@@ -18,12 +18,14 @@
 }
 
 .info-section {
-    border: #D5E2EE 2px solid;
     box-shadow: 0 6px 16px rgba(35, 49, 102, 0.08);
     margin: 2rem 0;
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     padding: 1rem;
     border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .info-section:first-of-type {
@@ -172,5 +174,8 @@
     
     .candidates-grid {
         grid-template-columns: 1fr;
+    }
+    .race-detail {
+        padding: 0;
     }
 }

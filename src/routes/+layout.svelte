@@ -123,12 +123,12 @@
 		<div class="search-section">
 			<h3>Search for a race</h3>
 			<div class="search-input-group">
-				<select id="race-type-select" aria-label="Race type">
+				<select id="race-type-select" aria-label="Race type" required>
 					<option value="">Select race type...</option>
 				</select>
 			</div>
 			<div class="search-input-group" id="district-select-group" style="display: none;">
-				<select id="district-select" aria-label="District">
+				<select id="district-select" aria-label="District" required>
 					<option value="">Select district...</option>
 				</select>
 			</div>

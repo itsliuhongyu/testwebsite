@@ -281,42 +281,32 @@
                     </div>
                 </div>
                 
-                {#if candidate.website_campaign || candidate.website_official || candidate.website_personal || candidate.email_campaign || candidate.email_official || candidate.phone_campaign}
+                {#if candidate.email || candidate.phone_number || candidate.municipality}
                     <div class="info-section">
                         <h2>Contact Information</h2>
                         <div class="info-grid">
-                            {#if candidate.email_campaign}
-                                <div class="info-label">Campaign Email:</div>
-                                <div class="info-value"><a href="mailto:{candidate.email_campaign}">{candidate.email_campaign}</a></div>
+                            {#if candidate.email}
+                                <div class="info-label">Email:</div>
+                                <div class="info-value"><a href="mailto:{candidate.email}">{candidate.email}</a></div>
                             {/if}
-                            {#if candidate.email_official}
-                                <div class="info-label">Official Email:</div>
-                                <div class="info-value"><a href="mailto:{candidate.email_official}">{candidate.email_official}</a></div>
+                            {#if candidate.phone_number}
+                                <div class="info-label">Phone:</div>
+                                <div class="info-value">{candidate.phone_number}</div>
                             {/if}
-                            {#if candidate.phone_campaign}
-                                <div class="info-label">Campaign Phone:</div>
-                                <div class="info-value">{candidate.phone_campaign}</div>
-                            {/if}
-                            {#if candidate.address_campaign}
-                                <div class="info-label">Campaign Address:</div>
-                                <div class="info-value">{candidate.address_campaign}</div>
+                            {#if candidate.municipality}
+                                <div class="info-label">Location:</div>
+                                <div class="info-value">{candidate.municipality}</div>
                             {/if}
                         </div>
                     </div>
                 {/if}
                 
-                {#if candidate.website_campaign || candidate.website_official || candidate.website_personal || candidate.facebook_campaign || candidate.x_campaign || candidate.instagram_campaign}
+                {#if candidate.website || candidate.facebook_campaign || candidate.x_campaign || candidate.instagram_campaign}
                     <div class="info-section">
                         <h2>Online Presence</h2>
                         <div class="contact-links">
-                            {#if candidate.website_campaign}
-                                <a href={candidate.website_campaign} target="_blank" rel="noopener noreferrer">Campaign Website →</a>
-                            {/if}
-                            {#if candidate.website_official}
-                                <a href={candidate.website_official} target="_blank" rel="noopener noreferrer">Official Website →</a>
-                            {/if}
-                            {#if candidate.website_personal}
-                                <a href={candidate.website_personal} target="_blank" rel="noopener noreferrer">Personal Website →</a>
+                            {#if candidate.website}
+                                <a href={candidate.website} target="_blank" rel="noopener noreferrer">Website →</a>
                             {/if}
                             {#if candidate.facebook_campaign}
                                 <a href={candidate.facebook_campaign} target="_blank" rel="noopener noreferrer">Facebook →</a>

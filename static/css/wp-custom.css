@@ -160,7 +160,7 @@ button, summary, span, .calendar-tooltip {
 .entry-content a {
     color: #3090c9 !important;
     text-decoration: none !important;
-    transition: color 0.2s !important;
+    transition: all 0.2s !important;
 }
 
 .entry-content a:active, .entry-content a:hover {
@@ -260,10 +260,6 @@ footer {
 @media (min-width: 782px) {
     .wp-block-heading {
         scroll-margin-top: 170px;
-    }
-
-    .site-content {
-        padding-bottom: 10em !important;
     }
 }
 

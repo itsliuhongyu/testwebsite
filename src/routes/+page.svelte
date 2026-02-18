@@ -33,7 +33,7 @@
         font-size: 1rem;
         border: 3px solid #0073aa;
         border-radius: 50px;
-        transition: border 0.2s, box-shadow 0.2s;
+        transition: all 0.2s;
     }
 
     .address-input:hover, .address-input:focus {
@@ -210,6 +210,7 @@
         gap: 1rem;
         justify-content: center;
         flex-wrap: wrap;
+        margin-bottom: 1em;
     }
 
     .calendars-container {
@@ -399,12 +400,12 @@
         }
 
         .calendar-day {
-            font-size: 0.75rem;
+            font-size: 1rem;
             border-radius: 4px;
         }
 
         .calendar-day-header {
-            font-size: 0.7rem;
+            font-size: 1.25rem;
             padding: 0.35rem 0;
         }
 
@@ -414,7 +415,7 @@
         }
 
         .calendar-header h4 {
-            font-size: 1.1rem;
+            font-size: 1.5rem;
         }
 
         .calendar-tooltip {
@@ -438,12 +439,12 @@
         }
 
         .calendar-day {
-            font-size: 0.7rem;
+            font-size: 0.8rem;
             border-radius: 3px;
         }
 
         .calendar-day-header {
-            font-size: 0.65rem;
+            font-size: 0.8rem;
             padding: 0.25rem 0;
         }
 

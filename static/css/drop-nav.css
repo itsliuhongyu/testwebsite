@@ -124,18 +124,41 @@
 .search-input-group select {
 	width: 100%;
 	padding: 12px;
-	border: 1px solid #ccc;
+	border: 3px solid #0073aa;
 	border-radius: 50px !important;
 	box-sizing: border-box;
 	font-family: 'Heebo', sans-serif;
 	box-sizing: border-box;
     margin-bottom: 0.5rem;
+	transition: all 0.2s;
+}
+
+.search-input-group select {
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%230073aa' d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right 15px center;
+	background-size: 20px;
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	padding-right: 45px;
+}
+
+.search-input-group select option[value=""] {
+	color: #5C6B7A;
+}
+
+.search-input-group select:invalid {
+	color: #5C6B7A;
 }
 
 .search-input-group input:focus,
-.search-input-group select:focus {
+.search-input-group input:hover,
+.search-input-group select:focus,
+.search-input-group select:hover {
 	outline: none;
-	border-color: #007bff;
+    border: 3px solid #233166;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* Search Buttons */

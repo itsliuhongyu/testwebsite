@@ -10,13 +10,14 @@
     import { onMount, onDestroy } from 'svelte';
     import { page } from '$app/stores';
     import { goto } from '$app/navigation';
-    import { getRaceByRaceId, getCandidateByCandidateId } from '$lib/googleSheets.js';
+    import { getRaceByRaceId, getCandidateByCandidateId, getStoriesByRaceId } from '$lib/googleSheets.js';
     import { saveSourceRace } from '$lib/raceStorage.js';
     
     export let data;
     
     let race = null;
     let candidates = [];
+    let stories = [];
     let loading = true;
     let error = null;
     let pymChild;
@@ -58,6 +59,9 @@
                     }
                 }
             }
+            
+            // Load stories for this race
+            stories = await getStoriesByRaceId(raceId);
             
             loading = false;
         } catch (err) {
@@ -126,6 +130,24 @@
                             {/each}
                         </div>
                     </div>
+                    
+                    {#if stories.length > 0}
+                        <div class="info-section">
+                            <h2>More stories here</h2>
+                            <div class="stories-list">
+                                {#each stories as story}
+                                    <div class="story-item">
+                                        <a href={story.url} target="_blank" rel="noopener noreferrer" class="story-headline">
+                                            {story.headline}
+                                        </a>
+                                        {#if story.publisher}
+                                            <div class="story-publisher">{story.publisher}</div>
+                                        {/if}
+                                    </div>
+                                {/each}
+                            </div>
+                        </div>
+                    {/if}
                 </div>
             {/if}
         </main>

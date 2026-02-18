@@ -6,6 +6,7 @@
 
 const SPREADSHEET_ID = '1H2tgXpnn7kt8KxvPkLSELsU5ohYFM0p2tvBQJi5M44E';
 const RACES_SPREADSHEET_ID = '1XecLv5Q-ZFr-5ijvhHqEiVbX6MPl61jJDmiS4GuG-SY';
+const STORIES_SPREADSHEET_ID = '19-BcTq-ueiZgxwCjEgTbxPSL2LBLyhjJAYmXQn3Bk-E';
 
 /**
  * Fetch candidate data from Google Sheets using Google Sheets API directly
@@ -174,5 +175,55 @@ export async function getRaceByDistrict(districtNumber, sheetName) {
 export async function getRaceByRaceId(raceId, sheetName) {
     const races = await fetchRacesFromAPI(sheetName);
     return races.find(r => r['race-id'] === raceId) || null;
+}
+
+/**
+ * Fetch stories from the stories spreadsheet
+ * @returns {Promise<Array>} Array of story objects
+ */
+export async function fetchStoriesFromAPI() {
+    try {
+        const API_KEY = import.meta.env.VITE_GOOGLE_SHEETS_API_KEY;
+        const range = `'Sheet1'!A:Z`;
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${STORIES_SPREADSHEET_ID}/values/${range}?key=${API_KEY}`;
+        
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            throw new Error(`API error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        const rows = data.values || [];
+        
+        if (rows.length === 0) {
+            return [];
+        }
+        
+        const headers = rows[0].map(h => h.toLowerCase().replace(/\s+/g, '_'));
+        const stories = rows.slice(1).map((row, index) => {
+            const story = { id: index };
+            headers.forEach((header, i) => {
+                story[header] = row[i] || '';
+            });
+            return story;
+        });
+        
+        return stories;
+        
+    } catch (error) {
+        console.error('Error fetching stories data:', error);
+        return [];
+    }
+}
+
+/**
+ * Get stories for a specific race
+ * @param {string} raceId - Race ID (e.g., 'go-1', 'se-1', 'as-1', 'co-1')
+ * @returns {Promise<Array>} Array of story objects for the race
+ */
+export async function getStoriesByRaceId(raceId) {
+    const stories = await fetchStoriesFromAPI();
+    return stories.filter(s => s.race_id === raceId);
 }
 

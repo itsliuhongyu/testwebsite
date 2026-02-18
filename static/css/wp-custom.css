@@ -67,6 +67,10 @@
     font-display: swap;
 }
 
+body {
+    background-color: #f0f8ff;
+}
+
 img {
     border-radius: 8px;
 }
@@ -76,7 +80,7 @@ section {
     padding-bottom: 0.5rem;
 }
 
-small, p, i, h1, h2, h3, h4, h5, h6, input {
+div, small, p, i, h1, h2, h3, h4, h5, h6, input {
     font-family: "Publico Roman","Georgia","serif";
 }
 
@@ -90,7 +94,7 @@ button, summary, span, .calendar-tooltip {
 }
 
 .site-header {
-    background: var(--newspack-theme-color-bg-body);
+    background-color: #ffffff;
     box-shadow: 0 2px 5px #0000001a;
     position: sticky;
     top: 0;
@@ -232,10 +236,7 @@ button, summary, span, .calendar-tooltip {
 
 .race-header {
     text-align: center;
-    margin-bottom: 2rem;
-    padding: 2rem;
-    background-color: #f0f8ff;
-    border-radius: 8px;
+    padding: 1rem;
 }
 
 .race-header h1 {

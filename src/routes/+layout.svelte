@@ -19,6 +19,7 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
+	<link rel="stylesheet" href="https://wisconsinwatch.org/wp-content/themes/newspack-theme/style.css?ver=2.17.0">
 	<link rel="stylesheet" href="{base}/css/wp-custom.css">
 	<link rel="stylesheet" href="{base}/css/drop-nav.css">
 </svelte:head>

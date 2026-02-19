@@ -134,8 +134,10 @@
                 {:else if race}
                     <div class="race-header">
                         <h1>U.S. Congressional District</h1>
-                        <h2 class="district-number">District {race['district-number']}</h2>
-                        <div id="district-map" class="district-map"></div>
+                        {#if race['district-number']}
+                            <h2 class="district-number">District {race['district-number']}</h2>
+                            <div id="district-map" class="district-map"></div>
+                        {/if}
                     </div>
                     
                     {#if candidates.length > 0}
@@ -144,18 +146,20 @@
                             <div class="candidates-grid">
                                 {#each candidates as candidate}
                                     <div class="candidate-card" role="button" tabindex="0" on:click={() => navigateToCandidate(candidate.candidate_id)} on:keydown={(e) => e.key === 'Enter' && navigateToCandidate(candidate.candidate_id)}>
+                                        <div class="candidate-icon">
+                                            <img src="{base}/graphics/plus.svg" alt="View details" />
+                                        </div>
                                         {#if candidate.candidate_id}
                                             <img src="{base}/graphics/candidates/{candidate.candidate_id}.jpg" alt={candidate.name} class="candidate-photo" />
                                         {:else}
                                             <div class="candidate-placeholder">?</div>
                                         {/if}
-                                        <div class="candidate-name">{candidate.name}</div>
-                                        {#if candidate.party}
-                                            <div class="candidate-party">{candidate.party}</div>
-                                        {/if}
-                                        {#if candidate.occupation}
-                                            <div class="candidate-occupation">{candidate.occupation}</div>
-                                        {/if}
+                                        <div class="candidate-info">
+                                            <p class="candidate-name">{candidate.name}</p>
+                                            {#if candidate.party}
+                                                <p class="candidate-party">{candidate.party}</p>
+                                            {/if}
+                                        </div>
                                     </div>
                                 {/each}
                             </div>

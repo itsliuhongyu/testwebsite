@@ -117,15 +117,20 @@
                         <div class="candidates-grid">
                             {#each candidates as candidate}
                                 <div class="candidate-card" on:click={() => navigateToCandidate(candidate.candidate_id)}>
+                                    <div class="candidate-icon">
+                                        <img src="{base}/graphics/plus.svg" alt="View details" />
+                                    </div>
                                     {#if candidate.candidate_id}
                                         <img src="{base}/graphics/candidates/{candidate.candidate_id}.jpg" alt={candidate.name} class="candidate-photo" />
                                     {:else}
                                         <div class="candidate-placeholder">?</div>
                                     {/if}
-                                    <div class="candidate-name">{candidate.name}</div>
-                                    {#if candidate.party}
-                                        <div class="candidate-party">{candidate.party}</div>
-                                    {/if}
+                                    <div class="candidate-info">
+                                        <p class="candidate-name">{candidate.name}</p>
+                                        {#if candidate.party}
+                                            <p class="candidate-party">{candidate.party}</p>
+                                        {/if}
+                                    </div>
                                 </div>
                             {/each}
                         </div>

@@ -797,15 +797,16 @@
             <div class="entry-content">
                 <div class="entry-content">
 		
-                    <h2 class="wp-block-heading has-text-align-center">National and statewide elections</h2>
+                    <h2 class="wp-block-heading has-text-align-center">Wisconsin elections</h2>
 
                         <div class="block-buttons is-horizontal is-content-justification-center is-layout-flex">
-                            <button class="election-button" on:click={() => navigate('/wisconsin-governor')}>Wisconsin Governor</button>
+                            <button class="election-button" on:click={() => navigate('/wisconsin-governor')}>Governor</button>
+                            <button class="election-button" on:click={() => navigate('/attorney-general')}>Attorney General</button>
                         </div>
 
                     <section id="address-map">
                         <h2 class="wp-block-heading has-text-align-center"><strong>Find Your Districts</strong></h2>
-                        <p class="has-text-align-center">Enter your Wisconsin address to find your Assembly, Senate, and Congressional districts.</p>
+                        <p class="has-text-align-center">Enter your Wisconsin address to find your <strong>Assembly</strong>, <strong>Senate</strong>, and <strong>Congressional</strong> districts.</p>
                         <div class="address-search-container">
                             <div class="search-box">
                                 <input 

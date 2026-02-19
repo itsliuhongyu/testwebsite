@@ -117,7 +117,7 @@
     
     // Redirect to the Governor race detail page (district 1)
     onMount(() => {
-        goto(`${base}/wisconsin-governor/1`);
+        goto(`${base}/race/governor/1`);
     });
 </script>
 

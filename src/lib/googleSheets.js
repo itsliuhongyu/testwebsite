@@ -227,3 +227,50 @@ export async function getStoriesByRaceId(raceId) {
     return stories.filter(s => s.race_id === raceId);
 }
 
+/**
+ * Fetch all sheet names from the Elections Running 2026 spreadsheet
+ * @returns {Promise<Array>} Array of sheet names
+ */
+export async function getAvailableSheets() {
+    try {
+        const API_KEY = import.meta.env.VITE_GOOGLE_SHEETS_API_KEY;
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${RACES_SPREADSHEET_ID}?key=${API_KEY}`;
+        
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            throw new Error(`API error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        const sheets = data.sheets || [];
+        
+        return sheets.map(sheet => sheet.properties.title);
+        
+    } catch (error) {
+        console.error('Error fetching available sheets:', error);
+        return [];
+    }
+}
+
+/**
+ * Get all statewide races (races without districts)
+ * Filters out district-based races like Assembly, Senate, and US Congress
+ * @returns {Promise<Array>} Array of statewide race objects
+ */
+export async function getStatewideRaces() {
+    const allSheets = await getAvailableSheets();
+    const districtRaces = ['Assembly', 'Senate', 'US Congress'];
+    
+    const statewideRaces = allSheets
+        .filter(sheet => !districtRaces.includes(sheet))
+        .map(sheet => ({
+            value: sheet,
+            label: sheet,
+            hasDistricts: false,
+            slug: sheet.toLowerCase().replace(/\s+/g, '-')
+        }));
+    
+    return statewideRaces;
+}
+

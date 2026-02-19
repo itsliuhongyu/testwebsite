@@ -97,6 +97,14 @@ button, summary, span, .calendar-tooltip {
     font-family: 'Heebo', sans-serif;
 }
 
+.block-buttons {
+    margin-bottom: 1rem;
+}
+
+.other-race {
+    font-size: 0.75rem !important;
+}
+
 .site-header {
     background-color: #ffffff;
     box-shadow: 0 2px 5px #0000001a;

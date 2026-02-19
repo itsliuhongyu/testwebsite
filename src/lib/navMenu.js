@@ -3,18 +3,18 @@
  * Handles race search functionality
  */
 
-import { fetchRacesFromAPI } from './googleSheets.js';
+import { fetchRacesFromAPI, getStatewideRaces } from './googleSheets.js';
 import { base } from '$app/paths';
 import { goto } from '$app/navigation';
 
-// Race type mapping - matches sheet names in the Elections Running 2026 spreadsheet
-const RACE_TYPES = [
+// District-based race types - these are constant
+const DISTRICT_RACES = [
 	{ value: 'Assembly', label: 'State Assembly', hasDistricts: true },
 	{ value: 'Senate', label: 'State Senate', hasDistricts: true },
-	{ value: 'US Congress', label: 'U.S. Congress', hasDistricts: true },
-	{ value: 'Governor', label: 'Governor', hasDistricts: false }
+	{ value: 'US Congress', label: 'U.S. Congress', hasDistricts: true }
 ];
 
+let RACE_TYPES = [...DISTRICT_RACES];
 let raceTypeData = {};
 
 /**
@@ -22,6 +22,10 @@ let raceTypeData = {};
  */
 async function init() {
 	try {
+		// Load statewide races dynamically
+		const statewideRaces = await getStatewideRaces();
+		RACE_TYPES = [...DISTRICT_RACES, ...statewideRaces];
+		
 		// Populate race type dropdown
 		populateRaceTypes();
 		
@@ -177,21 +181,24 @@ function handleRaceSearch() {
 	const selectedOption = raceTypeSelect.options[raceTypeSelect.selectedIndex];
 	const hasDistricts = selectedOption.dataset.hasDistricts === 'true';
 	
-	let racePath = '';
-	let raceId = '';
-	
-	// Determine race path
-	if (raceType === 'Assembly') {
-		racePath = 'assembly';
-	} else if (raceType === 'Senate') {
-		racePath = 'senate';
-	} else if (raceType === 'US Congress') {
-		racePath = 'congress';
-	} else if (raceType === 'Governor') {
-		racePath = 'wisconsin-governor';
-	} else {
+	if (!raceType) {
 		alert('Please select a race type');
 		return;
+	}
+	
+	let raceTypeParam = '';
+	let raceId = '';
+	
+	// Determine race type parameter - convert to slug format
+	if (raceType === 'Assembly') {
+		raceTypeParam = 'assembly';
+	} else if (raceType === 'Senate') {
+		raceTypeParam = 'senate';
+	} else if (raceType === 'US Congress') {
+		raceTypeParam = 'congress';
+	} else {
+		// For any statewide race, convert to slug format
+		raceTypeParam = raceType.toLowerCase().replace(/\s+/g, '-');
 	}
 	
 	// Get race-id if applicable
@@ -209,11 +216,11 @@ function handleRaceSearch() {
 			return;
 		}
 	} else {
-		// For statewide races like Governor, use appropriate race-id
-		raceId = 'go-1';
+		// For statewide races, use race-id = 1
+		raceId = '1';
 	}
 	
-	const url = `${base}/${racePath}/${raceId}`;
+	const url = `${base}/race/${raceTypeParam}/${raceId}`;
 	closeMenu();
 	goto(url);
 }

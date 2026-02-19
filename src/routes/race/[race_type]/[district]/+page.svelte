@@ -20,8 +20,8 @@
     
     export let data;
     
-    // Race type configuration
-    const RACE_CONFIG = {
+    // District-based race configurations (these have maps and happens every two years)
+    const DISTRICT_RACE_CONFIG = {
         assembly: {
             displayName: 'Wisconsin State Assembly',
             raceType: 'Assembly',
@@ -45,14 +45,28 @@
             mapTilesetId: 'wisconsinwatch.7scp33x9',
             mapSourceLayer: 'SEN2024',
             urlPath: 'senate'
-        },
-        governor: {
-            displayName: 'Wisconsin Governor Race',
-            raceType: 'Governor',
-            hasMap: false,
-            urlPath: 'wisconsin-governor'
         }
     };
+    
+    /**
+     * Generate configuration for a statewide race
+     * @param {string} raceTypeSlug - URL slug like 'governor', 'attorney-general'
+     * @returns {Object} Configuration object
+     */
+    function generateStatewideConfig(raceTypeSlug) {
+        // Convert slug to proper case for display
+        const displayName = raceTypeSlug
+            .split('-')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+        
+        return {
+            displayName: `Wisconsin ${displayName} Race`,
+            raceType: displayName,
+            hasMap: false,
+            urlPath: raceTypeSlug
+        };
+    }
     
     let race = null;
     let candidates = [];
@@ -64,14 +78,19 @@
     let districtMap = null;
     let config = null;
     let raceTypeParam = '';
+    let previousRaceType = '';
+    let previousDistrict = '';
     
     // Get race configuration based on URL parameter
     $: {
         raceTypeParam = $page.params.race_type;
-        config = RACE_CONFIG[raceTypeParam];
-        if (!config) {
-            error = 'Invalid race type';
-            loading = false;
+        
+        // Check if it's a district-based race first
+        if (DISTRICT_RACE_CONFIG[raceTypeParam]) {
+            config = DISTRICT_RACE_CONFIG[raceTypeParam];
+        } else {
+            // Assume it's a statewide race and generate config dynamically
+            config = generateStatewideConfig(raceTypeParam);
         }
     }
     
@@ -92,12 +111,24 @@
             
             let raceId = $page.params.district;
             
-            // Special handling for Governor race
-            if (raceTypeParam === 'governor' && raceId === '1') {
-                raceId = 'go-1';
+            // For statewide races, we might need to find the actual race-id
+            // Since we're passing '1' but the sheet might use 'go-1', 'ag-1', etc.
+            if (!config.hasMap && raceId === '1') {
+                // Fetch all races of this type and get the first one
+                // We'll use the raceType from config to query the right sheet
+                const races = await import('$lib/googleSheets.js').then(m => m.fetchRacesFromAPI(config.raceType));
+                if (races && races.length > 0) {
+                    // Use the first race's race-id
+                    race = races[0];
+                } else {
+                    error = 'Race not found';
+                    loading = false;
+                    return;
+                }
+            } else {
+                // For district races or if we have a specific race-id, use the normal flow
+                race = await getRaceByRaceId(raceId, config.raceType);
             }
-            
-            race = await getRaceByRaceId(raceId, config.raceType);
             
             if (!race) {
                 error = 'Race not found';
@@ -151,17 +182,39 @@
         );
     }
     
-    onMount(() => {
-        // Clear source race when arriving at race page
-        clearSourceRace();
+    // Reactive statement to reload data when URL params change
+    $: {
+        const currentRaceType = $page.params.race_type;
+        const currentDistrict = $page.params.district;
         
-        loadRaceData().then(() => {
-            // Initialize map after race data is loaded
-            if (config && config.hasMap) {
-                setTimeout(initializeDistrictMap, 100);
+        // Only reload if parameters actually changed
+        if (currentRaceType !== previousRaceType || currentDistrict !== previousDistrict) {
+            previousRaceType = currentRaceType;
+            previousDistrict = currentDistrict;
+            
+            // Clean up existing map before loading new data
+            if (districtMap) {
+                districtMap.remove();
+                districtMap = null;
             }
-        });
-        
+            
+            // Reset state
+            loading = true;
+            error = null;
+            
+            // Clear source race when arriving at race page
+            clearSourceRace();
+            
+            loadRaceData().then(() => {
+                // Initialize map after race data is loaded
+                if (config && config.hasMap) {
+                    setTimeout(initializeDistrictMap, 100);
+                }
+            });
+        }
+    }
+    
+    onMount(() => {
         // Initialize Pym.js for iframe embedding
         if (typeof window !== 'undefined' && window.pym) {
             pymChild = new window.pym.Child();

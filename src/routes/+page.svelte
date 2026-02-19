@@ -470,7 +470,7 @@
     import { goto } from '$app/navigation';
     import { base } from '$app/paths';
     import { findDistrictsForAddress } from '$lib/districtLookup.js';
-    import { getRaceByDistrict } from '$lib/googleSheets.js';
+    import { getRaceByDistrict, getStatewideRaces } from '$lib/googleSheets.js';
     import { saveRacesToLocalStorage, loadRacesFromLocalStorage } from '$lib/raceStorage.js';
     import { initializeDistrictMap } from '$lib/mapUtils.js';
     
@@ -486,6 +486,11 @@
 
     let pymChild;
     let contentElement;
+    
+    // Statewide races state
+    let statewideRaces = [];
+    let primaryRaces = [];
+    let otherRaces = [];
     
     // Address search state
     let searchAddress = '';
@@ -697,7 +702,7 @@
         }
     }
 
-    onMount(() => {
+    onMount(async () => {
         // Initialize pym.js child
         if (typeof window !== 'undefined' && window.pym) {
             pymChild = new window.pym.Child();
@@ -705,6 +710,23 @@
         
         // Load saved races from localStorage
         savedRaces = loadRacesFromLocalStorage();
+
+        // Load statewide races dynamically from Google Sheets
+        try {
+            const races = await getStatewideRaces();
+            statewideRaces = races;
+            
+            // Separate primary races (Governor, Attorney General) from others
+            primaryRaces = races.filter(race => 
+                race.value === 'Governor' || race.value === 'Attorney General'
+            );
+            
+            otherRaces = races.filter(race => 
+                race.value !== 'Governor' && race.value !== 'Attorney General'
+            );
+        } catch (error) {
+            console.error('Error loading statewide races:', error);
+        }
 
         // Add tooltip positioning logic after a short delay to ensure DOM is ready
         setTimeout(() => {
@@ -800,8 +822,21 @@
                     <h2 class="wp-block-heading has-text-align-center">Wisconsin elections</h2>
 
                         <div class="block-buttons is-horizontal is-content-justification-center is-layout-flex">
-                            <button class="election-button" on:click={() => navigate('/wisconsin-governor')}>Governor</button>
-                            <button class="election-button" on:click={() => navigate('/attorney-general')}>Attorney General</button>
+                            {#each primaryRaces as race}
+                                <button class="election-button primary-race" on:click={() => navigate(`/race/${race.slug}/1`)}>
+                                    {race.label}
+                                </button>
+                            {/each}
+                        </div>
+
+                    <h3 class="wp-block-heading has-text-align-center">Other Wisconsin elections</h3>
+
+                        <div class="block-buttons is-horizontal is-content-justification-center is-layout-flex">
+                            {#each otherRaces as race}
+                                <button class="election-button other-race" on:click={() => navigate(`/race/${race.slug}/1`)}>
+                                    {race.label}
+                                </button>
+                            {/each}
                         </div>
 
                     <section id="address-map">

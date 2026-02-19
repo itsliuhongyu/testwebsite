@@ -3,7 +3,6 @@
 .race-detail {
     max-width: 900px;
     margin: 0 auto;
-    padding: 2rem 1rem;
 }
 
 .district-map {
@@ -153,7 +152,7 @@
     color: #233166;
     text-decoration: none;
     margin-bottom: 0.5rem;
-    transition: color 0.2s ease;
+    transition: all 0.2s ease;
 }
 
 .story-headline:hover {

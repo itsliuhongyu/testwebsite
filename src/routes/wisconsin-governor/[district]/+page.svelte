@@ -117,8 +117,8 @@
                         <div class="candidates-grid">
                             {#each candidates as candidate}
                                 <div class="candidate-card" on:click={() => navigateToCandidate(candidate.candidate_id)}>
-                                    {#if candidate.image}
-                                        <img src={candidate.image} alt={candidate.name} class="candidate-photo" />
+                                    {#if candidate.candidate_id}
+                                        <img src="{base}/graphics/candidates/{candidate.candidate_id}.jpg" alt={candidate.name} class="candidate-photo" />
                                     {:else}
                                         <div class="candidate-placeholder">?</div>
                                     {/if}

@@ -150,8 +150,8 @@
                             <div class="candidates-grid">
                                 {#each candidates as candidate}
                                     <div class="candidate-card" role="button" tabindex="0" on:click={() => navigateToCandidate(candidate.candidate_id)} on:keydown={(e) => e.key === 'Enter' && navigateToCandidate(candidate.candidate_id)}>
-                                        {#if candidate.image}
-                                            <img src={candidate.image} alt={candidate.name} class="candidate-photo" />
+                                        {#if candidate.candidate_id}
+                                            <img src="{base}/graphics/candidates/{candidate.candidate_id}.jpg" alt={candidate.name} class="candidate-photo" />
                                         {:else}
                                             <div class="candidate-placeholder">?</div>
                                         {/if}

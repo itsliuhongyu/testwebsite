@@ -209,8 +209,8 @@
                 {:else if candidate}
                     <div class="candidate-header">
                         <div class="candidate-photo">
-                            {#if candidate.image}
-                                <img src={candidate.image} alt={candidate.name} />
+                            {#if candidate.candidate_id}
+                                <img src="{base}/graphics/candidates/{candidate.candidate_id}.jpg" alt={candidate.name} />
                             {:else}
                                 <div class="placeholder-image">?</div>
                             {/if}

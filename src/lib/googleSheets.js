@@ -1,12 +1,69 @@
 /**
  * Google Sheets API Utility
- * 
- * This module provides functions to fetch data from Google Sheets using the Google Sheets API directly from the client.
+ *
+ * This module provides functions to fetch data from Google Sheets using the
+ * Google Sheets API directly from the client. To reduce API usage, results
+ * are cached in `sessionStorage` per tab until the tab is closed.
  */
 
 const SPREADSHEET_ID = '1H2tgXpnn7kt8KxvPkLSELsU5ohYFM0p2tvBQJi5M44E';
 const RACES_SPREADSHEET_ID = '1XecLv5Q-ZFr-5ijvhHqEiVbX6MPl61jJDmiS4GuG-SY';
 const STORIES_SPREADSHEET_ID = '19-BcTq-ueiZgxwCjEgTbxPSL2LBLyhjJAYmXQn3Bk-E';
+
+// sessionStorage helpers --------------------------------------------------
+const sessionKey = (prefix, id, range) => `gs:${prefix}:${id}:${range}`;
+
+async function cachedFetchJson(cacheKey, fetcher) {
+    try {
+        const cached = sessionStorage.getItem(cacheKey);
+        if (cached) {
+            return JSON.parse(cached);
+        }
+    } catch (e) {
+        // ignore sessionStorage errors (quota, disabled, etc.)
+    }
+
+    const data = await fetcher();
+
+    try {
+        sessionStorage.setItem(cacheKey, JSON.stringify(data));
+    } catch (e) {
+        // ignore set errors
+    }
+
+    return data;
+}
+
+async function fetchSheetValuesWithCache(spreadsheetId, range) {
+    const API_KEY = import.meta.env.VITE_GOOGLE_SHEETS_API_KEY;
+    const cacheKey = sessionKey('values', spreadsheetId, range);
+
+    return cachedFetchJson(cacheKey, async () => {
+        const encodedRange = encodeURIComponent(range);
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodedRange}?key=${API_KEY}`;
+        const response = await fetch(url);
+        if (!response.ok) {
+            const err = new Error(`API error: ${response.status}`);
+            err.status = response.status;
+            throw err;
+        }
+        return response.json();
+    });
+}
+
+async function fetchSpreadsheetMetadataWithCache(spreadsheetId) {
+    const API_KEY = import.meta.env.VITE_GOOGLE_SHEETS_API_KEY;
+    const cacheKey = sessionKey('meta', spreadsheetId, 'sheets');
+
+    return cachedFetchJson(cacheKey, async () => {
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}?key=${API_KEY}`;
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`API error: ${response.status}`);
+        }
+        return response.json();
+    });
+}
 
 /**
  * Fetch candidate data from Google Sheets using Google Sheets API directly
@@ -15,39 +72,23 @@ const STORIES_SPREADSHEET_ID = '19-BcTq-ueiZgxwCjEgTbxPSL2LBLyhjJAYmXQn3Bk-E';
  * @returns {Promise<Array>} Array of candidate objects
  */
 export async function fetchCandidatesFromAPI(sheetName = 'Candidate') {
+    const range = `'${sheetName}'!A:Z`;
     try {
-        const API_KEY = import.meta.env.VITE_GOOGLE_SHEETS_API_KEY;
-        // Enclose sheet name in single quotes to handle spaces and special characters
-        const range = `'${sheetName}'!A:Z`;
-        const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}?key=${API_KEY}`;
-        
-        const response = await fetch(url);
-        
-        if (!response.ok) {
-            throw new Error(`API error: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        const rows = data.values || [];
-        
-        if (rows.length === 0) {
-            return [];
-        }
-        
+        const data = await fetchSheetValuesWithCache(SPREADSHEET_ID, range);
+        const rows = (data && data.values) || [];
+
+        if (rows.length === 0) return [];
+
         const headers = rows[0].map(h => h.toLowerCase().replace(/\s+/g, '_'));
-        const candidates = rows.slice(1).map((row, index) => {
+        return rows.slice(1).map((row, index) => {
             const candidate = { id: index };
             headers.forEach((header, i) => {
                 candidate[header] = row[i] || '';
             });
             return candidate;
         });
-        
-        return candidates;
-        
     } catch (error) {
         console.error('Error fetching from Google Sheets API:', error);
-        // Fall back to CSV method on error
         return fetchCandidatesFromCSV();
     }
 }
@@ -58,33 +99,23 @@ export async function fetchCandidatesFromAPI(sheetName = 'Candidate') {
  */
 async function fetchCandidatesFromCSV() {
     const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQpPPS8TGtIZA3FpBVknBwwhNBdf8Mkdh3ctvLtojlKIZcgKpqCvSG5znzjsj8XLlRWdikmaKfdf-aJ/pub?gid=0&single=true&output=csv';
-    
+
     try {
         const response = await fetch(CSV_URL);
-        
-        if (!response.ok) {
-            throw new Error(`Failed to fetch CSV: ${response.status}`);
-        }
-        
+        if (!response.ok) throw new Error(`Failed to fetch CSV: ${response.status}`);
         const csvContent = await response.text();
-        
-        // Parse CSV
+
         const lines = csvContent.trim().split('\n');
         const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
-        
-        const candidates = lines.slice(1).map((line, index) => {
+
+        return lines.slice(1).map((line, index) => {
             const values = line.split(',').map(v => v.trim());
             const candidate = { id: index };
-            
             headers.forEach((header, i) => {
                 candidate[header] = values[i] || '';
             });
-            
             return candidate;
         });
-        
-        return candidates;
-        
     } catch (error) {
         console.error('Error fetching CSV:', error);
         throw error;
@@ -119,36 +150,19 @@ export async function getCandidateByCandidateId(candidateId, sheetName) {
  * @returns {Promise<Array>} Array of race objects
  */
 export async function fetchRacesFromAPI(sheetName) {
+    const range = `'${sheetName}'!A:Z`;
     try {
-        const API_KEY = import.meta.env.VITE_GOOGLE_SHEETS_API_KEY;
-        // Enclose sheet name in single quotes to handle spaces and special characters
-        const range = `'${sheetName}'!A:Z`;
-        const url = `https://sheets.googleapis.com/v4/spreadsheets/${RACES_SPREADSHEET_ID}/values/${range}?key=${API_KEY}`;
-        
-        const response = await fetch(url);
-        
-        if (!response.ok) {
-            throw new Error(`API error: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        const rows = data.values || [];
-        
-        if (rows.length === 0) {
-            return [];
-        }
-        
+        const data = await fetchSheetValuesWithCache(RACES_SPREADSHEET_ID, range);
+        const rows = (data && data.values) || [];
+        if (rows.length === 0) return [];
         const headers = rows[0].map(h => h.toLowerCase().replace(/\s+/g, '_'));
-        const races = rows.slice(1).map((row, index) => {
+        return rows.slice(1).map((row, index) => {
             const race = { id: index };
             headers.forEach((header, i) => {
                 race[header] = row[i] || '';
             });
             return race;
         });
-        
-        return races;
-        
     } catch (error) {
         console.error('Error fetching race data:', error);
         throw error;
@@ -182,35 +196,19 @@ export async function getRaceByRaceId(raceId, sheetName) {
  * @returns {Promise<Array>} Array of story objects
  */
 export async function fetchStoriesFromAPI() {
+    const range = `'Sheet1'!A:Z`;
     try {
-        const API_KEY = import.meta.env.VITE_GOOGLE_SHEETS_API_KEY;
-        const range = `'Sheet1'!A:Z`;
-        const url = `https://sheets.googleapis.com/v4/spreadsheets/${STORIES_SPREADSHEET_ID}/values/${range}?key=${API_KEY}`;
-        
-        const response = await fetch(url);
-        
-        if (!response.ok) {
-            throw new Error(`API error: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        const rows = data.values || [];
-        
-        if (rows.length === 0) {
-            return [];
-        }
-        
+        const data = await fetchSheetValuesWithCache(STORIES_SPREADSHEET_ID, range);
+        const rows = (data && data.values) || [];
+        if (rows.length === 0) return [];
         const headers = rows[0].map(h => h.toLowerCase().replace(/\s+/g, '_'));
-        const stories = rows.slice(1).map((row, index) => {
+        return rows.slice(1).map((row, index) => {
             const story = { id: index };
             headers.forEach((header, i) => {
                 story[header] = row[i] || '';
             });
             return story;
         });
-        
-        return stories;
-        
     } catch (error) {
         console.error('Error fetching stories data:', error);
         return [];
@@ -233,20 +231,9 @@ export async function getStoriesByRaceId(raceId) {
  */
 export async function getAvailableSheets() {
     try {
-        const API_KEY = import.meta.env.VITE_GOOGLE_SHEETS_API_KEY;
-        const url = `https://sheets.googleapis.com/v4/spreadsheets/${RACES_SPREADSHEET_ID}?key=${API_KEY}`;
-        
-        const response = await fetch(url);
-        
-        if (!response.ok) {
-            throw new Error(`API error: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        const sheets = data.sheets || [];
-        
+        const data = await fetchSpreadsheetMetadataWithCache(RACES_SPREADSHEET_ID);
+        const sheets = (data && data.sheets) || [];
         return sheets.map(sheet => sheet.properties.title);
-        
     } catch (error) {
         console.error('Error fetching available sheets:', error);
         return [];

@@ -101,8 +101,30 @@ button, summary, span, .calendar-tooltip {
     margin-bottom: 1rem;
 }
 
+.primary-race {
+  width: 250px;      /* or use width: 150px for fixed width */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block; /* or use flex for container */
+}
+
 .other-race {
     font-size: 0.75rem !important;
+    padding: 0.5rem !important;
+    width: 200px;      /* or use width: 150px for fixed width */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block; /* or use flex for container */
+}
+
+.previous-result-button {
+    width: 200px;      /* or use width: 150px for fixed width */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block; /* or use flex for container */
 }
 
 .site-header {

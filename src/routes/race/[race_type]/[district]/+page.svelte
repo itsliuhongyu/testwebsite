@@ -93,11 +93,22 @@
             config = generateStatewideConfig(raceTypeParam);
         }
     }
+
+    function getRaceConfigKey(raceTypeSlug) {
+        // Map known slugs to config keys
+        if (raceTypeSlug.endsWith('governor')) return 'governor';
+        if (raceTypeSlug.endsWith('senate')) return 'senate';
+        if (raceTypeSlug.endsWith('assembly')) return 'assembly';
+        if (raceTypeSlug.endsWith('congress')) return 'congress';
+        // fallback: return original slug
+        return raceTypeSlug;
+    }
     
     function navigateToCandidate(candidateId) {
         if (race && config) {
             saveSourceRace(raceTypeParam, race['race-id']);
-            goto(`${base}/race/${raceTypeParam}/candidate/${candidateId}`);
+            const configKey = getRaceConfigKey(raceTypeParam);
+            goto(`${base}/race/${configKey}/candidate/${candidateId}`);
         }
     }
     

@@ -17,6 +17,8 @@
         border-radius: 50px;
         padding-top: 1rem;
         padding-bottom: 0rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
         margin-top: 1rem;
         margin-bottom: 1rem;
     }
@@ -202,7 +204,10 @@
         padding: 1rem;
         margin-top: 1.5rem;
         text-align: center;
-        border-radius: 50px;
+        border-bottom-left-radius: 50px;
+        border-bottom-right-radius: 50px;
+        margin-left: -1rem;
+        margin-right: -1rem;
     }
 
     .previous-results-buttons {
@@ -904,7 +909,7 @@
                                         {#if districtResults.raceIds?.assembly}
                                             <a href="{base}/race/assembly/{districtResults.raceIds.assembly}" class="district-card district-card-link">
                                                 <p class="district-number">
-                                                    State Assembly {districtResults.districts.assembly ? `District ${districtResults.districts.assembly}` : 'Not found'}
+                                                    Assembly {districtResults.districts.assembly ? `District ${districtResults.districts.assembly}` : 'Not found'}
                                                 </p>
                                                 {#if districtResults.districts.assembly}
                                                     <div id="assembly-map" class="district-map"></div>
@@ -913,7 +918,7 @@
                                             </a>
                                         {:else}
                                             <div class="district-card">
-                                                <p class="district-number">State Assembly Not found</p>
+                                                <p class="district-number">Assembly Not found</p>
                                             </div>
                                         {/if}
 
@@ -966,7 +971,7 @@
                                 <div class="previous-results-buttons">
                                     {#if savedRaces.assembly}
                                         <button class="previous-result-button" on:click={() => goto(`${base}/race/assembly/${savedRaces.assembly}`)}>
-                                            State Assembly
+                                            Assembly
                                         </button>
                                     {/if}
                                     {#if savedRaces.senate}
@@ -1110,16 +1115,6 @@
                         </div>
                     </section>
 
-
-
-                    <!--Some other element samples-->
-
-                    <details class="wp-block-details is-layout-flow wp-block-details-is-layout-flow">
-                        <summary>Here's what you need to know</summary>
-                        <p>In western Wisconsin, both state and national <a href="https://wisconsinwatch.org/2024/10/wisconsin-congress-van-orden-cooke-republican-democrat-us-house/">Democrats are looking to unseat incumbent U.S. Rep. Derrick Van Orden</a>, a freshman Republican being challenged by Democrat Rebecca Cooke. Van Orden flipped the seat in 2022, and Democrats are hoping to take it back in their push to retake the U.S. House majority.</p>
-                        <p>In the Milwaukee area, Republicans are hoping to help incumbent state Sen. Duey Stroebel, R-Saukville, <a href="https://wisconsinwatch.org/2024/09/wisconsin-milwaukee-senate-election-democrat-republican-stroebel-habush-sinykin/">survive a challenge from Democrat Jodi Habush Sinykin</a>. The race is one of a handful of state Senate seats that will set the field for races in 2026, in which Democrats will look to also flip control of the state Senate.</p>
-                        <p>And those are just a few examples. Elections consequential to the daily lives of Wisconsin residents across the state are on the ballot.</p>
-                    </details>
                     
                     <!--Self populated list of stories-->
 

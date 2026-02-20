@@ -108,48 +108,74 @@
     import { onMount, afterUpdate } from 'svelte';
     import { afterNavigate, goto } from '$app/navigation';
     import { page } from '$app/stores';
-    import { getCandidateByCandidateId, fetchRacesFromAPI } from '$lib/googleSheets.js';
+    import { getCandidateByCandidateId, fetchRacesFromAPI, getAvailableSheets } from '$lib/googleSheets.js';
     import { loadSourceRace, clearSourceRace } from '$lib/raceStorage.js';
     
-    // Race type configuration
-    const RACE_CONFIG = {
-        assembly: {
-            displayName: 'Assembly',
-            raceType: 'Assembly'
-        },
-        congress: {
-            displayName: 'Congress',
-            raceType: 'US Congress'
-        },
-        senate: {
-            displayName: 'Senate',
-            raceType: 'Senate'
-        },
-        governor: {
-            displayName: 'Governor',
-            raceType: 'Governor'
+    // Dynamic race type configuration
+    let dynamicRaceConfig = {};
+    let config = null;
+    let raceTypeParam = '';
+
+    async function buildRaceConfig() {
+        const sheetNames = await getAvailableSheets();
+        // Build a mapping from slug (hyphenated) -> sheetName (original title)
+        for (const sheetName of sheetNames) {
+            try {
+                const races = await fetchRacesFromAPI(sheetName);
+                // Ensure we always have a mapping from the sheet title slug to the sheetName
+                try {
+                    const sheetSlug = sheetName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                    if (!dynamicRaceConfig[sheetSlug]) {
+                        dynamicRaceConfig[sheetSlug] = {
+                            displayName: sheetName.replace(/\b\w/g, l => l.toUpperCase()),
+                            raceType: sheetName
+                        };
+                    }
+                } catch (e) {
+                    // ignore slug mapping errors
+                }
+                races.forEach(r => {
+                    // Headers in fetchRacesFromAPI are normalized to lowercase and spaces->underscores
+                    // Support both hyphen and underscore variants for robustness
+                    const rawVal = (r['race-type-slug'] || r['race-type'] || r['race_type_slug'] || r['race_type'] || '');
+                    const raw = String(rawVal).toLowerCase();
+                    if (!raw) return;
+                    const slug = raw.replace(/\s+/g, '-');
+                    if (!dynamicRaceConfig[slug]) {
+                        const display = slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                        // store original sheetName as raceType so fetchRacesFromAPI can use it
+                        dynamicRaceConfig[slug] = {
+                            displayName: display,
+                            raceType: sheetName
+                        };
+                    }
+                });
+            } catch (e) {
+                // ignore fetch errors and continue to next sheet
+                continue;
+            }
         }
-    };
+
+        // finished building dynamicRaceConfig
+    }
     
     let candidate = null;
     let loading = true;
     let error = null;
     let raceId = null;
-    let raceTypeParam = '';
-    let config = null;
-    
     let pymChild;
     let contentElement;
-    
-    // Get race configuration based on URL parameter
-    $: {
+
+    // Build config on mount
+    onMount(async () => {
+        await buildRaceConfig();
         raceTypeParam = $page.params.race_type;
-        config = RACE_CONFIG[raceTypeParam];
+        config = dynamicRaceConfig[raceTypeParam];
         if (!config) {
             error = 'Invalid race type';
             loading = false;
         }
-    }
+    });
     
     function returnToRace() {
         const sourceRace = loadSourceRace();
@@ -203,15 +229,24 @@
         }
     }
     
-    onMount(() => {
+    onMount(async () => {
+        await buildRaceConfig();
+        raceTypeParam = $page.params.race_type.toLowerCase();
+        config = dynamicRaceConfig[raceTypeParam];
+        if (!config) {
+            error = 'Invalid race type';
+            loading = false;
+            return;
+        }
+
         // Try to load from session storage first
         const sourceRace = loadSourceRace();
         if (sourceRace && sourceRace.raceType === raceTypeParam) {
             raceId = sourceRace.raceId;
         }
-        
-        fetchCandidate();
-        
+
+        await fetchCandidate();
+
         if (typeof window !== 'undefined' && window.pym) {
             pymChild = new window.pym.Child();
         }

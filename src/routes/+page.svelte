@@ -991,7 +991,7 @@
 
                     <section id="Keydates" style="margin: 0 0; overflow-x: hidden; width: 100%; position: relative;">
                         <h2 class="wp-block-heading has-text-align-center">Save these dates</h2>
-                        <p class="has-text-align-center"><small><i>Hover over highlighted dates for details</i></small></p>
+                        <p class="has-text-align-center"><small><i>Hover over highlighted dates for details. Click <a href="">here</a> to add to your calendar.</i></small></p>
                         
                         <!-- Dedicated Tooltip Container -->
                         <div class="tooltip-container">

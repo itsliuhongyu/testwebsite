@@ -1,17 +1,23 @@
 <svelte:head>
 	<link rel="stylesheet" href="https://wisconsinwatch.org/wp-content/themes/newspack-theme/style.css?ver=2.17.0">
 	<link rel="stylesheet" href="{base}/css/wp-custom.css">
-	<script src="https://pym.nprapps.org/pym.v1.min.js"></script>
+    <link rel="stylesheet" href="{base}/css/election.css">
 	<style>
+
+        .back-button:first-of-type {
+            margin-left: 0;
+        }
+
 		.candidate-detail {
 			max-width: 900px;
 			margin: 0 auto;
-			padding: 2rem 1rem;
+			padding: 0 1rem;
 		}
 		
 		.candidate-header {
 			display: flex;
 			gap: 2rem;
+            margin-top: 2rem;
 			margin-bottom: 2rem;
 			flex-wrap: wrap;
 		}
@@ -23,8 +29,8 @@
 		.candidate-photo img {
 			width: 100%;
 			height: auto;
-			border-radius: 8px;
-			box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+			border-radius: 50px;
+			box-shadow: 0 6px 16px rgba(35, 49, 102, 0.08);
 		}
 		
 		.candidate-basic-info {
@@ -34,7 +40,6 @@
 		
 		.candidate-detail h1 {
 			margin-top: 0;
-			color: #333;
 		}
 		
 		.info-section {

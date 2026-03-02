@@ -65,7 +65,6 @@
                 continue;
             }
         }
-
         // finished building dynamicRaceConfig
     }
     

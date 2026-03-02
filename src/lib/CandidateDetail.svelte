@@ -39,11 +39,33 @@
     <div class="candidate-basic-info">
       <h1>{candidate.name}</h1>
       {#if candidate.party}
-        <p style="font-size: 1.2rem; color: #666; margin: 0.5rem 0;">Party: {candidate.party}</p>
+        <p style="font-size: 1.2rem; margin: 0.5rem 0;">{candidate.party}</p>
       {/if}
       {#if candidate.occupation}
         <p style="font-size: 1.1rem; color: #555; margin: 0.5rem 0;">Occupation: {candidate.occupation}</p>
       {/if}
+      <div class="contact-inline" style="margin-top:0.75rem;">
+        {#if candidate.phone_number}
+          <div style="font-size:0.95rem;color:#444;margin-bottom:0.25rem">Phone: {candidate.phone_number}</div>
+        {/if}
+        {#if candidate.municipality}
+          <div style="font-size:0.95rem;color:#444;margin-bottom:0.25rem">Residence: {candidate.municipality}</div>
+        {/if}
+
+        <div class="contact-icons" style="margin-top:0.25rem">
+          {#if candidate.email}
+            <a href="mailto:{candidate.email}" aria-label="Email">
+              <img src="{base}/graphics/email.svg" alt="email" style="height:1.2em;vertical-align:middle;margin-right:0.5rem" />
+            </a>
+          {/if}
+
+          {#if candidate.website}
+            <a href={candidate.website} target="_blank" rel="noopener noreferrer" aria-label="Website">
+              <img src="{base}/graphics/hyperlink.svg" alt="website" style="height:1.2em;vertical-align:middle;margin-right:0.5rem" />
+            </a>
+          {/if}
+        </div>
+      </div>
     </div>
   </div>
 
@@ -56,79 +78,15 @@
 
   <div class="info-section">
     <h2>Basic Information</h2>
-    <div class="info-grid">
-      {#if candidate.name_first}
-        <div class="info-label">First Name:</div>
-        <div class="info-value">{candidate.name_first}</div>
-      {/if}
-      {#if candidate.name_middle}
-        <div class="info-label">Middle Name:</div>
-        <div class="info-value">{candidate.name_middle}</div>
-      {/if}
-      {#if candidate.name_last}
-        <div class="info-label">Last Name:</div>
-        <div class="info-value">{candidate.name_last}</div>
-      {/if}
-      {#if candidate.education}
-        <div class="info-label">Education:</div>
-        <div class="info-value">{candidate.education}</div>
-      {/if}
-      {#if candidate.date_of_birth}
-        <div class="info-label">Date of Birth:</div>
-        <div class="info-value">{candidate.date_of_birth}</div>
-      {/if}
-      {#if candidate.gender}
-        <div class="info-label">Gender:</div>
-        <div class="info-value">{candidate.gender}</div>
-      {/if}
-      {#if candidate.race}
-        <div class="info-label">Race:</div>
-        <div class="info-value">{candidate.race}</div>
-      {/if}
-      {#if candidate.ethnicity}
-        <div class="info-label">Ethnicity:</div>
-        <div class="info-value">{candidate.ethnicity}</div>
+    <div class="candidate-basic-info">
+      {#if candidate.basic_information}
+        <div class="info-value">
+          {candidate.basic_information}
+        </div>
       {/if}
     </div>
   </div>
-  
-  {#if candidate.email || candidate.phone_number || candidate.municipality}
-    <div class="info-section">
-      <h2>Contact Information</h2>
-      <div class="info-grid">
-        {#if candidate.email}
-          <div class="info-label">Email:</div>
-          <div class="info-value"><a href="mailto:{candidate.email}">{candidate.email}</a></div>
-        {/if}
-        {#if candidate.phone_number}
-          <div class="info-label">Phone:</div>
-          <div class="info-value">{candidate.phone_number}</div>
-        {/if}
-        {#if candidate.municipality}
-          <div class="info-label">Location:</div>
-          <div class="info-value">{candidate.municipality}</div>
-        {/if}
-      </div>
-    </div>
-  {/if}
-  
-  {#if candidate.website || candidate.facebook_campaign || candidate.x_campaign || candidate.instagram_campaign}
-    <div class="info-section">
-      <h2>Online Presence</h2>
-      <div class="contact-links">
-        {#if candidate.website}
-          <a href={candidate.website} target="_blank" rel="noopener noreferrer">Website →</a>
-        {/if}
-        {#if candidate.facebook_campaign}
-          <a href={candidate.facebook_campaign} target="_blank" rel="noopener noreferrer">Facebook →</a>
-        {/if}
-        {#if candidate.x_campaign}
-          <a href={candidate.x_campaign} target="_blank" rel="noopener noreferrer">X (Twitter) →</a>
-        {/if}
-        {#if candidate.instagram_campaign}
-          <a href={candidate.instagram_campaign} target="_blank" rel="noopener noreferrer">Instagram →</a>
-        {/if}
-      </div>
-    </div>
-  {/if}
+
+
+
 {/if}

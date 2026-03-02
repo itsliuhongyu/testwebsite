@@ -15,7 +15,14 @@
     import CandidateDetail from '$lib/CandidateDetail.svelte';
     
     // Dynamic race type configuration
-    let dynamicRaceConfig = {};
+    // Pre-seed with known district race slugs so that URL params like 'congress'
+    // (used by the district page) resolve correctly even though the sheet is
+    // named 'US Congress' (which would otherwise slugify to 'us-congress').
+    let dynamicRaceConfig = {
+        assembly: { displayName: 'Wisconsin State Assembly', raceType: 'Assembly' },
+        senate:   { displayName: 'Wisconsin State Senate',   raceType: 'Senate' },
+        congress: { displayName: 'U.S. House of Representatives', raceType: 'US Congress' }
+    };
     let config = null;
     let raceTypeParam = '';
 

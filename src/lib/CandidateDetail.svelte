@@ -54,14 +54,18 @@
 
         <div class="contact-icons" style="margin-top:0.25rem">
           {#if candidate.email}
-            <a href="mailto:{candidate.email}" aria-label="Email">
-              <img src="{base}/graphics/email.svg" alt="email" style="height:1.2em;vertical-align:middle;margin-right:0.5rem" />
+            <a href={"mailto:" + candidate.email} aria-label="Email">
+              <img src={base + '/graphics/email.svg'} alt="email" style="height:1.2em;vertical-align:middle;margin-right:0.5rem" loading="lazy" />
             </a>
           {/if}
-
           {#if candidate.website}
             <a href={candidate.website} target="_blank" rel="noopener noreferrer" aria-label="Website">
-              <img src="{base}/graphics/hyperlink.svg" alt="website" style="height:1.2em;vertical-align:middle;margin-right:0.5rem" />
+              <img src={base + '/graphics/hyperlink.svg'} alt="website" style="height:1.2em;vertical-align:middle;margin-right:0.5rem" loading="lazy" />
+            </a>
+          {/if}
+          {#if candidate.facebook}
+            <a href={candidate.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+              <img src={base + '/graphics/logos/facebook.svg'} alt="facebook" style="height:1.2em;vertical-align:middle;margin-right:0.5rem" loading="lazy" />
             </a>
           {/if}
         </div>

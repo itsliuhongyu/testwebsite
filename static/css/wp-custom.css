@@ -218,6 +218,7 @@ button, summary, span, .calendar-tooltip {
     margin: 1rem;
 }
 
+.calendar-btn,
 .election-button,
 .search-button,
 .previous-result-button,
@@ -238,6 +239,7 @@ button, summary, span, .calendar-tooltip {
     position: relative;
 }
 
+.calendar-btn:hover,
 .election-button:hover,
 .search-button:hover:not(:disabled),
 .previous-result-button:hover

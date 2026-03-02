@@ -350,6 +350,34 @@
         border-top-color: #233166;
     }
 
+    /* Add-to-calendar button styles */
+    .calendar-actions {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+        margin-top: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .calendar-btn {
+        width: 30%;
+    }
+
+    .calendar-link {
+        color: #3090c9;
+        font-weight: 600;
+        text-decoration: underline;
+        background: none;
+        border: none;
+        padding: 0.4rem 0.6rem;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    .calendar-link:hover {
+        color: #233166;
+    }
+
     @media (max-width: 820px) {
         .calendars-container {
             padding: 0 0.5rem;
@@ -486,6 +514,7 @@
 
     let pymChild;
     let contentElement;
+    let webcalUrl = '';
     
     // Statewide races state
     let statewideRaces = [];
@@ -520,6 +549,75 @@
         '10-20': 'General election early in-person voting begins',
         '11-03': 'General election day'
     };
+
+    // Calendar event metadata + helper functions for Add-to-Calendar buttons
+    const calendarTitle = 'Wisconsin 2026 Election Key Dates';
+    const calendarLocation = 'Wisconsin';
+    const calendarDescription = Object.entries(keyDates)
+        .map(([d, txt]) => `${d}: ${txt}`)
+        .join('\n');
+
+    function openGoogleCalendar() {
+        // Use an all-day event spanning the key date range (end date is exclusive)
+        const dates = '20260728/20261104';
+        const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(calendarTitle)}&dates=${dates}&details=${encodeURIComponent(calendarDescription)}&location=${encodeURIComponent(calendarLocation)}`;
+        window.open(url, '_blank');
+    }
+
+    function openOutlook() {
+        // Outlook web expects ISO datetimes; use midnight-local for all-day span
+        const start = '2026-07-28T00:00:00';
+        const end = '2026-11-04T00:00:00';
+        const url = `https://outlook.live.com/owa/?rru=addevent&startdt=${encodeURIComponent(start)}&enddt=${encodeURIComponent(end)}&subject=${encodeURIComponent(calendarTitle)}&body=${encodeURIComponent(calendarDescription)}&location=${encodeURIComponent(calendarLocation)}`;
+        window.open(url, '_blank');
+    }
+
+    function downloadICS() {
+        const uid = `${Date.now()}@wisconsinwatch.org`;
+        const now = new Date();
+        const dtstamp = now.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+        const dtstart = '20260728';
+        const dtend = '20261104';
+        const icsLines = [
+            'BEGIN:VCALENDAR',
+            'VERSION:2.0',
+            'PRODID:-//Wisconsin Watch//Election Key Dates//EN',
+            'CALSCALE:GREGORIAN',
+            'BEGIN:VEVENT',
+            `UID:${uid}`,
+            `DTSTAMP:${dtstamp}`,
+            `DTSTART;VALUE=DATE:${dtstart}`,
+            `DTEND;VALUE=DATE:${dtend}`,
+            `SUMMARY:${calendarTitle}`,
+            `DESCRIPTION:${calendarDescription.replace(/\n/g, '\\n')}`,
+            `LOCATION:${calendarLocation}`,
+            'END:VEVENT',
+            'END:VCALENDAR'
+        ];
+
+        const blob = new Blob([icsLines.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'WI-2026-Election-Key-Dates.ics';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+            URL.revokeObjectURL(url);
+            a.remove();
+        }, 1000);
+    }
+
+    function subscribeWebcal() {
+        if (typeof window === 'undefined') return;
+        const host = window.location.host;
+        const protocol = 'webcal://';
+        // Ensure base begins with a slash
+        const path = `${base}/others/WI-2026-Election-Key-Dates.ics`;
+        const url = `${protocol}${host}${path}`;
+        // Navigate to the webcal URL to trigger calendar subscription in supporting clients
+        window.location.href = url;
+    }
 
     function generateCalendar(month, year) {
         const firstDay = new Date(year, month, 1);
@@ -710,6 +808,12 @@
         // Initialize pym.js child
         if (typeof window !== 'undefined' && window.pym) {
             pymChild = new window.pym.Child();
+        }
+        // Build webcal URL on client so it's a real href the browser can handle
+        if (typeof window !== 'undefined') {
+            const host = window.location.host;
+            const protocol = 'webcal://';
+            webcalUrl = `${protocol}${host}${base}/others/WI-2026-Election-Key-Dates.ics`;
         }
         
         // Load saved races from localStorage
@@ -1056,7 +1160,11 @@
 
                     <section id="Keydates" style="margin: 0 0; overflow-x: hidden; width: 100%; position: relative;">
                         <h2 class="wp-block-heading has-text-align-center">Save these dates</h2>
-                        <p class="has-text-align-center"><small><i>Hover over highlighted dates for details. Click <a href="{base}/others/WI-2026-Election-Key-Dates.ics">here</a> to add to your calendar.</i></small></p>
+                        <p class="has-text-align-center"><small><i>Hover over highlighted dates for details.<br>Add to your calendar:</i></small></p>
+                        <div class="calendar-actions">
+                            <a href={webcalUrl} class="calendar-link">Subscribe (webcal)</a>
+                            <a href="{base}/others/WI-2026-Election-Key-Dates.ics" class="calendar-link" target="_blank" rel="noopener">Open .ics (HTTPS)</a>
+                        </div>
                         
                         <!-- Dedicated Tooltip Container -->
                         <div class="tooltip-container">

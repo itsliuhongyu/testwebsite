@@ -231,8 +231,7 @@
 
     .calendar {
         background: white;
-        border: 2px solid #D5E2EE;
-        border-radius: 12px;
+        border-radius: 50px;
         padding: 1.5rem;
         box-shadow: 0 6px 16px rgba(35, 49, 102, 0.08);
         position: relative;
@@ -323,7 +322,8 @@
         color: white;
         padding: 0.75rem 1rem;
         border-radius: 8px;
-        font-size: 0.85rem;
+        font-size: 1rem;
+        font-weight: 700;
         opacity: 0;
         pointer-events: none;
         transition: opacity 0.2s ease;
@@ -334,6 +334,7 @@
         white-space: normal;
         text-align: center;
         line-height: 1.5;
+
     }
 
     .calendar-tooltip.visible {
@@ -1160,10 +1161,11 @@
 
                     <section id="Keydates" style="margin: 0 0; overflow-x: hidden; width: 100%; position: relative;">
                         <h2 class="wp-block-heading has-text-align-center">Save these dates</h2>
-                        <p class="has-text-align-center"><small><i>Hover over highlighted dates for details.<br>Add to your calendar:</i></small></p>
+                        <p class="has-text-align-center"><small><i>Hover over highlighted dates for details.</i></small></p>
+                        <p class="has-text-align-center" style="margin-bottom: 0;"><strong>Add to your calendar:</strong></p>
                         <div class="calendar-actions">
-                            <a href={webcalUrl} class="calendar-link">Subscribe (webcal)</a>
-                            <a href="{base}/others/WI-2026-Election-Key-Dates.ics" class="calendar-link" target="_blank" rel="noopener">Open .ics (HTTPS)</a>
+                            <a href={webcalUrl} class="calendar-link">Subscribe to Calendar</a>
+                            <a href="{base}/others/WI-2026-Election-Key-Dates.ics" class="calendar-link" target="_blank" rel="noopener">Download .ics</a>
                         </div>
                         
                         <!-- Dedicated Tooltip Container -->

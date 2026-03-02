@@ -1,0 +1,35 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//ical.marudot.com//iCal Event Maker
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+DTSTAMP:20260302T185805Z
+UID:1772467663144-17046@ical.marudot.com
+DTSTART;VALUE=DATE:20260728
+DTEND;VALUE=DATE:20260729
+SUMMARY:Primary elections early in-person voting begins
+DESCRIPTION:Clerks may begin to issue in person absentee ballots at the clerk’s office or designated alternate location(s).
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260302T185805Z
+UID:1772467693999-14428@ical.marudot.com
+DTSTART;VALUE=DATE:20260811
+DTEND;VALUE=DATE:20260812
+SUMMARY:Partisan primary
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260302T185805Z
+UID:1772467763230-13288@ical.marudot.com
+DTSTART;VALUE=DATE:20261020
+DTEND;VALUE=DATE:20261021
+SUMMARY:General election early in-person voting begins
+DESCRIPTION:Clerks may begin to issue in person absentee ballots at the clerk’s office or designated alternate location(s).
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260302T185805Z
+UID:1772468715639-80529@ical.marudot.com
+DTSTART;VALUE=DATE:20261103
+DTEND;VALUE=DATE:20261104
+SUMMARY:General election day
+END:VEVENT
+END:VCALENDAR

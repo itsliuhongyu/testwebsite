@@ -175,14 +175,6 @@ button, summary, span, .calendar-tooltip {
     color: #3090c9;
 }
 
-.social-links-menu svg {
-    fill: #233166;
-}
-
-.social-links-menu svg:hover {
-    fill: #233166;
-}
-
 .entry-title {
     font-family: 'Publico Banner', sans-serif;
 }

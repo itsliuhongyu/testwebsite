@@ -2,7 +2,7 @@
 	import favicon from '$lib/assets/favicon.webp';
 	import stylizedBkg from '$lib/assets/stylized-bkg.png';
 	import { base } from '$app/paths';
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import navMenu from '$lib/navMenu.js';
 	
 	let { children } = $props();
@@ -14,6 +14,19 @@
 
 	onMount(() => {
 		navMenu.init();
+	});
+
+	let _destroyHoverTooltip = null;
+
+	onMount(() => {
+		// initialize global hover-tooltip for elements with class "hover-tooltip"
+		import('$lib/hoverTooltip.js').then(mod => {
+			_destroyHoverTooltip = mod.initHoverTooltip({ offset: 12, showClass: 'hover-tooltip' });
+		}).catch(() => {});
+	});
+
+	onDestroy(() => {
+		if (typeof _destroyHoverTooltip === 'function') _destroyHoverTooltip();
 	});
 </script>
 
@@ -33,7 +46,7 @@
 					<p class="site-description">Nonprofit, nonpartisan news about Wisconsin</p>
 				</div><!-- .site-identity -->
 			</div><!-- .site-branding -->
-			<button class="menu-icon" onclick={toggleMenu} aria-label="Toggle menu">
+			<button class="menu-icon hover-tooltip" data-tooltip="Navigation" onclick={toggleMenu} aria-label="Toggle menu">
 				<img src="{base}/graphics/menu.svg" alt="Menu" />
 			</button>
 		</div><!-- .wrapper -->

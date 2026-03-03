@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-  <path d="M22,5c.55,0,1,.45,1,1v12c0,.55-.45,1-1,1H2c-.55,0-1-.45-1-1V6c0-.55.45-1,1-1h20M22,4H2c-1.1,0-2,.9-2,2v12c0,1.1.9,2,2,2h20c1.1,0,2-.9,2-2V6c0-1.1-.9-2-2-2h0Z"/>
-  <polyline points="1 4.99 12 12 22.77 4.99" style="fill: none; stroke: #000; stroke-miterlimit: 10;"/>
+  <circle cx="12" cy="12" r="12"/>
+  <path d="M20,7.33v9.33H4V7.33h16M20,5.33H4c-1.1,0-2,.9-2,2v9.33c0,1.1.9,2,2,2h16c1.1,0,2-.9,2-2V7.33c0-1.1-.9-2-2-2h0Z" style="fill: #f3f6fa;"/>
+  <polyline points="2.83 6.16 12 12 20.97 6.16" style="fill: none; stroke: #f3f6fa; stroke-miterlimit: 10; stroke-width: 2px;"/>
 </svg>

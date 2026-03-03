@@ -16,9 +16,9 @@ const sessionKey = (prefix, id, range) => `gs:${prefix}:${id}:${range}`;
 async function cachedFetchJson(cacheKey, fetcher) {
     // To bypass sessionStorage caching during local development, you can:
     // 1) Temporarily enable the DEV bypass by uncommenting the next two lines:
-    //    if (import.meta.env && import.meta.env.DEV) {
-    //        return fetcher();
-    //    }
+    //  if (import.meta.env && import.meta.env.DEV) {
+    //      return fetcher();
+    //  }
     // 2) Or set the environment variable `VITE_BYPASS_CACHE=1` and uncomment/use the following:
     //    if (import.meta.env && import.meta.env.VITE_BYPASS_CACHE === '1') {
     //        return fetcher();

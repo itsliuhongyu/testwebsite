@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <g id="Layer_1" data-name="Layer 1">
+    <circle cx="12" cy="12" r="12"/>
+  </g>
+  <g id="Layer_2" data-name="Layer 2">
+    <g>
+      <path d="M19.06,19.56l-4.21,2.43c-.41.24-.92.22-1.31-.05-5.48-3.8-8.6-9.16-9.29-16.1-.05-.48.2-.94.61-1.18l4.2-2.42c.75-.43,1.7.03,1.82.88l.39,2.73c.07.49-.17.98-.6,1.23l-2.31,1.34c.56,3.53,2.22,6.41,5,8.66l2.31-1.34c.43-.25.97-.21,1.37.1l2.16,1.7c.68.53.6,1.59-.14,2.02Z" style="fill: #f3f6fa;"/>
+      <line x1="8.63" y1="8.39" x2="7.7" y2="2.87" style="fill: #f3f6fa; stroke: #000; stroke-miterlimit: 10; stroke-width: .5px;"/>
+      <line x1="17.81" y1="20.38" x2="13.5" y2="16.82" style="fill: #f3f6fa; stroke: #000; stroke-miterlimit: 10; stroke-width: .5px;"/>
+    </g>
+  </g>
+</svg>

@@ -19,11 +19,11 @@
 </button>
 
 {#if loading}
-  <div style="text-align: center; padding: 2rem;">
+  <div class="loading-candidate-box" style="text-align: center; padding: 2rem;">
     <p>Loading candidate information...</p>
   </div>
 {:else if error}
-  <div style="text-align: center; padding: 2rem; color: red;">
+  <div class="loading-candidate-box" style="text-align: center; padding: 2rem; color: red;">
     <p>Error: {error}</p>
   </div>
 {:else if candidate}
@@ -46,7 +46,10 @@
       {/if}
       <div class="contact-inline" style="margin-top:0.75rem;">
         {#if candidate.phone_number}
-          <div style="font-size:0.95rem;color:#444;margin-bottom:0.25rem">Phone: {candidate.phone_number}</div>
+          <div class="contact-icons hover-tooltip" data-tooltip="Phone" style="font-size:0.95rem;margin-bottom:0.25rem">
+            <img src={base + '/graphics/phone.svg'} alt="Phone Number" style="height:1.5em;vertical-align:middle;margin-right:0.5rem" loading="lazy" />
+            {candidate.phone_number}
+          </div>
         {/if}
         {#if candidate.municipality}
           <div style="font-size:0.95rem;color:#444;margin-bottom:0.25rem">Residence: {candidate.municipality}</div>
@@ -54,20 +57,38 @@
 
         <div class="contact-icons" style="margin-top:0.25rem">
           {#if candidate.email}
-            <a href={"mailto:" + candidate.email} aria-label="Email">
-              <img src={base + '/graphics/email.svg'} alt="email" style="height:1.2em;vertical-align:middle;margin-right:0.5rem" loading="lazy" />
+            <a class="hover-tooltip" data-tooltip="Email" href={"mailto:" + candidate.email} aria-label="Email">
+              <img src={base + '/graphics/email.svg'} alt="Email" loading="lazy" />
             </a>
           {/if}
           {#if candidate.website}
-            <a href={candidate.website} target="_blank" rel="noopener noreferrer" aria-label="Website">
-              <img src={base + '/graphics/hyperlink.svg'} alt="website" style="height:1.2em;vertical-align:middle;margin-right:0.5rem" loading="lazy" />
+            <a class="hover-tooltip" data-tooltip="Website" href={candidate.website} target="_blank" rel="noopener noreferrer" aria-label="Website">
+              <img src={base + '/graphics/hyperlink.svg'} alt="Website" loading="lazy" />
             </a>
           {/if}
           {#if candidate.facebook}
-            <a href={candidate.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-              <img src={base + '/graphics/logos/facebook.svg'} alt="facebook" style="height:1.2em;vertical-align:middle;margin-right:0.5rem" loading="lazy" />
+            <a class="hover-tooltip" data-tooltip="Facebook" href={candidate.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+              <img src={base + '/graphics/logos/facebook.svg'} alt="Facebook" loading="lazy" />
             </a>
           {/if}
+
+          {#if candidate.twitter}
+            <a class="hover-tooltip" data-tooltip="Twitter" href={candidate.twitter} target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+              <img src={base + '/graphics/logos/x.svg'} alt="Twitter" loading="lazy" />
+            </a>
+          {/if}
+          {#if candidate.instagram}
+            <a class="hover-tooltip" data-tooltip="Instagram" href={candidate.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <img src={base + '/graphics/logos/instagram.svg'} alt="Instagram" loading="lazy" />
+            </a>
+          {/if}
+          {#if candidate.youtube}
+            <a class="hover-tooltip" data-tooltip="YouTube" href={candidate.youtube} target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+              <img src={base + '/graphics/logos/youtube.svg'} alt="YouTube" loading="lazy" />
+            </a>
+          {/if}
+
+
         </div>
       </div>
     </div>
@@ -79,6 +100,8 @@
       <p>{candidate.bio}</p>
     </div>
   {/if}
+
+    
 
   <div class="info-section">
     <h2>Basic Information</h2>

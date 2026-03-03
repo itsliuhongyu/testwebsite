@@ -241,6 +241,10 @@
         min-width: 0;
     }
 
+    .calendar-actions {
+        font-family: 'Heebo', sans-serif;
+    }
+
     .calendar-header {
         text-align: center;
         margin-bottom: 1rem;
@@ -543,32 +547,64 @@
     let pinnedTooltipTarget = null; // element pinned by click
     let currentTooltipTarget = null; // currently hovered or focused element
 
-    // Key dates for the calendar
-    const keyDates = {
-        '07-28': 'Primary elections early in-person voting begins',
-        '08-11': 'Partisan primary',
-        '10-20': 'General election early in-person voting begins',
-        '11-03': 'General election day'
-    };
+    // Key dates for the calendar (populated from ICS file)
+    let keyDates = {};
+
+    async function fetchAndParseICS() {
+        try {
+            const resp = await fetch(`${base}/others/WI-2026-Election-Key-Dates.ics`);
+            if (!resp.ok) return;
+            const icsText = await resp.text();
+            keyDates = parseICSForDates(icsText);
+        } catch (e) {
+            console.error('Failed to load ICS:', e);
+        }
+    }
+
+    function parseICSForDates(icsText) {
+        const map = {};
+        // Split into VEVENT blocks
+        const events = icsText.split(/BEGIN:VEVENT/i).slice(1);
+        for (const ev of events) {
+            // Find DTSTART
+            const dtMatch = ev.match(/DTSTART(?:;[^:]*)?:([0-9TZ+-]+)/i);
+            if (!dtMatch) continue;
+            const dt = dtMatch[1];
+            // Extract date portion YYYYMMDD (handles YYYYMMDD or YYYYMMDDTHHMMSS)
+            const datePart = dt.split('T')[0];
+            if (!/^[0-9]{8}$/.test(datePart)) continue;
+            const year = datePart.slice(0,4);
+            const month = datePart.slice(4,6);
+            const day = datePart.slice(6,8);
+            // Find SUMMARY (may be folded across lines; unfold per RFC5545)
+            const unfolded = ev.replace(/\r?\n[ \t]/g, '');
+            const sumMatch = unfolded.match(/SUMMARY:(.*?)(?:\r?\n|$)/i);
+            const summary = sumMatch ? sumMatch[1].trim() : '';
+            // Map to MM-DD
+            const key = `${month}-${day}`;
+            if (summary) map[key] = summary;
+        }
+        return map;
+    }
 
     // Calendar event metadata + helper functions for Add-to-Calendar buttons
     const calendarTitle = 'Wisconsin 2026 Election Key Dates';
     const calendarLocation = 'Wisconsin';
-    const calendarDescription = Object.entries(keyDates)
+    $: calendarDescription = Object.entries(keyDates)
         .map(([d, txt]) => `${d}: ${txt}`)
         .join('\n');
 
     function openGoogleCalendar() {
         // Use an all-day event spanning the key date range (end date is exclusive)
-        const dates = '20260728/20261104';
+        const dates = '20260701/20261130';
         const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(calendarTitle)}&dates=${dates}&details=${encodeURIComponent(calendarDescription)}&location=${encodeURIComponent(calendarLocation)}`;
         window.open(url, '_blank');
     }
 
     function openOutlook() {
         // Outlook web expects ISO datetimes; use midnight-local for all-day span
-        const start = '2026-07-28T00:00:00';
-        const end = '2026-11-04T00:00:00';
+        const start = '2026-07-01T00:00:00';
+        const end = '2026-11-30T00:00:00';
         const url = `https://outlook.live.com/owa/?rru=addevent&startdt=${encodeURIComponent(start)}&enddt=${encodeURIComponent(end)}&subject=${encodeURIComponent(calendarTitle)}&body=${encodeURIComponent(calendarDescription)}&location=${encodeURIComponent(calendarLocation)}`;
         window.open(url, '_blank');
     }
@@ -577,8 +613,8 @@
         const uid = `${Date.now()}@wisconsinwatch.org`;
         const now = new Date();
         const dtstamp = now.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-        const dtstart = '20260728';
-        const dtend = '20261104';
+        const dtstart = '20260701';
+        const dtend = '20261130';
         const icsLines = [
             'BEGIN:VCALENDAR',
             'VERSION:2.0',
@@ -620,7 +656,7 @@
         window.location.href = url;
     }
 
-    function generateCalendar(month, year) {
+    function generateCalendar(month, year, keyDatesObj) {
         const firstDay = new Date(year, month, 1);
         const lastDay = new Date(year, month + 1, 0);
         const daysInMonth = lastDay.getDate();
@@ -638,7 +674,7 @@
             const monthStr = String(month + 1).padStart(2, '0');
             const dayStr = String(day).padStart(2, '0');
             const dateKey = `${monthStr}-${dayStr}`;
-            const isHighlighted = keyDates.hasOwnProperty(dateKey);
+            const isHighlighted = keyDatesObj && keyDatesObj.hasOwnProperty && keyDatesObj.hasOwnProperty(dateKey);
             
             days.push({
                 day,
@@ -651,10 +687,10 @@
         return days;
     }
 
-    const julyDays = generateCalendar(6, 2026); // July = month 6 (0-indexed)
-    const augustDays = generateCalendar(7, 2026); // August = month 7 (0-indexed)
-    const octoberDays = generateCalendar(9, 2026); // October = month 9 (0-indexed)
-    const novemberDays = generateCalendar(10, 2026); // November = month 10
+    $: julyDays = generateCalendar(6, 2026, keyDates); // July = month 6 (0-indexed)
+    $: augustDays = generateCalendar(7, 2026, keyDates); // August = month 7 (0-indexed)
+    $: octoberDays = generateCalendar(9, 2026, keyDates); // October = month 9 (0-indexed)
+    $: novemberDays = generateCalendar(10, 2026, keyDates); // November = month 10
 
     async function fetchSuggestions(query) {
         if (query.length < 10) {
@@ -836,6 +872,9 @@
         } catch (error) {
             console.error('Error loading statewide races:', error);
         }
+
+        // Load key dates from ICS so calendar highlights come from the .ics file
+        fetchAndParseICS();
 
         // Add tooltip positioning logic after a short delay to ensure DOM is ready
         setTimeout(() => {
@@ -1162,7 +1201,7 @@
                     <section id="Keydates" style="margin: 0 0; overflow-x: hidden; width: 100%; position: relative;">
                         <h2 class="wp-block-heading has-text-align-center">Save these dates</h2>
                         <p class="has-text-align-center"><small><i>Hover over highlighted dates for details.</i></small></p>
-                        <p class="has-text-align-center" style="margin-bottom: 0;"><strong>Add to your calendar:</strong></p>
+                        <p class="has-text-align-center calendar-actions" style="margin-bottom: 0;"><strong>Add to your calendar:</strong></p>
                         <div class="calendar-actions">
                             <a href={webcalUrl} class="calendar-link">Subscribe to Calendar</a>
                             <a href="{base}/others/WI-2026-Election-Key-Dates.ics" class="calendar-link" target="_blank" rel="noopener">Download .ics</a>

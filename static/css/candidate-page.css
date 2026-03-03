@@ -5,7 +5,6 @@
 .candidate-detail {
     max-width: 900px;
     margin: 0 auto;
-    padding: 0 1rem;
 }
 
 .candidate-header {
@@ -29,7 +28,6 @@
 
 .candidate-basic-info {
     flex: 1;
-    min-width: 300px;
 }
 
 .candidate-detail h1 {
@@ -41,8 +39,7 @@
 }
 
 .info-section h2 {
-    color: #0073aa;
-    border-bottom: 2px solid #0073aa;
+    border-bottom: 2px solid #233166;
     padding-bottom: 0.5rem;
 }
 

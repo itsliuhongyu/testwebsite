@@ -14,7 +14,7 @@
     <img src="{base}/graphics/back.svg" alt="" style="height: 1em; width: 1em; margin-right: 0.5rem; vertical-align: -0.125em; display: inline-block;" /> This Race
   </button>
 {/if}
-<button class="back-button" style="margin-left: 1rem;" on:click={() => goto(`${base}/`)}>
+<button class="back-button" on:click={() => goto(`${base}/`)}>
   <img src="{base}/graphics/back.svg" alt="" style="height: 1em; width: 1em; margin-right: 0.5rem; vertical-align: -0.125em; display: inline-block;" /> Home
 </button>
 
@@ -38,24 +38,38 @@
     
     <div class="candidate-basic-info">
       <h1>{candidate.name}</h1>
-      {#if candidate.party}
-        <p style="font-size: 1.2rem; margin: 0.5rem 0;">{candidate.party}</p>
-      {/if}
       {#if candidate.occupation}
-        <p style="font-size: 1.1rem; color: #555; margin: 0.5rem 0;">Occupation: {candidate.occupation}</p>
+        <p style="font-size: 1.2rem; margin: 0.5rem 0;">{candidate.occupation}</p>
       {/if}
       <div class="contact-inline" style="margin-top:0.75rem;">
+        <div class="contact-icons">
+        {#if candidate.party === 'Democrat'}
+          <p style="font-size: 1.2rem; margin: 0.5rem 0; color: #003cb9; display:flex; align-items:center;">
+            <img src={base + '/graphics/logos/dem.svg'} alt="Democrat" style="height:1.5em; margin-right:0.5rem; vertical-align:-0.125em" loading="lazy" />
+            <span>Democrat</span>
+          </p>
+        {:else if candidate.party === 'Republican'}
+          <p style="font-size: 1.2rem; margin: 0.5rem 0; color: #e9141e; display:flex; align-items:center;">
+            <img src={base + '/graphics/logos/rep.svg'} alt="Republican" style="height:1.5em; margin-right:0.5rem; vertical-align:-0.125em" loading="lazy" />
+            <span>Republican</span>
+          </p>
+        {:else}
+          <p style="font-size: 1.2rem; margin: 0.5rem 0; color: #e69f00;">Non-Partisan</p>
+        {/if}
+        </div>
         {#if candidate.phone_number}
-          <div class="contact-icons hover-tooltip" data-tooltip="Phone" style="font-size:0.95rem;margin-bottom:0.25rem">
+          <div class="contact-icons hover-tooltip" data-tooltip="Phone Number" style="font-size:0.95rem;margin-bottom:0.25rem">
             <img src={base + '/graphics/phone.svg'} alt="Phone Number" style="height:1.5em;vertical-align:middle;margin-right:0.5rem" loading="lazy" />
             {candidate.phone_number}
           </div>
         {/if}
         {#if candidate.municipality}
-          <div style="font-size:0.95rem;color:#444;margin-bottom:0.25rem">Residence: {candidate.municipality}</div>
+          <div class="contact-icons hover-tooltip" data-tooltip="Residence" style="font-size:0.95rem;margin-bottom:0.25rem">
+            <img src={base + '/graphics/location.svg'} alt="Residence" style="height:1.5em;vertical-align:middle;margin-right:0.5rem" loading="lazy" />
+            {candidate.municipality}
+          </div>
         {/if}
-
-        <div class="contact-icons" style="margin-top:0.25rem">
+        <div class="contact-icons" style="margin-top:1.5rem">
           {#if candidate.email}
             <a class="hover-tooltip" data-tooltip="Email" href={"mailto:" + candidate.email} aria-label="Email">
               <img src={base + '/graphics/email.svg'} alt="Email" loading="lazy" />

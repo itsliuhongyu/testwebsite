@@ -206,6 +206,10 @@ button, summary, span, .calendar-tooltip {
     flex-wrap: wrap;
 }
 
+.back-button {
+    margin-bottom: 0.5em;
+}
+
 .election-button,
 .search-button,
 .previous-result-button,

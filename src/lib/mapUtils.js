@@ -3,6 +3,7 @@
  */
 import maplibregl from 'maplibre-gl';
 import { Protocol, PMTiles } from 'pmtiles';
+import { base } from '$app/paths';
 
 // Register PMTiles protocol with MapLibre once
 let protocolRegistered = false;
@@ -161,8 +162,7 @@ export async function initializeDistrictMap(containerId, pmtilesPath, propertyKe
                     'source-layer': actualSourceLayer,
                     'paint': {
                         'line-color': '#233166',
-                        'line-width': 1,
-                        'fill-opacity': 0.8
+                        'line-width': 1
                     },
                     'filter': ['==', ['get', propertyKey], districtStr]
                 });
@@ -205,7 +205,7 @@ export async function initializeSingleDistrictMap(containerId, pmtilesPath, prop
     try {
         const map = new maplibregl.Map({
             container: containerId,
-            style: '/map-pmtiles/maptile_style.json',
+            style: `${base}/map-pmtiles/maptile_style.json`,
             center: [-89.6, 44.8],
             zoom: 6,
             interactive: false,

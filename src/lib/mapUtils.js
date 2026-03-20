@@ -193,6 +193,7 @@ export async function initializeSingleDistrictMap(containerId, pmtilesPath, prop
     
     // Inspect PMTiles metadata to get actual layer names
     const pmtilesUrl = `${window.location.origin}${pmtilesPath}`;
+    console.log(`[MapUtils] Fetching metadata from: ${pmtilesUrl}`);
     const pmtiles = new PMTiles(pmtilesUrl);
     const metadata = await pmtiles.getMetadata();
     
@@ -201,6 +202,7 @@ export async function initializeSingleDistrictMap(containerId, pmtilesPath, prop
     if (metadata.vector_layers && metadata.vector_layers.length > 0) {
         actualSourceLayer = metadata.vector_layers[0].id;
     }
+    console.log(`[MapUtils] Source layer: ${actualSourceLayer}, Property: ${propertyKey}, District: ${districtNumber}`);
 
     try {
         const map = new maplibregl.Map({
@@ -218,14 +220,17 @@ export async function initializeSingleDistrictMap(containerId, pmtilesPath, prop
         });
         
         map.on('load', () => {
+            const pmtilesSourceUrl = buildPMTilesUrl(pmtilesPath);
+            console.log(`[MapUtils] Adding districts source with URL: ${pmtilesSourceUrl}`);
             map.addSource('districts', {
                 'type': 'vector',
-                'url': buildPMTilesUrl(pmtilesPath)
+                'url': pmtilesSourceUrl
             });
         });
         
         map.on('sourcedata', (e) => {
             if (e.sourceId === 'districts' && e.isSourceLoaded && !map.getLayer('district-fill')) {
+                console.log(`[MapUtils] Districts source loaded, adding layers`);
                 // Convert district number to string for comparison (properties are strings in the data)
                 const districtStr = String(districtNumber);
                 
@@ -241,6 +246,8 @@ export async function initializeSingleDistrictMap(containerId, pmtilesPath, prop
                     },
                     'filter': ['==', ['get', propertyKey], districtStr]
                 });
+                console.log(`[MapUtils] Added district-fill layer with filter: ${propertyKey} == ${districtStr}`);
+                
                 // Add outline layer for the district
                 map.addLayer({
                     'id': 'district-outline',
@@ -253,10 +260,12 @@ export async function initializeSingleDistrictMap(containerId, pmtilesPath, prop
                     },
                     'filter': ['==', ['get', propertyKey], districtStr]
                 });
+                console.log(`[MapUtils] Added district-outline layer`);
                 
                 // Zoom to fit the district after layers are rendered
                 setTimeout(() => {
                     const features = map.queryRenderedFeatures({ layers: ['district-fill'] });
+                    console.log(`[MapUtils] Found ${features?.length || 0} features for zoom calculation`);
                     if (features && features.length > 0) {
                         // Calculate bounds from all features
                         const bounds = new maplibregl.LngLatBounds();
@@ -274,11 +283,14 @@ export async function initializeSingleDistrictMap(containerId, pmtilesPath, prop
                             }
                         });
                         
+                        console.log(`[MapUtils] Fitting map to bounds`);
                         // Fit map to district bounds with padding
                         map.fitBounds(bounds, {
                             padding: 20,
                             animate: false
                         });
+                    } else {
+                        console.warn(`[MapUtils] No features found to zoom to`);
                     }
                 }, 500);
             }

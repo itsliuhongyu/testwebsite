@@ -264,7 +264,12 @@ export async function initializeSingleDistrictMap(containerId, pmtilesPath, prop
                 
                 // Zoom to fit the district after layers are rendered
                 setTimeout(() => {
-                    const features = map.queryRenderedFeatures({ layers: ['district-fill'] });
+                    // Use querySourceFeatures instead of queryRenderedFeatures to get all features
+                    // regardless of current viewport
+                    const features = map.querySourceFeatures('districts', {
+                        sourceLayer: actualSourceLayer,
+                        filter: ['==', ['get', propertyKey], districtStr]
+                    });
                     console.log(`[MapUtils] Found ${features?.length || 0} features for zoom calculation`);
                     if (features && features.length > 0) {
                         // Calculate bounds from all features

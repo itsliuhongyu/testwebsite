@@ -25,7 +25,7 @@
             displayName: 'Wisconsin State Assembly',
             raceType: 'Assembly',
             hasMap: true,
-            pmtilesPath: '/map-pmtiles/WI_Assembly_Districts_2026.pmtiles',
+            pmtilesPath: `${base}/map-pmtiles/WI_Assembly_Districts_2026.pmtiles`,
             mapSourceLayer: 'ASM2024',
             urlPath: 'assembly'
         },
@@ -33,7 +33,7 @@
             displayName: 'U.S. House of Representatives',
             raceType: 'US Congress',
             hasMap: true,
-            pmtilesPath: '/map-pmtiles/WI_Congressional_Districts_2026.pmtiles',
+            pmtilesPath: `${base}/map-pmtiles/WI_Congressional_Districts_2026.pmtiles`,
             mapSourceLayer: 'CON2021',
             urlPath: 'congress'
         },
@@ -41,7 +41,7 @@
             displayName: 'Wisconsin State Senate',
             raceType: 'Senate',
             hasMap: true,
-            pmtilesPath: '/map-pmtiles/WI_Senate_Districts_2026.pmtiles',
+            pmtilesPath: `${base}/map-pmtiles/WI_Senate_Districts_2026.pmtiles`,
             mapSourceLayer: 'SEN2024',
             urlPath: 'senate'
         }

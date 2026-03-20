@@ -3,8 +3,7 @@
     <link rel="stylesheet" href="{base}/css/wp-custom.css">
     <link rel="stylesheet" href="{base}/css/election.css">
     {#if config.hasMap}
-        <link href='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css' rel='stylesheet' />
-        <script src='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js'></script>
+        <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.15.0/dist/maplibre-gl.css">
     {/if}
     <script src="https://pym.nprapps.org/pym.v1.min.js"></script>
 </svelte:head>
@@ -26,7 +25,7 @@
             displayName: 'Wisconsin State Assembly',
             raceType: 'Assembly',
             hasMap: true,
-            mapTilesetId: 'wisconsinwatch.6gs2v405',
+            pmtilesPath: '/map-pmtiles/WI_Assembly_Districts_2026.pmtiles',
             mapSourceLayer: 'ASM2024',
             urlPath: 'assembly'
         },
@@ -34,7 +33,7 @@
             displayName: 'U.S. House of Representatives',
             raceType: 'US Congress',
             hasMap: true,
-            mapTilesetId: 'wisconsinwatch.5mz9q1z2',
+            pmtilesPath: '/map-pmtiles/WI_Congressional_Districts_2026.pmtiles',
             mapSourceLayer: 'CON2021',
             urlPath: 'congress'
         },
@@ -42,7 +41,7 @@
             displayName: 'Wisconsin State Senate',
             raceType: 'Senate',
             hasMap: true,
-            mapTilesetId: 'wisconsinwatch.7scp33x9',
+            pmtilesPath: '/map-pmtiles/WI_Senate_Districts_2026.pmtiles',
             mapSourceLayer: 'SEN2024',
             urlPath: 'senate'
         }
@@ -171,25 +170,13 @@
     }
     
     async function initializeDistrictMap() {
-        if (!race || !config || !config.hasMap || typeof mapboxgl === 'undefined') return;
-        
-        const accessToken = data.mapboxToken;
-        if (!accessToken) return;
-        
-        // Check if district-number exists and is valid
-        if (!race['district-number']) {
-            console.error('District number is missing from race data:', race);
-            return;
-        }
-        
-        mapboxgl.accessToken = accessToken;
+        if (!race || !config || !config.hasMap) return;
         
         districtMap = await initializeSingleDistrictMap(
             'district-map',
-            config.mapTilesetId,
+            config.pmtilesPath,
             config.mapSourceLayer,
-            race['district-number'],
-            accessToken
+            race['district-number']
         );
     }
     

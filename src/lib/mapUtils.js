@@ -1,33 +1,80 @@
 /**
- * Utility functions for initializing Mapbox district maps
+ * Utility functions for initializing MapLibre district maps with PMTiles
  */
+import maplibregl from 'maplibre-gl';
+import { Protocol, PMTiles } from 'pmtiles';
+
+// Register PMTiles protocol with MapLibre once
+let protocolRegistered = false;
+function ensurePMTilesProtocol() {
+    if (!protocolRegistered) {
+        const protocol = new Protocol();
+        maplibregl.addProtocol("pmtiles", protocol.tile);
+        protocolRegistered = true;
+    }
+}
+
+/**
+ * Build absolute pmtiles:// URL from a relative path
+ */
+function buildPMTilesUrl(relativePath) {
+    const origin = window.location.origin;
+    return `pmtiles://${origin}${relativePath}`;
+}
 
 /**
  * Initialize a district map showing all districts with one highlighted
  * Used on the main search page
+ * @param {string} containerId - DOM element ID
+ * @param {string} pmtilesPath - Relative path to PMTiles file, e.g. '/map-pmtiles/WI_Assembly_Districts_2026.pmtiles'
+ * @param {string} propertyKey - Property name for district number in the tileset
+ * @param {string|number} districtNumber - The district number to highlight
  */
-export function initializeDistrictMap(containerId, tilesetId, propertyKey, districtNumber) {
+export async function initializeDistrictMap(containerId, pmtilesPath, propertyKey, districtNumber) {
     const container = document.getElementById(containerId);
-    if (!container || typeof mapboxgl === 'undefined') return null;
+    if (!container) {
+        console.error(`[MapUtils] Container not found: ${containerId}`);
+        return null;
+    }
+    
+    console.log(`[MapUtils] Initializing map: ${containerId}, district: ${districtNumber}`);
+    ensurePMTilesProtocol();
+    
+    // Inspect PMTiles metadata to get actual layer names
+    const pmtilesUrl = `${window.location.origin}${pmtilesPath}`;
+    const pmtiles = new PMTiles(pmtilesUrl);
+    const metadata = await pmtiles.getMetadata();
+    
+    // Get the actual source layer name from vector_layers
+    let actualSourceLayer = propertyKey;
+    if (metadata.vector_layers && metadata.vector_layers.length > 0) {
+        actualSourceLayer = metadata.vector_layers[0].id;
+    }
 
-    const map = new mapboxgl.Map({
+    const map = new maplibregl.Map({
         container: containerId,
         style: {
             'version': 8,
             'sources': {
                 'districts': {
                     'type': 'vector',
-                    'url': `mapbox://${tilesetId}`
+                    'url': buildPMTilesUrl(pmtilesPath)
                 }
             },
-            'glyphs': 'mapbox://fonts/mapbox/{fontstack}/{range}.pbf',
-            'layers': []
+            'layers': [
+                {
+                    'id': 'background',
+                    'type': 'background',
+                    'paint': {
+                        'background-color': '#FFFFFF'
+                    }
+                }
+            ]
         },
         center: [-89.6, 44.8], // Center of Wisconsin
         zoom: 6,
         interactive: false, // Disable zooming and panning
-        attributionControl: false,
-        preserveDrawingBuffer: true
+        attributionControl: false, // Hide MapLibre attribution
     });
 
     // Function to fit bounds
@@ -65,74 +112,100 @@ export function initializeDistrictMap(containerId, tilesetId, propertyKey, distr
     };
 
     map.on('sourcedata', (e) => {
-        if (e.sourceId === 'districts' && e.isSourceLoaded) {
-            const source = map.getSource('districts');
-            console.log(`[MapUtils] Source loaded for ${containerId}, vectorLayerIds:`, source?.vectorLayerIds);
+        if (e.sourceId === 'districts' && e.isSourceLoaded && !map.getLayer('districts-fill')) {
+            // Convert district number to string for comparison (properties are strings in the data)
+            const districtStr = String(districtNumber);
             
-            // Get the actual source-layer name from the loaded tileset
-            if (source && source.vectorLayerIds && source.vectorLayerIds.length > 0) {
-                const sourceLayerName = source.vectorLayerIds[0];
-                const districtNum = parseInt(districtNumber);
-                
-                // Check if layers already exist to avoid duplicate addition
-                if (!map.getLayer('districts-fill')) {
-                    console.log(`[MapUtils] Adding layers for ${containerId}, sourceLayer: ${sourceLayerName}, filtering by id: ${districtNum}`);
-                    // Add layer for all districts (white fill)
-                    map.addLayer({
-                        'id': 'districts-fill',
-                        'type': 'fill',
-                        'source': 'districts',
-                        'source-layer': sourceLayerName,
-                        'paint': {
-                            'fill-color': '#ffffff',
-                            'fill-opacity': 1
-                        }
-                    });
+            // Add layer for all districts
+                map.addLayer({
+                    'id': 'districts-fill',
+                    'type': 'fill',
+                    'source': 'districts',
+                    'source-layer': actualSourceLayer,
+                    'paint': {
+                        'fill-color': '#D5E2EE',
+                        'fill-opacity': 1
+                    }
+                });
 
-                    // Add layer for selected district (blue fill)
-                    map.addLayer({
-                        'id': 'selected-district',
-                        'type': 'fill',
-                        'source': 'districts',
-                        'source-layer': sourceLayerName,
-                        'paint': {
-                            'fill-color': '#0073aa',
-                            'fill-opacity': 0.8
-                        },
-                        'filter': ['==', ['get', 'FID'], districtNum]
-                    });
+                // Add border for all districts
+                map.addLayer({
+                    'id': 'districts-outline',
+                    'type': 'line',
+                    'source': 'districts',
+                    'source-layer': actualSourceLayer,
+                    'paint': {
+                        'line-color': '#FFFFFF',
+                        'line-width': 0.2
+                    }
+                });
 
-                    // Add border for all districts
-                    map.addLayer({
-                        'id': 'districts-outline',
-                        'type': 'line',
-                        'source': 'districts',
-                        'source-layer': sourceLayerName,
-                        'paint': {
-                            'line-color': '#000000',
-                            'line-width': 0.5
-                        }
-                    });
-                }
-            }
+                // Add layer for selected district (blue fill)
+                map.addLayer({
+                    'id': 'selected-district',
+                    'type': 'fill',
+                    'source': 'districts',
+                    'source-layer': actualSourceLayer,
+                    'paint': {
+                        'fill-color': '#0073aa',
+                        'fill-opacity': 1,
+                    },
+                    'filter': ['==', ['get', propertyKey], districtStr]
+                });
+
+                // Add stroke for selected district
+                map.addLayer({
+                    'id': 'selected-district-stroke',
+                    'type': 'line',
+                    'source': 'districts',
+                    'source-layer': actualSourceLayer,
+                    'paint': {
+                        'line-color': '#233166',
+                        'line-width': 1,
+                        'fill-opacity': 0.8
+                    },
+                    'filter': ['==', ['get', propertyKey], districtStr]
+                });
+
         }
+    });
+
+    map.on('error', (e) => {
+        console.error(`[MapUtils] Map error for ${containerId}:`, e);
     });
 
     return map;
 }
 
 /**
- * Initialize a single district map with custom background style
+ * Initialize a single district map with a light basemap style
  * Used on individual race detail pages
+ * @param {string} containerId - DOM element ID
+ * @param {string} pmtilesPath - Relative path to PMTiles file
+ * @param {string} propertyKey - Property name for district number
+ * @param {string|number} districtNumber - The district number to show
  */
-export async function initializeSingleDistrictMap(containerId, tilesetId, propertyKey, districtNumber, accessToken, customStyleId = 'mapbox/light-v11') {
+export async function initializeSingleDistrictMap(containerId, pmtilesPath, propertyKey, districtNumber) {
     const container = document.getElementById(containerId);
-    if (!container || typeof mapboxgl === 'undefined') return null;
+    if (!container) return null;
+
+    ensurePMTilesProtocol();
+    
+    // Inspect PMTiles metadata to get actual layer names
+    const pmtilesUrl = `${window.location.origin}${pmtilesPath}`;
+    const pmtiles = new PMTiles(pmtilesUrl);
+    const metadata = await pmtiles.getMetadata();
+    
+    // Get the actual source layer name from vector_layers
+    let actualSourceLayer = propertyKey;
+    if (metadata.vector_layers && metadata.vector_layers.length > 0) {
+        actualSourceLayer = metadata.vector_layers[0].id;
+    }
 
     try {
-        const map = new mapboxgl.Map({
+        const map = new maplibregl.Map({
             container: containerId,
-            style: `mapbox://styles/${customStyleId}`,
+            style: '/map-pmtiles/maptile_style.json',
             center: [-89.6, 44.8],
             zoom: 6,
             interactive: false,
@@ -147,160 +220,67 @@ export async function initializeSingleDistrictMap(containerId, tilesetId, proper
         map.on('load', () => {
             map.addSource('districts', {
                 'type': 'vector',
-                'url': `mapbox://${tilesetId}`
+                'url': buildPMTilesUrl(pmtilesPath)
             });
         });
         
         map.on('sourcedata', (e) => {
-            if (e.sourceId === 'districts' && e.isSourceLoaded) {
-                const source = map.getSource('districts');
+            if (e.sourceId === 'districts' && e.isSourceLoaded && !map.getLayer('district-fill')) {
+                // Convert district number to string for comparison (properties are strings in the data)
+                const districtStr = String(districtNumber);
                 
-                if (source && source.vectorLayerIds && source.vectorLayerIds.length > 0) {
-                    const sourceLayerName = source.vectorLayerIds[0];
-                    const districtNum = parseInt(districtNumber);
-                    
-                    if (!map.getLayer('district-fill')) {
-                        // Add fill layer for the district
-                        map.addLayer({
-                            'id': 'district-fill',
-                            'type': 'fill',
-                            'source': 'districts',
-                            'source-layer': sourceLayerName,
-                            'paint': {
-                                'fill-color': '#0073aa',
-                                'fill-opacity': 0.6
-                            },
-                            'filter': ['==', ['get', 'FID'], districtNum]
-                        });
-                        
-                        // Add outline layer for the district
-                        map.addLayer({
-                            'id': 'district-outline',
-                            'type': 'line',
-                            'source': 'districts',
-                            'source-layer': sourceLayerName,
-                            'paint': {
-                                'line-color': '#0073aa',
-                                'line-width': 3
-                            },
-                            'filter': ['==', ['get', 'FID'], districtNum]
-                        });
-                        
-                        // Use idle event to ensure tiles are loaded before querying
-                        map.once('idle', () => {
-                            const features = map.querySourceFeatures('districts', {
-                                sourceLayer: sourceLayerName,
-                                filter: ['==', ['get', 'FID'], districtNum]
-                            });
-                            
-                            console.log(`[MapUtils] Found ${features.length} features for district ${districtNum} in tileset ${tilesetId}`);
-                            
-                            if (features.length > 0) {
-                                // Log first feature for debugging
-                                console.log('[MapUtils] First feature geometry type:', features[0].geometry.type);
-                                console.log('[MapUtils] First feature sample coordinates:', 
-                                    features[0].geometry.type === 'Polygon' 
-                                        ? features[0].geometry.coordinates[0]?.slice(0, 2)
-                                        : features[0].geometry.coordinates[0]?.[0]?.slice(0, 2)
-                                );
-                                
-                                const bounds = new mapboxgl.LngLatBounds();
-                                let validCoordsFound = false;
-                                
-                                features.forEach(feature => {
-                                    if (feature.geometry.type === 'Polygon') {
-                                        feature.geometry.coordinates[0].forEach((coord, idx) => {
-                                            // Log first few coords for debugging
-                                            if (idx < 3) {
-                                                console.log(`[MapUtils] Polygon coord ${idx}:`, coord, 'isArray:', Array.isArray(coord), 'length:', coord?.length);
-                                            }
-                                            // Validate coordinates before extending
-                                            if (Array.isArray(coord) && coord.length >= 2 && 
-                                                !isNaN(coord[0]) && !isNaN(coord[1]) &&
-                                                isFinite(coord[0]) && isFinite(coord[1])) {
-                                                bounds.extend(coord);
-                                                validCoordsFound = true;
-                                            }
-                                        });
-                                    } else if (feature.geometry.type === 'MultiPolygon') {
-                                        feature.geometry.coordinates.forEach(polygon => {
-                                            polygon[0].forEach((coord, idx) => {
-                                                // Log first few coords for debugging
-                                                if (idx < 3) {
-                                                    console.log(`[MapUtils] MultiPolygon coord ${idx}:`, coord, 'isArray:', Array.isArray(coord), 'length:', coord?.length);
-                                                }
-                                                // Validate coordinates before extending
-                                                if (Array.isArray(coord) && coord.length >= 2 && 
-                                                    !isNaN(coord[0]) && !isNaN(coord[1]) &&
-                                                    isFinite(coord[0]) && isFinite(coord[1])) {
-                                                    bounds.extend(coord);
-                                                    validCoordsFound = true;
-                                                }
-                                            });
-                                        });
-                                    }
+                // Add fill layer for the district
+                map.addLayer({
+                    'id': 'district-fill',
+                    'type': 'fill',
+                    'source': 'districts',
+                    'source-layer': actualSourceLayer,
+                    'paint': {
+                        'fill-color': '#0073aa',
+                        'fill-opacity': 0.5
+                    },
+                    'filter': ['==', ['get', propertyKey], districtStr]
+                });
+                // Add outline layer for the district
+                map.addLayer({
+                    'id': 'district-outline',
+                    'type': 'line',
+                    'source': 'districts',
+                    'source-layer': actualSourceLayer,
+                    'paint': {
+                        'line-color': '#0073aa',
+                        'line-width': 2
+                    },
+                    'filter': ['==', ['get', propertyKey], districtStr]
+                });
+                
+                // Zoom to fit the district after layers are rendered
+                setTimeout(() => {
+                    const features = map.queryRenderedFeatures({ layers: ['district-fill'] });
+                    if (features && features.length > 0) {
+                        // Calculate bounds from all features
+                        const bounds = new maplibregl.LngLatBounds();
+                        features.forEach(feature => {
+                            if (feature.geometry.type === 'Polygon') {
+                                feature.geometry.coordinates[0].forEach(coord => {
+                                    bounds.extend(coord);
                                 });
-                                
-                                console.log('[MapUtils] validCoordsFound:', validCoordsFound);
-                                console.log('[MapUtils] bounds:', bounds);
-                                console.log('[MapUtils] bounds SW:', bounds.getSouthWest());
-                                console.log('[MapUtils] bounds NE:', bounds.getNorthEast());
-                                
-                                if (validCoordsFound) {
-                                    // Defer fitBounds to avoid calling it during idle event handler
-                                    // This prevents camera calculation issues that can cause NaN errors
-                                    setTimeout(() => {
-                                        try {
-                                            // Double-check map and container are in valid state
-                                            const container = map.getContainer();
-                                            const containerSize = { width: container.clientWidth, height: container.clientHeight };
-                                            console.log('[MapUtils] Container size:', containerSize);
-                                            console.log('[MapUtils] Map loaded:', map.loaded());
-                                            
-                                            if (containerSize.width > 0 && containerSize.height > 0) {
-                                                // Convert bounds to array format which is more reliable
-                                                const sw = bounds.getSouthWest();
-                                                const ne = bounds.getNorthEast();
-                                                const boundsArray = [[sw.lng, sw.lat], [ne.lng, ne.lat]];
-                                                console.log('[MapUtils] Fitting to bounds array:', boundsArray);
-                                                map.fitBounds(boundsArray, { padding: 40, animate: false });
-                                            } else {
-                                                console.error('[MapUtils] Invalid container size, cannot fit bounds');
-                                            }
-                                        } catch (err) {
-                                            console.error('[MapUtils] Error fitting bounds:', err);
-                                            console.error('[MapUtils] Bounds object:', bounds);
-                                        }
-                                    }, 0);
-                                } else {
-                                    console.warn(`[MapUtils] No valid coordinates found for district ${districtNum}, using Wisconsin bounds`);
-                                    setTimeout(() => {
-                                        map.fitBounds([
-                                            [-92.889, 42.491],
-                                            [-86.249, 47.309]
-                                        ], {
-                                            padding: 20,
-                                            animate: false
-                                        });
-                                    }, 0);
-                                }
-                            } else {
-                                console.warn(`[MapUtils] No features found for district ${districtNum}, using Wisconsin bounds`);
-                                // Fallback to Wisconsin bounds if no features found
-                                // Defer fitBounds to avoid calling it during idle event handler
-                                setTimeout(() => {
-                                    map.fitBounds([
-                                        [-92.889, 42.491],
-                                        [-86.249, 47.309]
-                                    ], {
-                                        padding: 20,
-                                        animate: false
+                            } else if (feature.geometry.type === 'MultiPolygon') {
+                                feature.geometry.coordinates.forEach(polygon => {
+                                    polygon[0].forEach(coord => {
+                                        bounds.extend(coord);
                                     });
-                                }, 0);
+                                });
                             }
                         });
+                        
+                        // Fit map to district bounds with padding
+                        map.fitBounds(bounds, {
+                            padding: 20,
+                            animate: false
+                        });
                     }
-                }
+                }, 500);
             }
         });
         

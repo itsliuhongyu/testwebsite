@@ -1,7 +1,6 @@
 <svelte:head>
     <link rel="stylesheet" href="{base}/css/bento-grid.css">
-	<link href='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css' rel='stylesheet' />
-	<script src='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js'></script>
+    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.15.0/dist/maplibre-gl.css">
 </svelte:head>
 
 <style>
@@ -12,6 +11,7 @@
     }
 
     #address-map {
+        background-color: #FFFFFF;
         border:#D5E2EE 2px solid;
         box-shadow: 0 6px 16px rgba(35, 49, 102, 0.08);
         border-radius: 50px;
@@ -19,7 +19,7 @@
         padding-bottom: 0rem;
         padding-left: 1rem;
         padding-right: 1rem;
-        margin-top: 1rem;
+        margin-top: 2rem;
         margin-bottom: 1rem;
     }
 
@@ -36,12 +36,14 @@
         border: 3px solid #0073aa;
         border-radius: 50px;
         transition: all 0.2s;
+        background-color: #FFFFFF;
     }
 
     .address-input:hover, .address-input:focus {
         outline: none;
         border: 3px solid #233166;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        background-color: #EAF1F7;
     }
 
     .address-input:disabled {
@@ -100,9 +102,7 @@
     }
 
     .results-container {
-        background-color: #f9f9f9;
-        border: 1px solid #ddd;
-        border-radius: 8px;
+        border-radius: 25px;
         padding: 2rem;
         margin-top: 1.5rem;
     }
@@ -131,12 +131,15 @@
 
     .district-card {
         background-color: white;
-        border: 2px solid #3090c9;
-        border-radius: 8px;
+        border-radius: 25px;
         padding: 1.5rem;
         text-align: center;
         display: flex;
         flex-direction: column;
+    }
+    
+    .district-card canvas {
+        border-radius: 50px;
     }
 
     .district-card-link {
@@ -148,14 +151,12 @@
 
     .district-card-link:hover {
         transform: translateY(-4px);
-        box-shadow: 0 4px 12px rgba(35, 49, 102, 0.3);
-        border-color: #233166;
     }
 
     .click-hint {
         margin-top: 1rem;
         color: #3090c9;
-        font-weight: 500;
+        font-weight: 700;
     }
 
     .district-card h4 {
@@ -174,19 +175,24 @@
 
     .district-map {
         width: 100%;
-        height: 0;
-        padding-bottom: 65%; /* Adjusted aspect ratio for larger single-column display */
+        height: 350px;
         position: relative;
         border-radius: 4px;
-        margin-top: auto;
+        margin-top: 1rem;
+        overflow: hidden;
+        display: block;
     }
-
-    .district-map > div {
-        position: absolute !important;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+    
+    .district-map canvas {
+        display: block;
+        width: 100% !important;
+        height: 100% !important;
+    }
+    
+    /* Hide MapLibre attribution */
+    .district-map .maplibregl-ctrl-attrib,
+    .district-map .maplibregl-ctrl-logo {
+        display: none !important;
     }
 
     .coordinates-info {
@@ -499,7 +505,7 @@
 </style>
 
 <script>
-    import { onMount, onDestroy } from 'svelte';
+    import { onMount, onDestroy, tick } from 'svelte';
     import { goto } from '$app/navigation';
     import { base } from '$app/paths';
     import { findDistrictsForAddress } from '$lib/districtLookup.js';
@@ -808,7 +814,8 @@
             }
             
             // Wait for DOM update then initialize maps
-            setTimeout(initializeMaps, 100);
+            await tick();
+            initializeMaps();
         } catch (error) {
             searchError = error.message || 'Failed to find districts for this address';
             console.error('District search error:', error);
@@ -817,28 +824,26 @@
         }
     }
 
-    function initializeMaps() {
-        if (!districtResults || typeof mapboxgl === 'undefined') return;
+    async function initializeMaps() {
+        if (!districtResults) return;
 
-        const accessToken = data.mapboxToken;
-        if (!accessToken) return;
+        // Use requestAnimationFrame to ensure DOM is painted and containers have dimensions
+        requestAnimationFrame(async () => {
+            // Initialize Assembly map
+            if (districtResults.districts.assembly) {
+                await initializeDistrictMap('assembly-map', `${base}/map-pmtiles/WI_Assembly_Districts_2026.pmtiles`, 'ASM2024', districtResults.districts.assembly);
+            }
 
-        mapboxgl.accessToken = accessToken;
+            // Initialize Senate map
+            if (districtResults.districts.senate) {
+                await initializeDistrictMap('senate-map', `${base}/map-pmtiles/WI_Senate_Districts_2026.pmtiles`, 'SEN2024', districtResults.districts.senate);
+            }
 
-        // Initialize Assembly map
-        if (districtResults.districts.assembly) {
-            initializeDistrictMap('assembly-map', 'wisconsinwatch.6gs2v405', 'ASM2024', districtResults.districts.assembly);
-        }
-
-        // Initialize Senate map
-        if (districtResults.districts.senate) {
-            initializeDistrictMap('senate-map', 'wisconsinwatch.7scp33x9', 'SEN2024', districtResults.districts.senate);
-        }
-
-        // Initialize Congress map
-        if (districtResults.districts.congress) {
-            initializeDistrictMap('congress-map', 'wisconsinwatch.5mz9q1z2', 'CON2021', districtResults.districts.congress);
-        }
+            // Initialize Congress map
+            if (districtResults.districts.congress) {
+                await initializeDistrictMap('congress-map', `${base}/map-pmtiles/WI_Congressional_Districts_2026.pmtiles`, 'CON2021', districtResults.districts.congress);
+            }
+        });
     }
 
     onMount(async () => {

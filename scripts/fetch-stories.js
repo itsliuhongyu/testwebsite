@@ -21,7 +21,7 @@ async function fetchStories() {
 		
 		// Parse RSS XML to extract stories
 		const itemRegex = /<item>([\s\S]*?)<\/item>/g;
-		const items = [...xmlText.matchAll(itemRegex)].slice(0, 5); // Get first 5 items
+		const items = [...xmlText.matchAll(itemRegex)].slice(0, 6); // Get first 6 items
 		
 		const stories = items.map((match, index) => {
 			const itemContent = match[1];

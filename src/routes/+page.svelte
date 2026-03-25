@@ -136,6 +136,7 @@
         text-align: center;
         display: flex;
         flex-direction: column;
+        border-bottom: 2px solid #D5E2EE;
     }
     
     .district-card canvas {
@@ -170,7 +171,7 @@
         margin: 0;
         font-size: 1.75rem;
         font-weight: bold;
-        color: #333;
+        color: #233166;
     }
 
     .district-map {
@@ -307,7 +308,7 @@
         box-shadow: 0 2px 8px #3090C9;
     }
 
-    .calendar-day.highlighted:hover {
+    .calendar-day.highlighted:hover, .calendar-day.highlighted:active {
         transform: scale(1.1);
         box-shadow: 0 4px 12px #233166;
         background: #233166;
@@ -387,6 +388,22 @@
 
     .calendar-link:hover {
         color: #233166;
+    }
+
+    .suggestions-dropdown {
+        opacity: 0.95;
+        transform: translateY(0.5em);
+        border-radius: 6px;
+    }
+
+    #author, #date {
+        font-family: 'Heebo', sans-serif;
+        font-size: 0.8rem;
+        margin: 0.25rem 0 0 0;
+    }
+
+    #author {
+        color: #999;
     }
 
     @media (max-width: 820px) {
@@ -469,6 +486,10 @@
     }
 
     @media (max-width: 480px) {
+        .address-search-container {
+            padding: 0 0.1rem;
+        }
+
         .calendars-container {
             padding: 0 0.25rem;
         }
@@ -1106,7 +1127,7 @@
                                     {/if}
                                 </button>
                             </div>
-                            <small><i>We do not save your data! Read our privacy policy <a href="https://wisconsinwatch.org/about/user-agreement-and-privacy-policy/">here</a> .</i></small> 
+                            <small style="transform:translateY(0.5em);"><i>We do not save your data! Read our privacy policy <a href="https://wisconsinwatch.org/about/user-agreement-and-privacy-policy/">here</a> .</i></small> 
 
                             {#if searchError}
                                 <div class="error-message">
@@ -1388,21 +1409,43 @@
 
                     
                     <!--Self populated list of stories-->
+                    <!--Obtain info from "https://wisconsinwatch.org/tag/election-2026"-->
 
                         <h2 class="wp-block-heading has-text-align-center" id="News">Latest election news from Wisconsin Watch</h2>
-                            <ul class="wp-block-latest-posts__list is-grid columns-3 wp-block-latest-posts" id="latest-election-2024-news-and-resources">
+                            <div class="recent-news ento-container grid grid-cols-12 grid-flow-dense gap-4" id="latest-election-2024-news-and-resources">
                                 {#each data.stories as story (story.id)}
-                                    <li><a data-post-id={story.id} class="wp-block-latest-posts__post-title" href={story.url}>{story.title}</a></li>
+                                    <section class="bento-section bento-section-secondary ring col-span-full md:col-span-12 xl:col-span-4 xl:row-span-1">
+                                            {#if story.image}
+                                                <figure class="post-content">
+                                                    <img 
+                                                        width={story.imageWidth || "782"}
+                                                        height={story.imageHeight || "410"}
+                                                        src={story.image}
+                                                        class="attachment-rss-image-size size-rss-image-size wp-post-image"
+                                                        alt={story.imageAlt || ""}
+                                                        decoding="async"
+                                                        loading="lazy"
+                                                        srcset={story.imageSrcset || story.image}
+                                                        sizes={story.imageSizes || "(max-width: 34.9rem) calc(100vw - 2rem), (max-width: 53rem) calc(8 * (100vw / 12)), (min-width: 53rem) calc(6 * (100vw / 12)), 100vw"}
+                                                    />
+                                                </figure>
+                                            {/if}
+                                            <div class="post-content">
+                                                <strong><a data-post-id={story.id} id="post-title" href={story.url} style="color: #233166 !important;">
+                                                    {story.title}
+                                                </a></strong>
+                                                {#if story.creator}
+                                                    <p id="author">By <strong>{story.creator}</strong></p>
+                                                {/if}
+                                                {#if story.pubDate}
+                                                    <p id="date">{
+                                                        new Date(story.pubDate).toLocaleDateString()
+                                                    }</p>
+                                                {/if}
+                                            </div>
+                                    </section>
                                 {/each}
-                            </ul>
-
-                    <!--Credit section-->
-                        <div class="wp-block-group credits" style="padding-top: 1rem;">
-                            <h4 class="wp-block-heading has-text-align-center">Credits</h4>
-                            <p>Wisconsin Watch's voter guide is a team effort made possible by:</p>
-                            <p>Reporters: </p>
-                            <p>Editors: </p>
-                        </div>
+                            </div>
                     </div>
                 </div> 
         </main>

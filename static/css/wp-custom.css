@@ -84,7 +84,7 @@ div, small, p, i, h1, h2, h3, h4, h5, h6, input {
     font-family: "Publico Roman","Georgia","serif";
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h3, h4, h5, h6{
     color: #233166;
 }
 
@@ -208,6 +208,17 @@ button, summary, span, .calendar-tooltip {
 
 .back-button {
     margin-bottom: 0.5em;
+}
+
+.credits {
+    flex-direction: column;
+}
+
+.credits p {
+    font-family: 'Heebo', sans-serif;
+    color: #666;
+    font-size: 14px;
+    margin: 0.25rem 0 ;
 }
 
 .election-button,

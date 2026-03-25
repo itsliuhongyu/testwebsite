@@ -154,11 +154,12 @@
 	{@render children()}
 </div>	
 
-<footer style="background-color: #eee; color: black; padding: 1rem 0.5rem">
+<footer style="background-color: #eee; padding: 1rem 0.5rem">
 
 	<!--Credit section-->
     <div class="credits wrapper">
         <small>
+			<strong>Credits:</strong><br>
 			<p>Reporting by Testing Name, Testing Name</p>
 			<p>Editing by Testing Name, Testing Name</p>
 			<p>Photography by Testing Name, Testing Name</p>

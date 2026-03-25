@@ -158,8 +158,8 @@
                 }
             }
             
-            // Load stories for this race
-            stories = await getStoriesByRaceId(raceId);
+            // Load stories for this race using the actual race-id
+            stories = await getStoriesByRaceId(race['race-id']);
             
             loading = false;
         } catch (err) {
@@ -258,13 +258,6 @@
                         {/if}
                     </div>
                     
-                    {#if raceTypeParam === 'governor' && race['district-race-nutshell']}
-                        <div class="info-section">
-                            <h2>Race Overview</h2>
-                            <p>{@html race['district-race-nutshell'].replace(/\n/g, '<br>')}</p>
-                        </div>
-                    {/if}
-                    
                     {#if candidates.length > 0}
                         <div class="info-section">
                             <h2>Candidates</h2>
@@ -293,6 +286,13 @@
                         </div>
                     {/if}
                     
+                    {#if raceTypeParam === 'governor' && race['district-race-nutshell']}
+                        <div class="info-section">
+                            <h2>Race Overview</h2>
+                            <p>{@html race['district-race-nutshell'].replace(/\n/g, '<br>')}</p>
+                        </div>
+                    {/if}
+                    
                     {#if raceTypeParam !== 'governor'}
                         {#if race['district-info']}
                             <div class="info-section">
@@ -314,26 +314,24 @@
                                 <p>{race['primary-results']}</p>
                             </div>
                         {/if}
-                        
-                        {#if race['key-races']}
-                            <div class="info-section">
-                                <h2>Key Race Information</h2>
-                                <p>{race['key-races']}</p>
-                            </div>
-                        {/if}
                     {/if}
                     
                     {#if stories.length > 0}
                         <div class="info-section">
-                            <h2>More stories here</h2>
+                            <h2>Stories about this race</h2>
                             <div class="stories-list">
                                 {#each stories as story}
                                     <div class="story-item">
-                                        <a href={story.url} target="_blank" rel="noopener noreferrer" class="story-headline">
-                                            {story.headline}
-                                        </a>
-                                        {#if story.publisher}
-                                            <div class="story-publisher">{story.publisher}</div>
+                                        <div class="story-data">
+                                            <a href={story.url} target="_blank" rel="noopener noreferrer" class="story-headline">
+                                                {story.headline}
+                                            </a>
+                                            {#if story.byline}
+                                                <div class="story-byline">by <strong>{story.byline}</strong></div>
+                                            {/if}
+                                        </div>
+                                        {#if story.cover_img}
+                                            <img src={story.cover_img} alt={story.headline} class="story-cover-img" />
                                         {/if}
                                     </div>
                                 {/each}

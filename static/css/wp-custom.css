@@ -186,7 +186,7 @@ button, summary, span, .calendar-tooltip {
 }
 
 .entry-content a:active, .entry-content a:hover {
-    color: #2679AA !important;
+    color: #233166 !important;
     text-decoration: underline !important;
 }
 
@@ -212,13 +212,14 @@ button, summary, span, .calendar-tooltip {
 
 .credits {
     flex-direction: column;
+    line-height: 1.3;
 }
 
-.credits p {
+.credits p, .credits strong {
     font-family: 'Heebo', sans-serif;
-    color: #666;
+    color: #515151;
     font-size: 14px;
-    margin: 0.25rem 0 ;
+    margin: 0 ;
 }
 
 .election-button,

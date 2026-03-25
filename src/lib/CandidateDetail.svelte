@@ -44,17 +44,17 @@
       <div class="contact-inline" style="margin-top:0.75rem;">
         <div class="contact-icons">
         {#if candidate.party === 'Democrat'}
-          <p style="font-size: 1.2rem; margin: 0.5rem 0; color: #003cb9; display:flex; align-items:center;">
+          <p style="margin: 0.5rem 0; color: #003cb9; display:flex; align-items:center;">
             <img src={base + '/graphics/logos/dem.svg'} alt="Democrat" style="height:1.5em; margin-right:0.5rem; vertical-align:-0.125em" loading="lazy" />
-            <span>Democrat</span>
+            <span style="font-weight: 600;">Democrat</span>
           </p>
         {:else if candidate.party === 'Republican'}
-          <p style="font-size: 1.2rem; margin: 0.5rem 0; color: #e9141e; display:flex; align-items:center;">
+          <p style="margin: 0.5rem 0; color: #e9141e; display:flex; align-items:center;">
             <img src={base + '/graphics/logos/rep.svg'} alt="Republican" style="height:1.5em; margin-right:0.5rem; vertical-align:-0.125em" loading="lazy" />
-            <span>Republican</span>
+            <span style="font-weight: 600;">Republican</span>
           </p>
         {:else}
-          <p style="font-size: 1.2rem; margin: 0.5rem 0; color: #e69f00;">Non-Partisan</p>
+          <p style="font-weight: 600; margin: 0.5rem 0; color: #e69f00;">Non-Partisan</p>
         {/if}
         </div>
         {#if candidate.phone_number}

@@ -400,10 +400,7 @@
         font-family: 'Heebo', sans-serif;
         font-size: 0.8rem;
         margin: 0.25rem 0 0 0;
-    }
-
-    #author {
-        color: #999;
+        color: #515151;
     }
 
     @media (max-width: 820px) {

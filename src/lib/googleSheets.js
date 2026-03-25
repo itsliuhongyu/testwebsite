@@ -213,7 +213,8 @@ export async function fetchStoriesFromAPI() {
         const data = await fetchSheetValuesWithCache(STORIES_SPREADSHEET_ID, range);
         const rows = (data && data.values) || [];
         if (rows.length === 0) return [];
-        const headers = rows[0].map(h => h.toLowerCase().replace(/\s+/g, '_'));
+        // Normalize headers: lowercase, replace spaces AND hyphens with underscores
+        const headers = rows[0].map(h => h.toLowerCase().replace(/[\s-]+/g, '_'));
         return rows.slice(1).map((row, index) => {
             const story = { id: index };
             headers.forEach((header, i) => {
@@ -234,7 +235,8 @@ export async function fetchStoriesFromAPI() {
  */
 export async function getStoriesByRaceId(raceId) {
     const stories = await fetchStoriesFromAPI();
-    return stories.filter(s => s.race_id === raceId);
+    const filteredStories = stories.filter(s => s.race_id === raceId);
+    return filteredStories;
 }
 
 /**

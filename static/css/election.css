@@ -19,7 +19,7 @@
 .info-section {
     box-shadow: 0 6px 16px rgba(35, 49, 102, 0.08);
     margin: 2rem 0;
-    background-color: rgba(255, 255, 255, 0.7);
+    background-color: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     padding: 1rem;
@@ -198,8 +198,11 @@
 }
 
 .story-item {
-    padding: 0.5rem 0;
+    padding: 1rem 0;
     border-bottom: 1px solid #e0e0e0;
+    display: grid;
+    grid-auto-flow: column;
+    justify-items: start;
 }
 
 .story-item:last-child {
@@ -209,8 +212,8 @@
 .story-headline {
     display: block;
     font-size: 1.1rem;
-    font-weight: 600;
-    color: #233166;
+    font-weight: 700;
+    color: #233166 !important;
     text-decoration: none;
     margin-bottom: 0.5rem;
     transition: all 0.2s ease;
@@ -221,10 +224,28 @@
     text-decoration: underline;
 }
 
+.story-cover-img {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    margin: 0;
+    display: block;
+}
+
+.story-data {
+    margin-right: 0.5em;
+}
+
+.story-byline {
+    font-size: 0.9rem;
+    font-family: 'Heebo', sans-serif;
+    color: #515151;
+}
+
 .story-publisher {
     font-size: 0.9rem;
-    color: #666;
-    font-style: italic;
+    font-family: 'Heebo', sans-serif;
+    color: #515151;
 }
 
 @media (max-width: 768px) {
@@ -237,5 +258,13 @@
     }
     .race-detail {
         padding: 0;
+    }
+
+    .story-item {
+        grid-auto-flow: row;
+    } 
+
+    .story-cover-img {
+        margin: 0.75rem 0;
     }
 }

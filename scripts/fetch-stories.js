@@ -1,13 +1,16 @@
-import { json } from '@sveltejs/kit';
+// Script to fetch and parse Wisconsin Watch RSS feed
+// Saves results to static/data/stories.json
 
-/** @type {import('./$types').RequestHandler} */
-export async function GET({ fetch, setHeaders }) {
+import { writeFileSync, mkdirSync } from 'fs';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+async function fetchStories() {
 	try {
-		// Cache for 5 minutes to avoid hammering the RSS feed
-		setHeaders({
-			'Cache-Control': 'public, max-age=300'
-		});
-		
+		console.log('Fetching RSS feed from Wisconsin Watch...');
 		const response = await fetch('https://wisconsinwatch.org/tag/election-2026/feed/');
 		
 		if (!response.ok) {
@@ -18,7 +21,7 @@ export async function GET({ fetch, setHeaders }) {
 		
 		// Parse RSS XML to extract stories
 		const itemRegex = /<item>([\s\S]*?)<\/item>/g;
-		const items = [...xmlText.matchAll(itemRegex)].slice(0, 6); // Get first 6 items
+		const items = [...xmlText.matchAll(itemRegex)].slice(0, 5); // Get first 5 items
 		
 		const stories = items.map((match, index) => {
 			const itemContent = match[1];
@@ -108,10 +111,27 @@ export async function GET({ fetch, setHeaders }) {
 			return { id, title, url, creator, pubDate, image, imageAlt, imageSrcset, imageSizes, imageWidth, imageHeight };
 		});
 		
-		return json(stories);
+		// Create data directory if it doesn't exist
+		const outputDir = `${__dirname}/../static/data`;
+		mkdirSync(outputDir, { recursive: true });
+		
+		// Write to JSON file with metadata
+		const output = {
+			lastUpdated: new Date().toISOString(),
+			stories: stories
+		};
+		
+		const outputPath = `${outputDir}/stories.json`;
+		writeFileSync(outputPath, JSON.stringify(output, null, 2));
+		
+		console.log(`✓ Successfully fetched ${stories.length} stories`);
+		console.log(`✓ Saved to ${outputPath}`);
+		console.log(`✓ Last updated: ${output.lastUpdated}`);
+		
 	} catch (error) {
-		console.error('Error fetching RSS feed:', error);
-		// Return empty array on error
-		return json([]);
+		console.error('Error fetching stories:', error);
+		process.exit(1);
 	}
 }
+
+fetchStories();

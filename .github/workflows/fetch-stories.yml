@@ -1,0 +1,42 @@
+name: Fetch Latest Election Stories
+
+on:
+  schedule:
+    # Run at 7:00 AM Central Time (12:00 PM UTC) every day
+    # Adjust hours based on your timezone (CT is UTC-6 in winter, UTC-5 in summer)
+    - cron: '0 12 * * *'
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  fetch-stories:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Fetch and parse RSS feed
+        run: node scripts/fetch-stories.js
+      
+      - name: Check for changes
+        id: git-check
+        run: |
+          git diff --exit-code static/data/stories.json || echo "changed=true" >> $GITHUB_OUTPUT
+      
+      - name: Commit and push if changed
+        if: steps.git-check.outputs.changed == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add static/data/stories.json
+          git commit -m "Update election stories [automated]"
+          git push
+      
+      - name: No changes detected
+        if: steps.git-check.outputs.changed != 'true'
+        run: echo "No changes in stories - skipping commit"

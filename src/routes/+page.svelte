@@ -1041,6 +1041,64 @@
             positionTooltipAboveElement(target);
         }
     }
+
+    // Script for animated banner
+
+    onMount(() => {
+        const banner = document.getElementById('header-banner-full');
+        if (!banner) return;
+
+        banner.addEventListener('load', () => {
+            const svgDoc = banner.contentDocument;
+            if (!svgDoc) return;
+
+            function animateBubble(id, amplitude, speed, phase = 0) {
+                const el = svgDoc.getElementById(id);
+                if (!el) return;
+                let start = null;
+                function step(ts) {
+                    if (!start) start = ts;
+                    const t = (ts - start) / 1000;
+                    const x = Math.sin(t * speed + phase) * amplitude;
+                    el.setAttribute('transform', `translate(${x},0)`);
+                    requestAnimationFrame(step);
+                }
+                requestAnimationFrame(step);
+            }
+            animateBubble('large-bubble', 40, 0.7);
+            animateBubble('small-bubble', 25, 1.1, Math.PI / 2);
+        });
+    });
+
+
+    // Script for animated banner
+
+    onMount(() => {
+        const banner = document.getElementById('header-banner-mobile');
+        if (!banner) return;
+
+        banner.addEventListener('load', () => {
+            const svgDoc = banner.contentDocument;
+            if (!svgDoc) return;
+
+            function animateBubble(id, amplitude, speed, phase = 0) {
+                const el = svgDoc.getElementById(id);
+                if (!el) return;
+                let start = null;
+                function step(ts) {
+                    if (!start) start = ts;
+                    const t = (ts - start) / 1000;
+                    const x = Math.sin(t * speed + phase) * amplitude;
+                    el.setAttribute('transform', `translate(${x},0)`);
+                    requestAnimationFrame(step);
+                }
+                requestAnimationFrame(step);
+            }
+            animateBubble('large-bubble', 40, 0.7);
+            animateBubble('small-bubble', 25, 1.1, Math.PI / 2);
+        });
+    });
+
 </script>
 
 <div id="content" class="site-content" bind:this={contentElement}>
@@ -1048,8 +1106,26 @@
         <main id="main" class="site-main" role="main">
 
             <section class="hero">
-                <header class="entry-header">						
-                    <h1 class="entry-title ">Wisconsin 2026 voter guide TBD</h1>
+                <header class="entry-header">
+                    <object type="image/svg+xml" data="{base}/graphics/banner/Banner_PC.svg" id="header-banner-full"></object>	
+                    <object type="image/svg+xml" data="{base}/graphics/banner/Banner_Mobile.svg" id="header-banner-mobile"></object>
+                    <style>
+                        /* Default: Mobile first */
+                        #header-banner-full { display: none; }
+                        #header-banner-mobile { display: block; }
+
+                        /* Small screens (e.g., phones) */
+                        @media (max-width: 600px) {
+                            #header-banner-full { display: none; }
+                            #header-banner-mobile { display: block; }
+                        }
+
+                        /* Large screens (e.g., desktops) */
+                        @media (min-width: 601px) {
+                            #header-banner-full { display: block; }
+                            #header-banner-mobile { display: none; }
+                        }
+                    </style>				
                 </header>
             </section>
 

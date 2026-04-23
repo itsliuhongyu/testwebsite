@@ -52,67 +52,6 @@
 		</div><!-- .wrapper -->
 	</div><!-- .middle-header-contain -->
 
-
-	<div class="bottom-header-contain desktop-only">
-					<div class="wrapper">
-						<div id="site-navigation">
-									<nav class="main-navigation nav1 dd-menu" aria-label="Top Menu"  >
-			<ul id="menu-main-navigation-1" class="main-menu"><li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-1300736"><a href="https://wisconsinwatch.org/about/">About us</a><button aria-expanded="false" class="submenu-expand"    aria-haspopup="true" data-toggle-parent-id="toggle-1300736" aria-controls="submenu-1300736">
-					<svg class="svg-icon" width="24" height="24" aria-hidden="true" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"></path><path fill="none" d="M0 0h24v24H0V0z"></path></svg>
-					<span class="screen-reader-text" >Open dropdown menu</span>
-				</button>
-<ul class="sub-menu" id="submenu-1300736">
-	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1307794"><a href="https://wisconsinwatch.org/about/staff/">Our people</a></li>
-	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1307795"><a href="https://wisconsinwatch.org/about/the-board/">Our Board of Directors</a></li>
-	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1307797"><a href="https://wisconsinwatch.org/about/ethics/">Our ethics</a></li>
-	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1307798"><a href="https://wisconsinwatch.org/about/funding/">Our funding</a></li>
-	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1309916"><a href="https://wisconsinwatch.org/annual-reports/">Our impact</a></li>
-</ul>
-</li>
-<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-1307764"><a href="#">Support our work</a><button aria-expanded="false" class="submenu-expand"    aria-haspopup="true" data-toggle-parent-id="toggle-1307764" aria-controls="submenu-1307764">
-					<svg class="svg-icon" width="24" height="24" aria-hidden="true" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"></path><path fill="none" d="M0 0h24v24H0V0z"></path></svg>
-					<span class="screen-reader-text" >Open dropdown menu</span>
-				</button>
-<ul class="sub-menu" id="submenu-1307764">
-	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1307767"><a href="https://wisconsinwatch.org/donate/">Ways to give or donate</a></li>
-	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1307766"><a href="https://wisconsinwatch.org/watchdog-club/">Join the Watchdog Club or Leadership Circle</a></li>
-	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1307765"><a href="https://wisconsinwatch.org/legacy-society/">Join the Legacy Society</a></li>
-</ul>
-</li>
-<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-1260205"><a href="#">Coverage areas</a><button aria-expanded="false" class="submenu-expand"    aria-haspopup="true" data-toggle-parent-id="toggle-1260205" aria-controls="submenu-1260205">
-					<svg class="svg-icon" width="24" height="24" aria-hidden="true" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"></path><path fill="none" d="M0 0h24v24H0V0z"></path></svg>
-					<span class="screen-reader-text" >Open dropdown menu</span>
-				</button>
-<ul class="sub-menu" id="submenu-1260205">
-	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1271861"><a href="https://wisconsinwatch.org/category/government/">State government</a></li>
-	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1307791"><a href="https://wisconsinwatch.org/category/pathways-to-success/">Education &amp; Employment</a></li>
-	<li class="a1i0s0 menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1260208"><a href="https://wisconsinwatch.org/category/environment/">Agriculture &amp; Environment</a></li>
-	<li class="a1i0s0 menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1260209"><a href="https://wisconsinwatch.org/category/health-welfare/">Health &amp; Welfare</a></li>
-	<li class="a1i0s0 menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1260210"><a href="https://wisconsinwatch.org/category/justice-public-safety/">Justice &amp; Safety</a></li>
-	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1313410"><a href="https://wisconsinwatch.org/category/opinion/">Opinion</a></li>
-</ul>
-</li>
-<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-1260195"><a href="#">Major projects</a><button aria-expanded="false" class="submenu-expand"    aria-haspopup="true" data-toggle-parent-id="toggle-1260195" aria-controls="submenu-1260195">
-					<svg class="svg-icon" width="24" height="24" aria-hidden="true" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"></path><path fill="none" d="M0 0h24v24H0V0z"></path></svg>
-					<span class="screen-reader-text" >Open dropdown menu</span>
-				</button>
-<ul class="sub-menu" id="submenu-1260195">
-	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1313426"><a href="https://wisconsinwatch.org/category/government/forward/">Forward</a></li>
-	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1264083"><a href="https://wisconsinwatch.org/new-news-lab/">NEW News Lab</a></li>
-	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1273506"><a href="https://wisconsinwatch.org/series/fact-briefs/">Fact briefs</a></li>
-	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1283676"><a href="https://wisconsinwatch.org/supreme-costs-pricey-and-partisan-high-court-elections/">Supreme costs</a></li>
-	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1268956"><a href="https://wisconsinwatch.org/forgotten-homes-promise-and-peril-in-manufactured-housing/">Forgotten homes</a></li>
-	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1292164"><a href="https://wisconsinwatch.org/tag/prison-problems/">Prison Problems</a></li>
-	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1270278"><a href="https://wisconsinwatch.org/wisconsin-talk-radio-change-is-on-the-air-series/">Change is on the Air</a></li>
-	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1271863"><a href="https://wisconsinwatch.org/tag/mississippi-river-basin-ag-water-desk/">Mississippi River Basin Ag &amp; Water Desk</a></li>
-</ul>
-</li>
-<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1307808"><a href="https://wisconsinwatch.org/tag/news/">Latest stories</a></li>
-</ul>		</nav>
-								</div>
-
-											</div><!-- .wrapper -->
-				</div><!-- .bottom-header-contain -->
 </header>
 
 <!-- Navigation Menu Slide-in Panel -->

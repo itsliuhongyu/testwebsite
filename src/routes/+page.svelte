@@ -1094,8 +1094,8 @@
                 }
                 requestAnimationFrame(step);
             }
-            animateBubble('large-bubble', 40, 0.7);
-            animateBubble('small-bubble', 25, 1.1, Math.PI / 2);
+            animateBubble('large-bubble', 30, 0.7);
+            animateBubble('small-bubble', 15, 1.1, Math.PI / 2);
         });
     });
 
@@ -1129,7 +1129,7 @@
                 </header>
             </section>
 
-            <div class="entry-content">
+            <div class="entry-content" style="padding-top: 4rem;">
                 <div class="entry-content">
 		
                     <h2 class="wp-block-heading has-text-align-center">Key Wisconsin elections</h2>
